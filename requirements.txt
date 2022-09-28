@@ -1,1 +1,7 @@
 flask
+pymysql
+flask-migrate == 2.7.0
+flask_sqlalchemy
+flask_script
+click
+flask-wtf

@@ -1,3 +1,4 @@
+import json
 from flask import Flask, render_template , request, redirect, flash
 from datetime import datetime
 # import for database models
@@ -16,7 +17,10 @@ from wtforms import StringField, SubmitField, TextAreaField,PasswordField, Field
 
 from wtforms.validators import DataRequired, Email
 
-from form import AddStock,Type_of_Stock
+from form import AddStock,Type_of_Stock,Sales,credentials
+
+# models
+# from model import AvailableStock
 
 # imports for mail
 from flask_mail import Mail,Message
@@ -39,6 +43,8 @@ migrate = Migrate(app, db)
 mail = Mail(app)
 cli.add_command('db', MigrateCommand)
 
+from model import AvailableStock
+
 class user(db.Model):
 
     __tablename__ = "user"
@@ -58,7 +64,7 @@ class Stock(db.Model):
 
     name = db.Column(db.String(50),primary_key = True, unique = False , nullable = False)
 
-    size_range  = db.Column(db.String(10), nullable = False)
+    size_range  = db.Column(db.JSON, nullable = False)
 
     colours = db.Column(db.JSON, nullable = False)
 
@@ -77,23 +83,89 @@ class Stock(db.Model):
         self.variation = variation
         self.date = date
 
+class SalesLog(db.Model):
+
+    __tablename__ = "sales_logs"
+    
+    date_sold = db.Column(db.DateTime(), primary_key = True, default = datetime.utcnow())
+
+    sold_data = db.Column(db.JSON, nullable = False)
+
+    no_of_sales = db.Column(db.Integer, nullable = False)
+
+    def __init__(self,date_sold,sold_data,no_of_sales):
+
+        self.date_sold = date_sold
+        self.sold_data = sold_data
+        self.no_of_sales = no_of_sales
+
+class AvailableStock(db.Model):
+
+    __tablename__ = "stock_available"
+
+    name = db.Column(db.String(50),primary_key = True, unique=True, nullable = False)
+
+    size_range = db.Column(db.JSON,nullable= False)
+
+    colours = db.Column(db.JSON,nullable = False)
+
+    amount = db.Column(db.Integer, nullable =False)
+
+    variation = db.Column(db.JSON, nullable = False)
+
+    date = db.Column(db.DateTime(), default = datetime.utcnow(), nullable = False)
+
+    def __init__(self,name,size_range,colours,amount,variation,date):
+
+        self.name = name
+        self.size_range = size_range
+        self.colours = colours
+        self.amount = amount
+        self.variation = variation
+        self.date = date
+
 db.create_all()
 
 @app.route('/update', methods = ['GET','POST'])
 def update():
-    # form = ContactForm()
     form = Type_of_Stock()
+    # col = Stock.query.with_entities(Stock.colours).all()
+    # print(col)
+    # form.stock_sold.colours.choices = []
 
     if form.validate_on_submit():
-        user_name = form.name.data
+        name = form.name.data
 
-        pass_word = form.colours.data
+        var = json.loads(form.stock_data.data)
 
-        print(user_name,pass_word)
+        sizes = []
+        for size in var.keys():
+            sizes.append(size)
+        # print(type(json.loads(pass_word)))
+        colour = form.colours.data
 
-    #     c =form.colours.data
-    #         # c.append(0)
-    #     print(c)
+        amount = 0
+        for col in var.values():
+            for am in col.values():
+                amount = amount +am
+
+        stock_details = Stock(name=name,size_range=sizes,colours=colour,amount=amount,variation=var,date=datetime.utcnow())
+
+        product = AvailableStock.query.filter_by(name = name).first()
+
+        if not product:
+            product = AvailableStock(name=name,size_range=sizes,colours=colour,amount=amount,variation=var,date=datetime.utcnow())
+
+            db.session.add(product)
+
+            db.session.commit()
+
+        # print(stock_details)
+
+
+        db.session.add(stock_details)
+
+        db.session.commit()
     #     users = user.query.filter_by(username = user_name).first()
 
     #     if users:
@@ -111,14 +183,39 @@ def update():
 
     return render_template("index.html",form = form)
 
-@app.route("/addStock")
+@app.route("/sales",methods = ['POST', 'GET'])
 def addStock():
 
-    form = AddStock()
+    if request.method == "POST":
+        sales_data = request.get_json()
+        print(sales_data.keys())
 
-    if form.validate_on_submit():
-        return
-    return
+        # Ensure that stock data provided is correct
+        for key in sales_data:
+            
+            # check product exists
+            stock = AvailableStock.query.filter_by(name = key).first()
+
+            if not stock:
+                resp_msg = {"message": "error","error":f"{key} does not exist"}
+                return resp_msg
+
+            available_stock = stock.variation
+            sold_stock = sales_data[key]
+            # TODO check size exists
+            # TODO check colour exists
+            # TODO check sold <= remaining
+        resp_msg = {"messagee""success"}
+        # for key in sales_data:
+
+        sales = SalesLog(date_sold=datetime.utcnow(),sold_data=sales_data,no_of_sales=10)
+
+        db.session.add(sales)
+
+        db.session.commit()
+
+
+    return render_template("record.html")
 
 if __name__ == "__main__":
     # app.run()

@@ -1,3 +1,47 @@
 .hidden {
   display: none;
 }
+ul {
+  display: inline-flex;
+  list-style: none;
+  flex-wrap: wrap;
+  flex-direction: column;
+}
+tr,
+th,
+td {
+  border: 1px solid black;
+  text-align: center;
+  padding: 0.5rem;
+}
+table {
+  border-collapse: collapse;
+}
+td > input[type="number"] {
+  border: none;
+  width: 4rem;
+  text-align: center;
+}
+#Sales_data {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+}
+
+#Sales_data > .Sale_name {
+  display: flex;
+  flex-direction: row;
+}
+.Sale_name > .Sale_sizes {
+  display: flex;
+  flex-direction: column;
+}
+.Sale_sizes > div {
+  display: flex;
+}
+#Sale_Colour {
+  display: f;
+}
+.add_sale {
+  width: fit-content;
+}

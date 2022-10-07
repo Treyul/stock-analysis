@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 
-from  wtforms import SelectField,StringField,EmailField,SelectMultipleField,IntegerField, SubmitField, TextAreaField, PasswordField,FieldList
+from  wtforms import SelectField,StringField,FormField,EmailField,SelectMultipleField,IntegerField, SubmitField, TextAreaField, PasswordField,FieldList
 
 from wtforms.validators import Email, DataRequired
 
@@ -58,5 +58,27 @@ class Type_of_Stock(FlaskForm):
 
     colours = FieldList(StringField("Colour", validators=[DataRequired()]), min_entries=1,)
 
+    stock_data = StringField("Data: ", validators=[DataRequired()])
+
     add_stock = SubmitField("Add and Confirm stock")
 
+class SalesData(FlaskForm):
+    
+    stock_type = SelectField(u'Type',choices=[('Clothes','Clothing'),('Shoes','Shoes')], validators=[DataRequired()],validate_choice=True)
+
+    stock_name = SelectField(u"Product Name",choices=[('Clothes','Clothing'),('Shoes','Shoes')])
+
+    colours = SelectField(u'Colour',choices=[('Clothes','Clothing'),('Shoes','Shoes')])
+
+    size = IntegerField("Size of product")
+
+    no_sold = IntegerField("Number Sold")
+
+
+    
+    
+class Sales(FlaskForm):
+
+    stock_sold = FieldList(FormField(SalesData),min_entries=1)
+
+    Submit_data =  SubmitField("Submit Sales Data")

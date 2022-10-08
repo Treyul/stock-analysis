@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 
 from  wtforms import SelectField,StringField,FormField,EmailField,SelectMultipleField,IntegerField, SubmitField, TextAreaField, PasswordField,FieldList
 
-from wtforms.validators import Email, DataRequired
+from wtforms.validators import  DataRequired
 
 from wtforms.widgets import ListWidget,CheckboxInput
 
@@ -34,15 +34,15 @@ class AddStock(FlaskForm):
 
     Submit = SubmitField("Add new stalk")
 
-class CreateAccount(FlaskForm):
+# class CreateAccount(FlaskForm):
 
-    name = StringField("Enter your full names", validators= [DataRequired()])
+#     name = StringField("Enter your full names", validators= [DataRequired()])
 
-    username = StringField("Username", validators = [DataRequired()])
+#     username = StringField("Username", validators = [DataRequired()])
 
-    email = EmailField("Email", validators = [Email(), DataRequired()])
+#     email = EmailField("Email", validators = [Email(), DataRequired()])
 
-    Submit = SubmitField("Create account")
+#     Submit = SubmitField("Create account")
 
 class Type_of_Stock(FlaskForm):
 

@@ -6,3 +6,4 @@ flask_script
 click
 flask-wtf
 flask-mail
+gunicorn

@@ -31,17 +31,59 @@ td > input[type="number"] {
 #Sales_data > .Sale_name {
   display: flex;
   flex-direction: row;
+  border: 1px black solid;
+  margin-top: 1rem;
+
+  /* padding: 1; */
 }
 .Sale_name > .Sale_sizes {
   display: flex;
   flex-direction: column;
+  padding-left: 1rem;
 }
 .Sale_sizes > div {
   display: flex;
+  /* padding-left: 1rem; */
 }
 #Sale_Colour {
   display: f;
+  margin-left: 1rem;
+}
+#Sale_Colour > div {
+  padding-top: 0.5rem;
 }
 .add_sale {
   width: fit-content;
+  margin-top: 0.5rem;
+  text-align: center;
+  background-color: limegreen;
+  border-radius: 45px;
+  padding: 2px 0.5rem;
+  border: none;
+  letter-spacing: 1px;
+  color: white;
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  font-size: normal;
+}
+.rem_sale {
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  float: right;
+  width: fit-content;
+  background-color: rgb(181, 49, 49);
+  border: none;
+  margin-top: 0.5rem;
+  border-radius: 45px;
+  padding: 2px 0.5rem;
+  text-align: le;
+}
+input {
+  /* width: 3rem; */
+  height: fit-content;
+  width: auto;
+  text-align: center;
+  margin-top: 0.5rem;
+}
+#Sale_Colour > div > input {
+  width: 3rem;
+  /* border: 1px black solid; */
 }

@@ -124,7 +124,7 @@ class AvailableStock(db.Model):
         self.variation = variation
         self.date = date
 
-db.create_all()
+# db.create_all()
 
 @app.route('/update', methods = ['GET','POST'])
 def update():
@@ -219,4 +219,4 @@ def addStock():
 
 if __name__ == "__main__":
     app.run()
-    cli()
+    # cli()

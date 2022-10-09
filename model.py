@@ -1,9 +1,9 @@
+from flask import Flask
 
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
 db = SQLAlchemy()
-# from app import db
 
 class user(db.Model):
 
@@ -33,6 +33,8 @@ class Stock(db.Model):
     variation = db.Column(db.JSON , nullable = False)
 
     date = db.Column(db.DateTime(), default = datetime.utcnow())
+
+    arrival_date = db.Column(db.DateTime(), default = datetime.utcnow())
 
     def __init__(self,name, size_range, colours, amount, variation,date):
 

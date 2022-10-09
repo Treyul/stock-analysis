@@ -1,6 +1,7 @@
 import json
 from flask import Flask, render_template , request, redirect, flash
 from datetime import datetime
+from flask_cors import CORS
 # import for database models
 from flask_sqlalchemy import SQLAlchemy
 
@@ -20,114 +21,25 @@ from wtforms.validators import DataRequired, Email
 from form import AddStock,Type_of_Stock,Sales,credentials
 
 # models
-# from model import AvailableStock
+from model import AvailableStock,db,user,SalesLog,Stock
 
 # imports for mail
 from flask_mail import Mail,Message
 app = Flask(__name__)
 
-app.debug = True
-app.config['SECRET_KEY'] = 'testing'
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://user2:Treyul18@localhost/flask_jwt_auth"
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-app.config["MAIL_SERVER"] = 'smtp.googlemail.com'
-app.config["MAIL_PORT"] = 587
-app.config["MAIL_USE_TLS"] = True 
-app.config["MAIL_USERNAME"] = "emmanuelryley55@gmail.com"
-app.config["MAIL_DEFAULT_SENDER"] = "emmanuelryley55@gmail.com"
-app.config["MAIL_PASSWORD"] = "Elwito18"
-
-cli = FlaskGroup(app)
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
-mail = Mail(app)
-cli.add_command('db', MigrateCommand)
-
-from model import AvailableStock
-
-class user(db.Model):
-
-    __tablename__ = "user"
-
-    username = db.Column(db.String(255),primary_key = True, unique = True, nullable = False)
-
-    password = db.Column(db.Text(), nullable = False)
+# cli = FlaskGroup(app)
+# migrate = Migrate(app, db)
+# mail = Mail(app)
+# cli.add_command('db', MigrateCommand)
 
 
-    def __init__(self,username,password):
-        self.username = username
-        self.password = password
+app.route("/",methods = ['POST','GET'])
+def index():
 
-class Stock(db.Model):
-
-    __tablename__ = 'stocklogs'
-
-    name = db.Column(db.String(50),primary_key = True, unique = False , nullable = False)
-
-    size_range  = db.Column(db.JSON, nullable = False)
-
-    colours = db.Column(db.JSON, nullable = False)
-
-    amount = db.Column(db.Integer, nullable = False)
-
-    variation = db.Column(db.JSON , nullable = False)
-
-    date = db.Column(db.DateTime(), default = datetime.utcnow())
-
-    def __init__(self,name, size_range, colours, amount, variation,date):
-
-        self.name = name
-        self.size_range = size_range
-        self.colours = colours
-        self.amount = amount
-        self.variation = variation
-        self.date = date
-
-class SalesLog(db.Model):
-
-    __tablename__ = "sales_logs"
-    
-    date_sold = db.Column(db.DateTime(), primary_key = True, default = datetime.utcnow())
-
-    sold_data = db.Column(db.JSON, nullable = False)
-
-    no_of_sales = db.Column(db.Integer, nullable = False)
-
-    def __init__(self,date_sold,sold_data,no_of_sales):
-
-        self.date_sold = date_sold
-        self.sold_data = sold_data
-        self.no_of_sales = no_of_sales
-
-class AvailableStock(db.Model):
-
-    __tablename__ = "stock_available"
-
-    name = db.Column(db.String(50),primary_key = True, unique=True, nullable = False)
-
-    size_range = db.Column(db.JSON,nullable= False)
-
-    colours = db.Column(db.JSON,nullable = False)
-
-    amount = db.Column(db.Integer, nullable =False)
-
-    variation = db.Column(db.JSON, nullable = False)
-
-    date = db.Column(db.DateTime(), default = datetime.utcnow(), nullable = False)
-
-    def __init__(self,name,size_range,colours,amount,variation,date):
-
-        self.name = name
-        self.size_range = size_range
-        self.colours = colours
-        self.amount = amount
-        self.variation = variation
-        self.date = date
-
-# db.create_all()
+    return render_template("home.html")
 
 @app.route('/update', methods = ['GET','POST'])
-def update():
+def update(): 
     form = Type_of_Stock()
     # col = Stock.query.with_entities(Stock.colours).all()
     # print(col)
@@ -217,6 +129,29 @@ def addStock():
 
     return render_template("record.html")
 
+def create_app(config_file):
+
+    # app = Flask(__name__)
+
+    CORS(app)
+
+    app.config.from_pyfile(config_file,silent=True)
+
+    from model import db
+
+    db.init_app(app)
+
+    # Mail.init_app(app)
+
+    with app.app_context():
+        db.create_all()
+    
+
+    return app
+
 if __name__ == "__main__":
+    app = create_app("config.py")
+
     app.run()
+
     # cli()

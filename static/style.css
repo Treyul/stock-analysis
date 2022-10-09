@@ -1,12 +1,48 @@
+/* *********************** */
+/* *********************** Styles for stock update page *************************** */
 .hidden {
   display: none;
 }
-ul {
-  display: inline-flex;
+.inline {
+  display: inline;
+  padding-left: 2rem;
+}
+label {
+  display: none;
+}
+.form {
+  margin: 1rem 0.5rem;
+  text-align: center;
+}
+.form > input {
+  background-color: white;
+}
+.form > ul[id="clothing"] {
+  /* display: inline-flex; */
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   list-style: none;
   flex-wrap: wrap;
-  flex-direction: column;
+  /* flex-direction: column; */
 }
+.form > ul[id="clothing"] > li > label {
+  display: inline;
+}
+.form > ul[id="colours"] {
+  list-style: none;
+}
+.form > ul > li {
+  padding: 5px 0rem;
+  /* display: grid;
+  grid */
+}
+label[for="min_size"],
+label[for="max_size"] {
+  display: none;
+}
+
+/* *********************** */
+/* *********************** Styles for stock sales page *************************** */
 tr,
 th,
 td {
@@ -29,25 +65,33 @@ td > input[type="number"] {
 }
 
 #Sales_data > .Sale_name {
-  display: flex;
+  /* display: flex; */
   flex-direction: row;
-  border: 1px black solid;
+  /* border: 1px black solid; */
+  background-color: antiquewhite;
   margin-top: 1rem;
-
   /* padding: 1; */
+  box-shadow: 2px 2px 10px 3px rgb(192, 189, 189);
+  padding: 1rem;
 }
 .Sale_name > .Sale_sizes {
   display: flex;
   flex-direction: column;
   padding-left: 1rem;
+  margin-top: 1rem;
 }
 .Sale_sizes > div {
   display: flex;
-  /* padding-left: 1rem; */
+  background-color: rgb(225, 210, 191);
+  box-shadow: -5px 2px 10px 3px rgb(192, 189, 189);
+  /* padding-right: 1rem; */
 }
 #Sale_Colour {
-  display: f;
-  margin-left: 1rem;
+  background-color: #ede6e6;
+  box-shadow: -2px 2px 10px 5px rgb(192, 189, 189);
+  /* margin-left: 1rem; */
+  margin-bottom: 0.5rem;
+  /* padding-right: 1em; */
 }
 #Sale_Colour > div {
   padding-top: 0.5rem;
@@ -55,6 +99,8 @@ td > input[type="number"] {
 .add_sale {
   width: fit-content;
   margin-top: 0.5rem;
+  display: block;
+  /* float: right; */
   text-align: center;
   background-color: limegreen;
   border-radius: 45px;
@@ -67,23 +113,104 @@ td > input[type="number"] {
 }
 .rem_sale {
   font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  display: block;
   float: right;
   width: fit-content;
-  background-color: rgb(181, 49, 49);
+  background-color: #e6534e;
+  /* background-color: #f54029; */
   border: none;
   margin-top: 0.5rem;
   border-radius: 45px;
+  /* color: white; */
+  text-align: center;
   padding: 2px 0.5rem;
-  text-align: le;
+}
+.green {
+  background-color: limegreen;
+  border: none;
+  border-radius: 45px;
+  color: white;
+  padding: 2px 0.5rem;
 }
 input {
-  /* width: 3rem; */
+  /* width: 4rem; */
+  /* width: auto; */
+  /* border: no; */
+  /* margin-top: 1rem; */
+  background-color: #f5f5f5;
   height: fit-content;
-  width: auto;
+  border: none;
+  margin: 0.25rem;
+  border-bottom: 1px rgb(145, 147, 117) solid;
   text-align: center;
-  margin-top: 0.5rem;
 }
 #Sale_Colour > div > input {
-  width: 3rem;
+  width: 4rem;
   /* border: 1px black solid; */
+  margin-right: 0.5rem;
+}
+input[type="number"] {
+  width: 4rem;
+}
+.align {
+  align-self: flex-end;
+}
+input:focus-visible {
+  border: none;
+  outline: none;
+  border-bottom: 1px blue solid;
+}
+input[type="text"],
+input[type="number"] {
+  margin: 1rem;
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  letter-spacing: 1.5px;
+  font-weight: bold;
+}
+
+/* *********************** */
+/* *********************** Styles for home page *************************** */
+.hometitle {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  /* align-items: center; */
+  /* align-content: space-between; */
+  justify-items: center;
+}
+.homedata {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  justify-items: center;
+}
+.contain {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  justify-items: center;
+}
+.start {
+  grid-column: 1;
+}
+button {
+  height: fit-content;
+  align-self: center;
+}
+.availdata {
+  display: flex;
+  padding: 0.5rem;
+}
+.availdata > p {
+  margin: 0.5rem;
+}
+.coldata > div {
+  display: flex;
+  /* display: inline; */
+  /* padding: 0.5rem; */
+}
+.coldata > div > p {
+  margin: 0.5rem;
+}
+.par-availdata {
+  grid-column: span 5;
+  display: flex;
+  flex-wrap: wrap;
 }

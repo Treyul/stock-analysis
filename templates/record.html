@@ -14,7 +14,11 @@
         <input type="text" placeholder="Product name" />
         <div class="Sale_sizes">
           <div>
-            <input type="text" placeholder="Size" />
+            <input
+              style="align-self: center"
+              type="number"
+              placeholder="Size"
+            />
             <div id="Sale_Colour">
               <div>
                 <input type="text" placeholder="Colour" />
@@ -22,7 +26,7 @@
               </div>
               <div>
                 <input type="text" placeholder="Colour" />
-                <input type="numeric" placeholder="Sold" />
+                <input type="number" placeholder="Sold" />
               </div>
 
               <input type="button" class="add_sale" value="Add colour" />
@@ -31,11 +35,15 @@
           </div>
 
           <input type="button" class="add_sale" value="add Size Sold" />
-          <input type="button" class="rem_sale" value="Delete Size Sold" />
+          <input
+            type="button"
+            class="rem_sale align"
+            value="Delete Size Sold"
+          />
         </div>
       </div>
       <input type="button" class="add_sale" value="Add Product Sold" />
-      <input type="button" class="rem_sale" value="Delete Product Sold" />
+      <input type="button" class="rem_sale align" value="Delete Product Sold" />
     </div>
     <input type="submit" href="/sales" id="sales" value="Submit Sales data" />
   </body>

@@ -16,11 +16,14 @@ const hide = (el) => {
 hide(max_shoes);
 hide(min_shoes);
 hide(fields[7]);
+hide(fields[6]);
 
 type.addEventListener("input", function () {
   clothes.classList.toggle("hidden");
   max_shoes.classList.toggle("hidden");
   min_shoes.classList.toggle("hidden");
+  max_shoes.classList.toggle("inline");
+  min_shoes.classList.toggle("inline");
 });
 
 next_stock_details.addEventListener("click", function (e) {
@@ -54,7 +57,7 @@ next_stock_details.addEventListener("click", function (e) {
     for (let k = 0; k < len; k++) {
       variation_template += `<td><input type="number" value="0"></td>`;
     }
-    variation_template += `<td><input type="number" value="0"></td><td>
+    variation_template += `<td><input type="number" disabled value="0"></td><td>
     <input type="button" class="summation" value="Done"></td></tr>`;
   }
 
@@ -105,6 +108,7 @@ next_stock_details.addEventListener("click", function (e) {
         stock_json[`${siblings[0].innerHTML}`] = size;
         // console.log(typeof siblings[0].innerHTML);
         console.log(stock_json);
+        element.classList.add("green");
       }
     });
   });

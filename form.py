@@ -46,17 +46,17 @@ class AddStock(FlaskForm):
 
 class Type_of_Stock(FlaskForm):
 
-    name = StringField("Name of stock: ", validators=[DataRequired()])
+    name = StringField("Name of stock: ", validators=[DataRequired()], render_kw={"placeholder":"Product name"})
 
     stock_type = SelectField(u'Type',choices=[('Clothes','Clothing'),('Shoes','Shoes')], validators=[DataRequired()],validate_choice=True)
 
     clothing = Multi("Size",choices=[("XXXS","XXXS"),("XXS","XXS"),("XS","XS"),("S","S"),("M","M"),("L","L"),("XL","XL"),("XXL","XXL"),("XXXL","XXXL")],validate_choice=True)
 
-    max_size = IntegerField("max size: ")
+    max_size = IntegerField("max size: ",render_kw = {"placeholder":"Max Size"})
 
-    min_size = IntegerField("min size: ")
+    min_size = IntegerField("min size: ", render_kw = {"placeholder":"min size"})
 
-    colours = FieldList(StringField("Colour", validators=[DataRequired()]), min_entries=1,)
+    colours = FieldList(StringField("Colour", validators=[DataRequired()], render_kw ={"placeholder":"Colour Name"}), min_entries=1,)
 
     stock_data = StringField("Data: ", validators=[DataRequired()])
 

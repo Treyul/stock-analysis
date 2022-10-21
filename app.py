@@ -31,9 +31,10 @@ app = Flask(__name__)
 # migrate = Migrate(app, db)
 # mail = Mail(app)
 # cli.add_command('db', MigrateCommand)
+# app.config["SECRET_KEY"] = "treyulwito"
 
 
-app.route("/",methods = ['POST','GET'])
+@app.route("/",methods = ['POST','GET'])
 def index():
 
     return render_template("home.html")
@@ -140,6 +141,8 @@ def create_app(config_file):
     from model import db
 
     db.init_app(app)
+
+    # csrf.
 
     # Mail.init_app(app)
 

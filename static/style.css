@@ -170,22 +170,82 @@ input[type="number"] {
 
 /* *********************** */
 /* *********************** Styles for home page *************************** */
-.hometitle {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-  /* align-items: center; */
-  /* align-content: space-between; */
-  justify-items: center;
+
+#available {
+  background-color: rgb(211, 211, 211);
+  /* border-radius: 45px; */
 }
-.homedata {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-  justify-items: center;
+#pending {
+  background-color: rgb(223, 220, 220);
 }
 .contain {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   justify-items: center;
+}
+
+.hometitle > h5,
+.home-sales > h5 {
+  display: inline;
+  margin: auto;
+  letter-spacing: 1.25px;
+  font-size: medium;
+  align-self: center;
+  margin: 0rem;
+}
+.hometitle,
+.sales-title {
+  border-bottom: 1px grey solid;
+}
+.homedata {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  justify-items: center;
+  grid-column: span 5;
+  justify-content: space-around;
+  border-bottom: 1px grey solid;
+}
+.hometitle {
+  grid-column: span 5;
+  margin: 0.5rem 0rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  width: -webkit-fill-available;
+  justify-content: space-around;
+  justify-items: center;
+}
+.home-sales {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  justify-items: center;
+  background-color: lightgray;
+}
+.sales-title {
+  grid-column: span 6;
+  margin: 0.5rem 0rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  width: -webkit-fill-available;
+  justify-content: space-around;
+  justify-items: center;
+}
+.sales-data {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  justify-items: center;
+  grid-column: span 6;
+  justify-content: space-around;
+  border-bottom: 1px darkgrey solid;
+}
+.sales-data > :nth-child(n + 3) {
+  border-top: 1px whitesmoke solid;
+}
+.sales-data-div {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  justify-items: center;
+  grid-column: 2 / span 5;
+  border-left: 1px darkgray solid;
 }
 .start {
   grid-column: 1;
@@ -193,13 +253,28 @@ input[type="number"] {
 button {
   height: fit-content;
   align-self: center;
+  border: none;
+  border-radius: 45px;
+  padding: 0.25rem 1rem;
+  background-color: #1495;
 }
 .availdata {
   display: flex;
   padding: 0.5rem;
+  border-right: 1px darkgrey solid;
+  border-bottom: 1px darkgrey solid;
+  height: fit-content;
+  flex-wrap: wrap;
 }
 .availdata > p {
-  margin: 0.5rem;
+  margin: 0.5rem 0rem 0.5rem 0.5rem;
+  font-weight: bolder;
+  letter-spacing: 1.25px;
+  padding-right: 0.25rem;
+  border-right: 1px black solid;
+}
+.coldata > :nth-child(n + 2) {
+  border-top: 1px black solid;
 }
 .coldata > div {
   display: flex;
@@ -210,6 +285,7 @@ button {
   margin: 0.5rem;
 }
 .par-availdata {
+  border-top: 1px whitesmoke solid;
   grid-column: span 5;
   display: flex;
   flex-wrap: wrap;

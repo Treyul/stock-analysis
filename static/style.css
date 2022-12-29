@@ -1,4 +1,8 @@
 /* *********************** */
+/* *********************** Styles for login *************************** */
+users > div {
+  display: block;
+}
 /* *********************** Styles for stock update page *************************** */
 .hidden {
   display: none;

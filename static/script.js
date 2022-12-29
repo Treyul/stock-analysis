@@ -6,6 +6,7 @@ const fields = document.querySelectorAll(".form");
 const next_stock_details = document.getElementById("add_stock_next");
 const list = document.getElementById("colours");
 const form = document.getElementById("form_add_stock");
+const submit = document.getElementById("stock_det");
 const clothes = fields[2];
 const max_shoes = fields[3];
 const min_shoes = fields[4];
@@ -27,6 +28,8 @@ type.addEventListener("input", function () {
 });
 
 next_stock_details.addEventListener("click", function (e) {
+  next_stock_details.classList.add("hidden");
+  submit.classList.remove("hidden");
   e.preventDefault();
   let stock_json = {};
   const max_size = +document.getElementById("max_size").value;

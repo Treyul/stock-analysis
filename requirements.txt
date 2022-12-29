@@ -3,8 +3,10 @@ pymysql
 flask-migrate == 2.7.0
 flask_sqlalchemy
 flask_script
+flask-sessions
 click
 flask-wtf
 flask-mail
 flask_cors
 gunicorn
+flask-login

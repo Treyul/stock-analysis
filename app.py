@@ -262,6 +262,8 @@ def update():
             colour = json.loads(colour)
             # update stock available -- variation
             old_variation = json.loads(product.variation)
+            old_sizes = json.loads(product.size_range)
+            old_color = json.loads(product.colours)
 
             for size in old_variation:
                 # Test for presence of size in new variation
@@ -289,18 +291,24 @@ def update():
             product.variation = json.dumps(var)
             
             # update sizes
-            for element in product.size_range:
+            print(sizes)
+            for element in old_sizes:
                 if element not in sizes:
                     sizes.append(element)
             product.size_range = json.dumps(sizes)
+            print(sizes)
 
             # Update colours
-            for color in product.colours:
+            print(colour)
+            for color in old_color:
                 if color not in colour:
                     colour.append(color)
-            product.colours = json.dumps(color)
+            print(colour)
+            product.colours = json.dumps(colour)
 
             # update amount
+
+            print(amount , product.amount)
             amount = amount + product.amount
             product.amount = amount
 

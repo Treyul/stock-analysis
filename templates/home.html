@@ -15,6 +15,12 @@
     "
   >
     <h2>Welcome Margaret Kamau</h2>
+
+    <div id="menu">
+      <a href="/update">Update stock available</a>
+      <a href="/sales">Update sales</a>
+    </div>
+
     <div class="contain" id="available">
       <h3 style="grid-column: span 5">Available stock</h3>
       <div class="hometitle">
@@ -24,122 +30,32 @@
         <h5>Amount</h5>
         <h5></h5>
       </div>
+      {% for product in products %}
       <div class="homedata">
-        <p class="start">Combat</p>
-        <p>36-40</p>
-        <p>Red, White, Black, Pink</p>
-        <p>25</p>
+        <p class="start">{{product.name}}</p>
+        <p>{% for size in product.size_range %} {{size}} {% endfor %}</p>
+        <p>{% for colour in product.colours %} {{color}} {% endfor %}</p>
+        <p>{{product.amount}}</p>
         <button>Show details</button>
         <div class="hidden">
+          {% for size in product.variation %}
           <div class="availdata">
-            <p>36</p>
+            {# Render size variation#}
+            <p>{{size}}</p>
             <div class="coldata">
+              {%set colours = product.variation[size] %} {% for color in colours
+              %}
               <div>
-                <p>Red</p>
-                <p>10</p>
+                <p>{{color}}</p>
+                <p>{{colours[color]}}</p>
               </div>
-              <div>
-                <p>Red</p>
-                <p>10</p>
-              </div>
+              {% endfor %}
             </div>
           </div>
-          <div class="availdata">
-            <p>37</p>
-            <div class="coldata">
-              <div>
-                <p>Red</p>
-                <p>10</p>
-              </div>
-            </div>
-          </div>
-          <div class="availdata">
-            <p>38</p>
-            <div class="coldata">
-              <div>
-                <p>Red</p>
-                <p>10</p>
-              </div>
-            </div>
-          </div>
-          <div class="availdata">
-            <p>39</p>
-            <div class="coldata">
-              <div>
-                <p>Red</p>
-                <p>10</p>
-              </div>
-            </div>
-          </div>
-          <div class="availdata">
-            <p>40</p>
-            <div class="coldata">
-              <div>
-                <p>Red</p>
-                <p>10</p>
-              </div>
-            </div>
-          </div>
+          {% endfor %}
         </div>
       </div>
-      <div class="homedata">
-        <p class="start">Fashion</p>
-        <p>36-45</p>
-        <p>Red, White, Black, Pink</p>
-        <p>25</p>
-        <button>Show details</button>
-        <div class="hidden">
-          <div class="availdata">
-            <p>36</p>
-            <div class="coldata">
-              <div>
-                <p>Red</p>
-                <p>10</p>
-              </div>
-              <div>
-                <p>Red</p>
-                <p>10</p>
-              </div>
-            </div>
-          </div>
-          <div class="availdata">
-            <p>37</p>
-            <div class="coldata">
-              <div>
-                <p>Red</p>
-                <p>10</p>
-              </div>
-            </div>
-          </div>
-          <div class="availdata">
-            <p>38</p>
-            <div class="coldata">
-              <div>
-                <p>Red</p>
-                <p>10</p>
-              </div>
-            </div>
-          </div>
-          <div class="availdata">
-            <p>39</p>
-            <div class="coldata">
-              <div>
-                <p>Red</p>
-                <p>10</p>
-              </div>
-            </div>
-          </div>
-          <div class="availdata">
-            <p>40</p>
-            <div class="coldata">
-              <div>
-                <p>Red</p>
-                <p>10</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      {% endfor %}
     </div>
     <div class="contain" id="pending">
       <h3 style="grid-column: span 5">Stock pending arrival</h3>

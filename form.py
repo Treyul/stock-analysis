@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 
 from wtforms import SelectField, StringField, FormField, EmailField, SelectMultipleField, IntegerField, SubmitField, TextAreaField, PasswordField, FieldList
 
-from wtforms.validators import DataRequired, email
+from wtforms.validators import DataRequired, email, NumberRange
 
 from wtforms.widgets import ListWidget, CheckboxInput
 
@@ -59,9 +59,9 @@ class Type_of_Stock(FlaskForm):
 
     clothing = Multi("Size", choices=[("XXXS", "XXXS"), ("XXS", "XXS"), ("XS", "XS"), ("S", "S"), ("M", "M"), ("L", "L"), ("XL", "XL"), ("XXL", "XXL"), ("XXXL", "XXXL")], validate_choice=True)
 
-    max_size = IntegerField("max size: ", render_kw={"placeholder": "Max Size"})
+    max_size = IntegerField("max size: ",validators=[NumberRange(min=0, message="Cannot be less than 0")], render_kw={"placeholder": "Max Size"})
 
-    min_size = IntegerField("min size: ", render_kw={"placeholder": "min size"})
+    min_size = IntegerField("min size: ",validators=[NumberRange(min=0, message="Cannot be less than 0")], render_kw={"placeholder": "min size"})
 
     colours = FieldList(StringField("Colour", validators=[DataRequired()], render_kw={"placeholder": "Colour Name"}), min_entries=1,)
 

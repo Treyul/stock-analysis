@@ -15,6 +15,10 @@ from hashlib import sha512
 # import for flask forms
 from flask_wtf import CSRFProtect
 from form import AddStock, Type_of_Stock, Sales, credentials, Login, CreateAccount
+from flask_wtf import FlaskForm
+from wtforms import SelectField, StringField, FormField, EmailField, SelectMultipleField, IntegerField, SubmitField, TextAreaField, PasswordField, FieldList
+from wtforms.validators import DataRequired, email, NumberRange
+
 
 # import fro login config
 from flask_login import UserMixin,LoginManager, login_user
@@ -113,7 +117,7 @@ class SalesLog(db.Model):
 
     date_sold = db.Column(db.DateTime(), primary_key=True, default=datetime.utcnow(), nullable=False)
 
-    # sold_data = db.Column(db.JSON, nullable=False)
+    sold_data = db.Column(LONGTEXT, nullable=False)
 
     no_of_sales = db.Column(db.Integer, nullable=False)
 
@@ -150,6 +154,57 @@ class AvailableStock(db.Model):
         self.variation = variation
         self.date = date
 
+class LocalSales(db.Model):
+
+    __tablename__ = "wholesale_sales"
+
+    product = db.Column(db.String(50),primary_key = True, nullable = False )
+
+    size = db.Column(db.Integer, nullable = False)
+
+    colour = db.Column(db.String(50), nullable = False)
+
+    shop_no = db.Column(db.String(10),nullable = False)
+
+    paid = db.Column(db.Boolean, nullable = False)
+
+    def __init__(self,product,size,collour,shop_no,paid):
+
+        self.product = product
+        self.size = size
+        self.colour = collour
+        self.shop_no = shop_no
+        self.paid = paid
+
+class Ordered(db.Model):
+
+    __tablename__ = "stock_ordered"
+
+    name = db.Column(db.String(50), primary_key=True, unique=False, nullable=False)
+
+    size_range = db.Column(LONGTEXT, nullable=False)
+
+    colours = db.Column(LONGTEXT, nullable=False)
+
+    amount = db.Column(db.Integer, nullable=False)
+
+    variation = db.Column(LONGTEXT, nullable=False)
+
+    order_date = db.Column(db.DateTime(), default=datetime.utcnow())
+
+    arrival_date = db.Column(db.DateTime(), nullable = True)
+
+
+    def __init__(self, name, size_range, colours, amount, variation, order_date, arrival_date):
+
+        self.name = name
+        self.size_range = size_range
+        self.colours = colours
+        self.amount = amount
+        self.variation = variation
+        self.order_date = order_date
+        self.arrival_date = arrival_date
+
 # db.create_all()
 #   **********************  END OF DATABASE MODELS ************************
 
@@ -163,12 +218,55 @@ class AvailableStock(db.Model):
 
 #     return required
 
-# configuration of routes
-@app.route("/", methods=['POST', 'GET'])
-# @loginreq
-def index():
 
-    return render_template("home.html")
+#   **************************  CREATE FORMS ********************************
+
+class Wholesale(FlaskForm):
+
+    product = StringField("Product name", validators=[DataRequired()])
+
+    name = StringField("Shop name", validators=[DataRequired()])
+
+    size = IntegerField("size", validators=[DataRequired()])
+
+    colour = StringField("colur",validators=[DataRequired()])
+
+    paid = StringField("paid",validators=[DataRequired()])
+
+
+
+# ****************************END OF FORMS ***************************
+
+# configuration of routes
+@app.route("/",methods = ["POST","GET"])
+def index():
+    
+    products = AvailableStock.query.all()
+    print(products)
+    for product in products:
+        
+        # convert json strings into objects
+        product.size_range = json.loads(product.size_range)
+        product.colours = json.loads(product.colours)
+        product.variation = json.loads(product.variation)
+
+    return render_template("home.html",products = products)
+
+
+@app.route("/catalog", methods=['POST', 'GET'])
+# @loginreq
+def catalog():
+
+    products = AvailableStock.query.all()
+    print(products)
+    for product in products:
+        
+        # convert json strings into objects
+        product.size_range = json.loads(product.size_range)
+        product.colours = json.loads(product.colours)
+        product.variation = json.loads(product.variation)
+
+    return render_template("catalog.html",products = products)
 
 
 # route for logging in
@@ -343,7 +441,7 @@ def addStock():
 
     if request.method == "POST":
         sales_data = request.get_json()
-        print(sales_data.keys())
+        sold = 0
 
         # Ensure that stock data provided is correct
         for key in sales_data:
@@ -356,22 +454,77 @@ def addStock():
                             "error": f"{key} does not exist"}
                 return resp_msg
 
-            available_stock = stock.variation
+            available_stock = json.loads(stock.variation)
+            # print(available_stock["23"])
+            # print(available_stock[" 23"],"second")
             sold_stock = sales_data[key]
-            # TODO check size exists
-            # TODO check colour exists
+            amount_sold = 0
+
+            # check size exists
+            for size in sold_stock:
+
+                # create var to store no sold
+                # return error if size is not available in database
+                if size not in available_stock:
+                    resp_msg = {"message":"error","error":f"size {size} not found"}
+                    return resp_msg
+
+                elif size in available_stock:
+                    # get size objects
+                    old_color = available_stock[size]
+                    sold_color = sold_stock[size]
+
+                    for color in sold_color:
+
+                        # catch error if color was not available
+                        if color not in old_color:
+                            resp_msg = {"message":"error","error":f"{color} in size {size} not found"}
+                            return resp_msg
+                        
+                        elif color in old_color:
+
+                            old_color[color] = old_color[color] - sold_color[color]
+                            amount_sold = amount_sold + sold_color[color]
+                            print(f"summation for sold {sold}, {amount_sold}")
+
+                            # catch error for negative entries
+                            if old_color[color] < 0:
+                                resp_msg = {"message":"error","error":f"Cannot have negative stock amount"}
+                                return resp_msg
+
+                            # TODO remove stock color and sizes and product altogether if depleted
+
+                           
+            sold = sold + amount_sold
+            # update stock amount remaining, variation, date
+            stock.amount = stock.amount - amount_sold
+
+            stock.variation = json.dumps(available_stock)
+
+            stock.date = datetime.utcnow()
+
+            db.session.commit()
+                            
+                            
+
+
+                
+
             # TODO check sold <= remaining
         resp_msg = {"messagee""success"}
         # for key in sales_data:
+        sales_data =  json.dumps(sales_data)
 
         sales = SalesLog(date_sold=datetime.utcnow(),
-                         sold_data=sales_data, no_of_sales=10)
+                         sold_data=sales_data, no_of_sales=sold)
 
         db.session.add(sales)
 
         db.session.commit()
 
     return render_template("record.html")
+
+
 
 # def create_app(config_file):
 

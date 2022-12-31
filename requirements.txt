@@ -10,3 +10,4 @@ flask-mail
 flask_cors
 gunicorn
 flask-login
+ansible

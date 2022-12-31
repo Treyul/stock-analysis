@@ -31,52 +31,65 @@ next_stock_details.addEventListener("click", function (e) {
   next_stock_details.classList.add("hidden");
   submit.classList.remove("hidden");
   e.preventDefault();
+
+  // create object to store the product variation
   let stock_json = {};
   const max_size = +document.getElementById("max_size").value;
   let min_size = +document.getElementById("min_size").value;
 
-  // console.log(max_size, min_size);
-
+  // get no of sizes available for the product
   let variation = max_size - min_size + 1;
 
+  // get colours available and their number
   const colours = list.getElementsByTagName("input");
   const len = colours.length;
 
-  console.log(len, variation);
-
+  // create table to alloe use input for th product variation
   let variation_template = `<table> <tr><th>Size</th>`;
+
+  // create table columns for the colors
   for (const el of colours) {
     variation_template += `<th> ${el.value}</th>`;
   }
   variation_template += `<th>Total</th></tr>`;
+
+  // create table ros for the sizes
   for (min_size; min_size <= max_size + 1; min_size++) {
+    // create final tallying row
     if (min_size == max_size + 1) {
       variation_template += `<tr><td>Total</td>`;
-      0;
     } else {
-      variation_template += `<tr><td> ${min_size}</td>`;
+      // size row
+      variation_template += `<tr><td>${min_size}</td>`;
     }
 
+    // create input fields for the number of shoes in a colour and size
     for (let k = 0; k < len; k++) {
       variation_template += `<td><input type="number" value="0"></td>`;
     }
+
+    // create totaling button for the row
     variation_template += `<td><input type="number" disabled value="0"></td><td>
     <input type="button" class="summation" value="Done"></td></tr>`;
   }
 
+  // close the table and append it to the page
   variation_template += `</table>`;
   fields[fields.length - 1].insertAdjacentHTML("afterend", variation_template);
 
+  // get all totalling button s and add functionality
   const summation_buttons = document.querySelectorAll(".summation");
-  console.log(summation_buttons);
 
   summation_buttons.forEach((element) => {
     element.addEventListener("click", function () {
+      // get row to be totalled  and columns
       const parent = element.closest("tr");
       const siblings = parent.getElementsByTagName("td");
+
+      // put functionality for final tallying
       if (siblings[0].innerHTML == "Total") {
+        // iterate between columns
         for (let r = 0; r <= colours.length; r++) {
-          console.log(r, r == colours.length);
           let sum = 0;
 
           if (r == colours.length) {
@@ -88,23 +101,31 @@ next_stock_details.addEventListener("click", function (e) {
             fields[6].getElementsByTagName("input")[0].value =
               JSON.stringify(stock_json);
           } else if (r < colours.length) {
+            // iterate between variation object colors
             for (const [key, val] of Object.entries(stock_json)) {
+              // get summation of the color in each size
               sum += +val[`${colours[r].value}`];
             }
+
+            // make summation of color visible
             siblings[r + 1].getElementsByTagName("input")[0].value = sum;
           }
         }
         console.log("done");
       } else {
+        // initailze sum and size object to store the color variation
         let sum = 0;
         let size = {};
+
+        // iterate between color columns
         for (let i = 1; i < siblings.length - 2; i++) {
+          // get size number and update summation
           size[`${colours[i - 1].value}`] =
             +siblings[i].getElementsByTagName("input")[0].value;
           sum += +siblings[i].getElementsByTagName("input")[0].value;
         }
-        console.log(size);
 
+        // show total tally for the row
         siblings[siblings.length - 2].getElementsByTagName("input")[0].value =
           sum;
 

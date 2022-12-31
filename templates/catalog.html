@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/static/style.css" />
+    <script defer src="/static/home.js"></script>
+    <title>Document</title>
+  </head>
+  <body
+    style="
+      margin: 0em;
+      font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    "
+  >
+    <h2>Welcome Margaret Kamau</h2>
+
+    <div class="contain" id="available">
+      <h3 style="grid-column: span 5">Available stock</h3>
+      <div class="hometitle">
+        <h5 style="grid-column: 1">Name</h5>
+        <h5>Sizes</h5>
+        <h5>Colours</h5>
+        <h5>Amount</h5>
+        <h5></h5>
+      </div>
+      {% for product in products %}
+      <div class="homedata">
+        <p class="start">{{product.name}}</p>
+        <p>{% for size in product.size_range %} {{size}} {% endfor %}</p>
+        <p>{% for colour in product.colours %} {{color}} {% endfor %}</p>
+        <p>{{product.amount}}</p>
+        <button>Show details</button>
+        <div class="hidden">
+          {% for size in product.variation %}
+          <div class="availdata">
+            {# Render size variation#}
+            <p>{{size}}</p>
+            <div class="coldata">
+              {%set colours = product.variation[size] %} {% for color in colours
+              %}
+              <div>
+                <p>{{color}}</p>
+                <p>{{colours[color]}}</p>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </body>
+</html>

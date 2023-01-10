@@ -10,9 +10,9 @@ avail_data.forEach((btn) => {
     btn.nextElementSibling.classList.toggle("hidden");
     btn.nextElementSibling.classList.toggle("par-availdata");
     if (btn.nextElementSibling.classList.contains("hidden")) {
-      btn.innerHTML = "show details";
+      btn.innerHTML = "Show";
     } else {
-      btn.innerHTML = "hide details";
+      btn.innerHTML = "Hide";
     }
   });
   console.log(btn.nextElementSibling);

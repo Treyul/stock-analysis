@@ -5,46 +5,88 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/static/style.css" />
+    <link rel="stylesheet" href="/static/sales.css" />
     <script defer src="/static/salescript.js"></script>
     <title>Document</title>
   </head>
   <body>
-    <div id="Sales_data">
-      <div class="Sale_name">
-        <input type="text" placeholder="Product name" />
-        <div class="Sale_sizes">
-          <div>
-            <input
-              style="align-self: center"
-              type="number"
-              placeholder="Size"
-            />
-            <div id="Sale_Colour">
-              <div>
-                <input type="text" placeholder="Colour" />
-                <input type="number" placeholder="Sold" />
-              </div>
-              <div>
-                <input type="text" placeholder="Colour" />
-                <input type="number" placeholder="Sold" />
-              </div>
+    <div id="error" class="hide"></div>
 
-              <input type="button" class="add_sale" value="Add colour" />
-              <input type="button" class="rem_sale" value="Delete colour" />
-            </div>
-          </div>
+    <form style="display: inline">
+      {{form.csrf_token()}} {% for field in form if fieldname != "crsf_token" %}
+      <div style="display: inline">{{field.label()}}{{field}}</div>
+      {%endfor%}
+    </form>
+    {% if sales %}
+    <!-- <div id="records"> -->
+    <table>
+      <tr>
+        <!-- <div class="record--rows title"> -->
+        <th>Product</th>
+        <th>Size</th>
+        <th>Colour</th>
+        <th>shop_no</th>
+        <th>Status</th>
+        <th>Paid</th>
+      </tr>
+      {% for sale in sales %}
+      <tr>
+        <!-- <div class="record--rows"> -->
+        <td>{{sale.product}}</td>
+        <td>{{sale.size}}</td>
+        <td>{{sale.colour}}</td>
+        <td>{{sale.shop_no}}</td>
+        <td>{{sale.status}}</td>
+        <td>{{sale.paid}}</td>
+        <td><input type="button" value="Change status" class="status" /></td>
+        <!-- </div> -->
+      </tr>
+      {% endfor %}
+    </table>
+    <!-- </div> -->
 
-          <input type="button" class="add_sale" value="add Size Sold" />
-          <input
-            type="button"
-            class="rem_sale align"
-            value="Delete Size Sold"
-          />
-        </div>
-      </div>
-      <input type="button" class="add_sale" value="Add Product Sold" />
-      <input type="button" class="rem_sale align" value="Delete Product Sold" />
-    </div>
-    <input type="submit" href="/sales" id="sales" value="Submit Sales data" />
+    {% else %}
+    <div>No sales today</div>
+    {% endif %}
   </body>
 </html>
+
+<!-- <div id="error" class="hide success">This is an success</div> -->
+<!-- 
+  <div id="Sales_data">
+    <div class="Sale_name">
+      <input type="text" placeholder="Product name" />
+      <div class="Sale_sizes">
+        <div>
+          <input
+            style="align-self: center"
+            type="number"
+            placeholder="Size"
+          />
+          <div id="Sale_Colour">
+            <div>
+              <input type="text" placeholder="Colour" />
+              <input type="number" placeholder="Sold" />
+            </div>
+            <div>
+              <input type="text" placeholder="Colour" />
+              <input type="number" placeholder="Sold" />
+            </div>
+
+            <input type="button" class="add_sale" value="Add colour" />
+            <input type="button" class="rem_sale" value="Delete colour" />
+          </div>
+        </div>
+
+        <input type="button" class="add_sale" value="add Size Sold" />
+        <input
+          type="button"
+          class="rem_sale align"
+          value="Delete Size Sold"
+        />
+      </div>
+    </div>
+    <input type="button" class="add_sale" value="Add Product Sold" />
+    <input type="button" class="rem_sale align" value="Delete Product Sold" />
+  </div>
+  <input type="submit" href="/sales" id="sales" value="Submit Sales data" /> -->

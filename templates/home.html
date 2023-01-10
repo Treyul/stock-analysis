@@ -21,6 +21,7 @@
       <a href="/sales">Update sales</a>
     </div>
 
+    {% if products %}
     <div class="contain" id="available">
       <h3 style="grid-column: span 5">Available stock</h3>
       <div class="hometitle">
@@ -33,10 +34,10 @@
       {% for product in products %}
       <div class="homedata">
         <p class="start">{{product.name}}</p>
-        <p>{% for size in product.size_range %} {{size}} {% endfor %}</p>
-        <p>{% for colour in product.colours %} {{color}} {% endfor %}</p>
+        <p>{% for size in product.size_range %} {{size}}, {% endfor %}</p>
+        <p>{% for colour in product.colours %} {{colour}}, {% endfor %}</p>
         <p>{{product.amount}}</p>
-        <button>Show details</button>
+        <button>Show</button>
         <div class="hidden">
           {% for size in product.variation %}
           <div class="availdata">
@@ -57,6 +58,9 @@
       </div>
       {% endfor %}
     </div>
+    {%else%}
+    <div>No stock available</div>
+    {%endif%}
     <div class="contain" id="pending">
       <h3 style="grid-column: span 5">Stock pending arrival</h3>
       <div class="hometitle">

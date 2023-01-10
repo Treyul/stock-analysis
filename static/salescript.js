@@ -1,10 +1,74 @@
 "use strict";
 
-const sale_records = document.getElementById("Sales_data");
-let add_sales = document.querySelectorAll(".add_sale");
-const sales = document.getElementById("sales");
+// const sale_records = document.getElementById("Sales_data");
+// let add_sales = document.querySelectorAll(".add_sale");
+// const sale = { sales };
+const Add = document.getElementById("add_sale");
 
-const add_events = (addbtns, no) => {
+Add.addEventListener("click", function (e) {
+  e.preventDefault();
+  console.log("print");
+
+  let saledata = {};
+  const product = document.getElementById("product");
+  const name = document.getElementById("name");
+  const size = document.getElementById("size");
+  const colour = document.getElementById("colour");
+  const status = document.getElementById("status");
+  const paid = document.getElementById("paid");
+
+  const product_data = {
+    color: `${colour.value}`,
+    status: `${status.checked}`,
+    paid: `${paid.checked}`,
+    name: `${name.value}`,
+  };
+
+  saledata[product.value] = {};
+  saledata[product.value][size.value] = product_data;
+
+  let response = fetch("/sales", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(saledata),
+  }).then(function (response) {
+    if (response.status !== 200) {
+      console.log("ERROR");
+    }
+    response.json().then(function (data) {
+      if (data["message"] == "error") {
+        const error = document.getElementById("error");
+
+        error.innerHTML = data["error"];
+        error.classList.remove("hide");
+        error.classList.add("error");
+        product.innerHTML = "";
+        name.innerHTML = "";
+        size.innerHTML = 0;
+        colour.innerHTML = "";
+        setTimeout(function () {
+          console.log("test");
+          error.classList.add("hide");
+        }, 5000);
+      } else if (data["message"] != "error") {
+        error.innerHTML = "Successfully added sale";
+        error.classList.remove("hide");
+        error.classList.add("success");
+        product.value = "";
+        name.value = "";
+        size.value = 0;
+        colour.value = "";
+        console.log("passed");
+
+        setTimeout(function () {
+          error.classList.add("hide");
+        }, 5000);
+      }
+    });
+  });
+});
+
+/*const add_events = (addbtns, no) => {
   addbtns.forEach((element) => {
     element.addEventListener("click", function () {
       const parent = element.closest("div");
@@ -74,8 +138,15 @@ sales.addEventListener("click", function (e) {
       console.log("ERROR");
     }
     response.json().then(function (data) {
-      console.log(data);
+      console.log(data["message"]);
+      if (data["message"] == "error") {
+        const error = document.getElementById("error");
+
+        error.innerHTML = data["error"];
+        error.classList.remove("hidden");
+      }
     });
   });
   console.log(saledata);
 });
+*/

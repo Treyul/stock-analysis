@@ -204,10 +204,14 @@ input[type="number"] {
 .homedata {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-  justify-items: center;
+  /* justify-items: center; */
+  width: 100%;
   grid-column: span 5;
   justify-content: space-around;
   border-bottom: 1px grey solid;
+}
+.homedata > p {
+  text-align: center;
 }
 .hometitle {
   grid-column: span 5;
@@ -290,7 +294,7 @@ button {
 }
 .par-availdata {
   border-top: 1px whitesmoke solid;
-  grid-column: span 5;
+  grid-column: 2 / span 4;
   display: flex;
   flex-wrap: wrap;
 }

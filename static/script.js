@@ -1,5 +1,10 @@
 "use strict";
 
+/*
+ *catch error for empty fields and incorrect max and min sizes when next page is clicked
+ *remove add color button when next page is clicked
+ *During tabulation ensure all done buttons are clicked before enabling submition of form
+ */
 const colours = document.getElementById("addColours");
 const type = document.getElementById("stock_type");
 const fields = document.querySelectorAll(".form");

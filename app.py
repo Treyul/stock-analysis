@@ -9,14 +9,18 @@ from flask.cli import FlaskGroup
 from flask_migrate import Migrate, MigrateCommand
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.mysql import LONGTEXT
-from datetime import datetime
 from hashlib import sha512
+from sqlalchemy import delete
+
+# imports for dates
+from datetime import datetime
+from datetime import date
 
 # import for flask forms
 from flask_wtf import CSRFProtect
-from form import AddStock, Type_of_Stock, Sales, credentials, Login, CreateAccount
+from form import AddStock, Type_of_Stock, Sales, credentials, Login, CreateAccount,Multi
 from flask_wtf import FlaskForm
-from wtforms import SelectField, StringField, FormField, EmailField, SelectMultipleField, IntegerField, SubmitField, TextAreaField, PasswordField, FieldList
+from wtforms import BooleanField,SelectField, StringField, FormField, EmailField, SelectMultipleField, IntegerField, SubmitField, TextAreaField, PasswordField, FieldList
 from wtforms.validators import DataRequired, email, NumberRange
 
 
@@ -27,6 +31,7 @@ from flask_login import UserMixin,LoginManager, login_user
 # from flask_sessions import Session
 
 # imports for mail
+# TODO catch sql error for lost connection and force a retrial
 
 app = Flask(__name__)
 
@@ -87,7 +92,9 @@ class Stock(db.Model):
 
     __tablename__ = 'stocklogs'
 
-    name = db.Column(db.String(50), primary_key=True, unique=False, nullable=False)
+    index = db.Column(db.Integer, index = True,primary_key = True, unique= True,nullable=False)
+
+    name = db.Column(db.String(50), unique=False, nullable=False)
 
     size_range = db.Column(LONGTEXT, nullable=False)
 
@@ -97,9 +104,9 @@ class Stock(db.Model):
 
     variation = db.Column(LONGTEXT, nullable=False)
 
-    date = db.Column(db.DateTime(), default=datetime.utcnow())
+    date = db.Column(db.Date(), default=date.today())
 
-    arrival_date = db.Column(db.DateTime(), default=datetime.utcnow())
+    depletion_date = db.Column(db.Date(), nullable = True)
 
     def __init__(self, name, size_range, colours, amount, variation, date):
 
@@ -109,13 +116,14 @@ class Stock(db.Model):
         self.amount = amount
         self.variation = variation
         self.date = date
+        # self.depletion_date = depletion_date
 
 
 class SalesLog(db.Model):
 
     __tablename__ = "sales_logs"
 
-    date_sold = db.Column(db.DateTime(), primary_key=True, default=datetime.utcnow(), nullable=False)
+    date_sold = db.Column(db.Date(), primary_key=True, default=date.today(), nullable=False)
 
     sold_data = db.Column(LONGTEXT, nullable=False)
 
@@ -132,8 +140,7 @@ class AvailableStock(db.Model):
 
     __tablename__ = "stock_available"
 
-    name = db.Column(db.String(50), primary_key=True,
-                     unique=True, nullable=False)
+    name = db.Column(db.String(50), primary_key=True,unique=True, nullable=False)
 
     size_range = db.Column(LONGTEXT, nullable=False)
 
@@ -143,7 +150,7 @@ class AvailableStock(db.Model):
 
     variation = db.Column(LONGTEXT, nullable=False)
 
-    date = db.Column(db.DateTime(), default=datetime.utcnow(), nullable=False)
+    date = db.Column(db.Date(), default=date.today(), nullable=False)
 
     def __init__(self, name, size_range, colours, amount, variation, date):
 
@@ -158,7 +165,9 @@ class LocalSales(db.Model):
 
     __tablename__ = "wholesale_sales"
 
-    product = db.Column(db.String(50),primary_key = True, nullable = False )
+    index = db.Column(db.Integer, index = True,primary_key = True, unique= True,nullable=False)
+
+    product = db.Column(db.String(50), nullable = False )
 
     size = db.Column(db.Integer, nullable = False)
 
@@ -166,21 +175,30 @@ class LocalSales(db.Model):
 
     shop_no = db.Column(db.String(10),nullable = False)
 
+    status = db.Column(db.Boolean, nullable = False )
+
     paid = db.Column(db.Boolean, nullable = False)
 
-    def __init__(self,product,size,collour,shop_no,paid):
+    date = db.Column(db.Date(), default= date.today(), nullable=False)
 
+    def __init__(self,product,size,colour,shop_no,status,paid,date):
+
+        # self.index = index
         self.product = product
         self.size = size
-        self.colour = collour
+        self.colour = colour
         self.shop_no = shop_no
+        self.status = status
         self.paid = paid
+        self.date = date
 
 class Ordered(db.Model):
 
     __tablename__ = "stock_ordered"
 
-    name = db.Column(db.String(50), primary_key=True, unique=False, nullable=False)
+    index = db.Column(db.Integer, index = True,primary_key = True, unique= True,nullable=False)
+
+    name = db.Column(db.String(50), unique=False, nullable=False)
 
     size_range = db.Column(LONGTEXT, nullable=False)
 
@@ -190,9 +208,9 @@ class Ordered(db.Model):
 
     variation = db.Column(LONGTEXT, nullable=False)
 
-    order_date = db.Column(db.DateTime(), default=datetime.utcnow())
+    order_date = db.Column(db.Date(), default=date.today())
 
-    arrival_date = db.Column(db.DateTime(), nullable = True)
+    arrival_date = db.Column(db.Date(), nullable = True)
 
 
     def __init__(self, name, size_range, colours, amount, variation, order_date, arrival_date):
@@ -223,16 +241,26 @@ class Ordered(db.Model):
 
 class Wholesale(FlaskForm):
 
-    product = StringField("Product name", validators=[DataRequired()])
+    product = StringField("Product name", validators=[DataRequired()], render_kw={"placeholder":"Item"})
 
-    name = StringField("Shop name", validators=[DataRequired()])
+    name = StringField("Shop name", validators=[DataRequired()], render_kw={"placeholder":"Shop no/Name"})
 
-    size = IntegerField("size", validators=[DataRequired()])
+    size = IntegerField("size", validators=[DataRequired()], render_kw={"placeholder":"Size"})
 
-    colour = StringField("colur",validators=[DataRequired()])
+    colour = StringField("Color",validators=[DataRequired()], render_kw={"placeholder":"Color"})
 
-    paid = StringField("paid",validators=[DataRequired()])
+    status = BooleanField("Status",default=False,render_kw={"placeholder":"Color"})
 
+    paid = BooleanField("paid",default = False)
+
+    add_sale = SubmitField("Add sale")
+
+
+class salesform(FlaskForm):
+
+    stock_sold = FieldList(FormField(Wholesale), min_entries=1)
+
+    Submit_data = SubmitField("Submit Sales Data")
 
 
 # ****************************END OF FORMS ***************************
@@ -242,13 +270,18 @@ class Wholesale(FlaskForm):
 def index():
     
     products = AvailableStock.query.all()
-    print(products)
+    logs = Stock.query.all()
+    for log in logs:
+        print(log.name)
+    print(products,logs)
     for product in products:
         
         # convert json strings into objects
         product.size_range = json.loads(product.size_range)
         product.colours = json.loads(product.colours)
+        # print(product.name)
         product.variation = json.loads(product.variation)
+        # print(len(product.variation))
 
     return render_template("home.html",products = products)
 
@@ -318,7 +351,12 @@ def create():
 @app.route('/update', methods=['GET', 'POST'])
 # @login_required
 def update():
+    # TODO **last stocklog must be updated also so as to gt depletion date
     form = Type_of_Stock()
+    Stock_log = Stock.query.filter_by(name="test1").all()
+    print("here")
+    print(Stock_log)
+
     # col = Stock.query.with_entities(Stock.colours).all()
     # print(col)
     # form.stock_sold.colours.choices = []
@@ -342,12 +380,12 @@ def update():
             for am in col.values():
                 amount = amount + am
 
-        stock_details = Stock(name=name, size_range=sizes, colours=colour, amount=amount, variation=variation, date=datetime.utcnow())
+        stock_details = Stock(name=name, size_range=sizes, colours=colour, amount=amount, variation=variation, date=date.today())
 
         product = AvailableStock.query.filter_by(name=name).first()
 
         if not product:
-            product = AvailableStock(name=name, size_range=sizes, colours=colour, amount=amount, variation=variation, date=datetime.utcnow())
+            product = AvailableStock(name=name, size_range=sizes, colours=colour, amount=amount, variation=variation, date=date.today())
 
             db.session.add(product)
 
@@ -411,7 +449,7 @@ def update():
             product.amount = amount
 
             #update time when stock was last updated
-            product.date = datetime.utcnow()
+            product.date = date.today()
             
             db.session.commit()
 
@@ -439,8 +477,21 @@ def update():
 # @login_required
 def addStock():
 
+    # get current day sales
+    # TODO reverse list so that latest comes on top
+    day_sales = db.session.query(LocalSales).filter(LocalSales.date.like(f"%{date.today()}%")).all()
+    day_sale = LocalSales.query.all()
+    print(day_sales,date.today(),type(day_sale),day_sale[::-1])
+    print(delete(SalesLog).where(SalesLog.no_of_sales==2))
+
+    if day_sale:
+        print("***********NOT EMPTY **************")
+
+    
+
     if request.method == "POST":
         sales_data = request.get_json()
+        print(sales_data)
         sold = 0
 
         # Ensure that stock data provided is correct
@@ -448,13 +499,15 @@ def addStock():
 
             # check product exists
             stock = AvailableStock.query.filter_by(name=key).first()
+            # print(stock.variation)
 
             if not stock:
                 resp_msg = {"message": "error",
-                            "error": f"{key} does not exist"}
+                            "error": f"The product {key} does not exist"}
                 return resp_msg
 
             available_stock = json.loads(stock.variation)
+            available_sizes = json.loads(stock.size_range)
             # print(available_stock["23"])
             # print(available_stock[" 23"],"second")
             sold_stock = sales_data[key]
@@ -474,34 +527,89 @@ def addStock():
                     old_color = available_stock[size]
                     sold_color = sold_stock[size]
 
-                    for color in sold_color:
+                    color = sold_color["color"]
+                    shop = sold_color["name"]
+                    # covert status and paid strings to boolean values
+                    status = sold_color["status"]
+                    if status == "false":
+                        status = False
+                    elif status == "true":
+                        status = True
+                    paid = sold_color["paid"]
+                    if paid == "false":
+                        paid = False
+                    elif paid == "true":
+                        paid = True
+                    print("tis",shop)
 
-                        # catch error if color was not available
-                        if color not in old_color:
-                            resp_msg = {"message":"error","error":f"{color} in size {size} not found"}
-                            return resp_msg
+                    # Check if the color is available
+                    if color not in old_color:
+                        resp_msg = {"message":"error","error":f"The colour {color} in size {size} not found"}
+                        return resp_msg
+
+                    elif color in old_color:
+
+                        old_color[color] = old_color[color] - 1
                         
-                        elif color in old_color:
+                        if old_color[color] < 0:
+                            resp_msg = {"message":"error","error":f"Cannot have negative stock amount"}
+                            return resp_msg
+                        # delete color if it is depeleted
+                        elif old_color[color] == 0:
+                            del old_color[color]
 
-                            old_color[color] = old_color[color] - sold_color[color]
-                            amount_sold = amount_sold + sold_color[color]
-                            print(f"summation for sold {sold}, {amount_sold}")
+                            # test also if stock size is depleted
+                            if len(old_color) == 0:
+                                del available_stock[size]
 
-                            # catch error for negative entries
-                            if old_color[color] < 0:
-                                resp_msg = {"message":"error","error":f"Cannot have negative stock amount"}
+                                # Update size lists
+                                available_sizes.remove(size)
+                                print(available_sizes)
+
+
+                            # test if the stock id depleted altogether
+                            if len(available_stock) == 0:
+                                AvailableStock.query.filter_by(name=key).delete()
+                                db.session.commit()
+                                print("****************************************")
+                                # print(Stock_log)
+                                # Stock_log.depletion_date = date.today()
+                                db.session.commit()
+                                resp_msg = {"message":"success","success":f"The ${key} is depleted"}
+
+                                # print(SalesL)
                                 return resp_msg
+
+                        # TODO delete object from variation
+                        # elif old_color[color]  == 0
+                        #     return
+
+                        # upload sale to database
+                        sale = LocalSales(product=key,size=size,colour=color,shop_no=shop,paid=paid,status=status,date=date.today())
+
+                        db.session.add(sale)
+                        db.session.commit()
+
+                        # update available stock
+                        # TODO if amount is zero delete row
+                        # stock.amount = stock.amount - 1
+                        # stock.variation = json.dumps(available_stock)
+                        # stock.date = date.today()
 
                             # TODO remove stock color and sizes and product altogether if depleted
 
                            
             sold = sold + amount_sold
             # update stock amount remaining, variation, date
-            stock.amount = stock.amount - amount_sold
+            stock.amount = stock.amount - 1
+
+            # if stock.amount
 
             stock.variation = json.dumps(available_stock)
 
-            stock.date = datetime.utcnow()
+            stock.date = date.today()
+
+            stock.sizes = json.dumps(available_sizes)
 
             db.session.commit()
                             
@@ -511,21 +619,66 @@ def addStock():
                 
 
             # TODO check sold <= remaining
-        resp_msg = {"messagee""success"}
+        resp_msg = {"message":"success"}
         # for key in sales_data:
         sales_data =  json.dumps(sales_data)
 
-        sales = SalesLog(date_sold=datetime.utcnow(),
-                         sold_data=sales_data, no_of_sales=sold)
 
-        db.session.add(sales)
+        return resp_msg
 
-        db.session.commit()
+                    # for color in sold_color:
 
-    return render_template("record.html")
+                    #     # catch error if color was not available
+                    #     if color not in old_color:
+                    #         resp_msg = {"message":"error","error":f"The colour {color} in size {size} not found"}
+                    #         return resp_msg
+                        
+                    #     elif color in old_color:
+
+                    #         old_color[color] = old_color[color] - sold_color[color]
+                    #         amount_sold = amount_sold + sold_color[color]
+                    #         print(f"summation for sold {sold}, {amount_sold}")
+
+                    #         # catch error for negative entries
+                    #         if old_color[color] < 0:
+                    #             resp_msg = {"message":"error","error":f"Cannot have negative stock amount"}
+                    #             return resp_msg
+
+        # sales = SalesLog(date_sold=date.today(),
+        #                  sold_data=sales_data, no_of_sales=sold)
+
+        # db.session.add(sales)
+
+        # db.session.commit()
+
+    return render_template("record.html",form=Wholesale(),sales = day_sale[::-1])
 
 
+@app.route("/test", methods=['GET', 'POST'])
+def test():
+    form = Wholesale()
 
+    # print("passes")
+
+    if form.validate_on_submit():
+        print("passed")
+        print(form.is_submitted())
+
+        product = form.product.data
+        name = form.name.data
+        size = form.size.data
+        color = form.colour.data
+        payment = form.paid.data
+        status = form.status.data
+
+        print(status,request.method)
+
+    return render_template("test.html",form = form)
+    
+@app.route("/changestatus")
+def status():
+    response_message = {"message":"success"}
+    return response_message
 # def create_app(config_file):
 
 #     # app = Flask(__name__)

@@ -4,7 +4,120 @@
 // let add_sales = document.querySelectorAll(".add_sale");
 // const sale = { sales };
 const Add = document.getElementById("add_sale");
+const return_status = document.querySelectorAll(".return");
+const pay_status = document.querySelectorAll(".paid");
 
+return_status.forEach((element) => {
+  element.addEventListener("click", function () {
+    // get status value
+    let value = element.previousElementSibling.innerHTML;
+
+    let bool = false;
+
+    // if status is false
+    if (value == "False") {
+      bool = confirm("Do you want to change status to returned");
+    } else {
+      bool = confirm("Do you want to change status to not returned");
+    }
+
+    if (bool == true) {
+      // declare object to be sent to servers and set its properties
+      const parent = element.closest("tr").cells;
+      element.insertAdjacentHTML(
+        "afterend",
+        `<i class="fa-solid fa-spinner fa-spin-pulse"></i>`
+      );
+      element.classList.add("hidden");
+      // element.setAttribute("d")
+      let sale_data = {};
+      // const sales_data{"name","data"} = "yes",
+      sale_data["name"] = parent[0].innerHTML;
+      sale_data["size"] = parent[1].innerHTML;
+      sale_data["colour"] = parent[2].innerHTML;
+      sale_data["shop"] = parent[3].innerHTML;
+      sale_data["return"] = value;
+      sale_data["pay"] = parent[5].firstElementChild.innerHTML;
+
+      // fetch endpoint
+      let response = fetch("/changereturn", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(sale_data),
+      }).then(function (response) {
+        if (response.status != 200) {
+          console.log("ERROR");
+        }
+        response.json().then(function (data) {
+          if ((data["message"] = "success")) {
+            alert("successfully changed status");
+            element.previousElementSibling.innerHTML =
+              "returned" == value ? "False" : "returned";
+            element.classList.remove("hidden");
+            element.nextElementSibling.remove();
+            // element.removeAttribute("disabled")
+          }
+          console.log(data);
+        });
+      });
+    }
+  });
+});
+
+// Change status of payments
+pay_status.forEach((element) => {
+  element.addEventListener("click", function () {
+    // get status value
+    let value = element.previousElementSibling.innerHTML;
+
+    let bool = false;
+
+    // if status is false
+    if (value == "False") {
+      bool = confirm("Do you want to change status to paid");
+    } else {
+      bool = confirm("Do you want to change status to not paid");
+    }
+    if (bool == true) {
+      // Fetch endpoint from server
+      console.log("print stat ");
+      const parent = element.closest("tr").cells;
+      element.insertAdjacentHTML(
+        "afterend",
+        `<i class="fa-solid fa-spinner fa-spin-pulse"></i>`
+      );
+      element.classList.add("hidden");
+      console.log(parent);
+      let sale_data = {};
+      // set properties of the sale to be changed status
+      sale_data["name"] = parent[0].innerHTML;
+      sale_data["size"] = parent[1].innerHTML;
+      sale_data["colour"] = parent[2].innerHTML;
+      sale_data["shop"] = parent[3].innerHTML;
+      sale_data["return"] = parent[4].firstElementChild.innerHTML;
+      sale_data["pay"] = value;
+      let response = fetch("changepay", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(sale_data),
+      }).then(function (response) {
+        if (response.status != 200) {
+          console.log("ERROR");
+        }
+        response.json().then(function (data) {
+          if ((data["message"] = "success")) {
+            element.previousElementSibling.innerHTML =
+              "paid" == value ? "False" : "paid";
+            element.nextElementSibling.remove();
+            alert("successfully changed status");
+          }
+          console.log(data);
+        });
+      });
+    }
+    // console.log(bool);
+  });
+});
 Add.addEventListener("click", function (e) {
   e.preventDefault();
   console.log("print");
@@ -19,7 +132,7 @@ Add.addEventListener("click", function (e) {
 
   const product_data = {
     color: `${colour.value}`,
-    status: `${status.checked}`,
+    // status: `${status.checked}`,
     paid: `${paid.checked}`,
     name: `${name.value}`,
   };

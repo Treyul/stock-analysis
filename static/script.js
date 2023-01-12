@@ -5,13 +5,14 @@
  *remove add color button when next page is clicked
  *During tabulation ensure all done buttons are clicked before enabling submition of form
  */
-const colours = document.getElementById("addColours");
+const colour = document.getElementById("addColours");
 const type = document.getElementById("stock_type");
 const fields = document.querySelectorAll(".form");
 const next_stock_details = document.getElementById("add_stock_next");
 const list = document.getElementById("colours");
 const form = document.getElementById("form_add_stock");
 const submit = document.getElementById("stock_det");
+document.getElementsByTagName;
 const clothes = fields[2];
 const max_shoes = fields[3];
 const min_shoes = fields[4];
@@ -25,6 +26,9 @@ hide(fields[7]);
 hide(fields[6]);
 
 type.addEventListener("input", function () {
+  if (type.value == "Shoes") {
+  } else if (type.value == "Clothes") {
+  }
   clothes.classList.toggle("hidden");
   max_shoes.classList.toggle("hidden");
   min_shoes.classList.toggle("hidden");
@@ -34,6 +38,8 @@ type.addEventListener("input", function () {
 
 next_stock_details.addEventListener("click", function (e) {
   next_stock_details.classList.add("hidden");
+  colour.classList.add("hidden");
+  colour.classList.remove("add_sale");
   submit.classList.remove("hidden");
   e.preventDefault();
 
@@ -144,7 +150,7 @@ next_stock_details.addEventListener("click", function (e) {
 });
 
 let count = 1;
-colours.addEventListener("click", function (e) {
+colour.addEventListener("click", function (e) {
   e.preventDefault();
   let label = `colours-${count}`;
 

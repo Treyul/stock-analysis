@@ -24,10 +24,13 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
 }
+#add_sale {
+  grid-column: 5/6;
+}
 .record--rows {
   grid-column: span 6;
   display: grid;
-  grid-template-columns: 1fr 0.5fr 1fr 1fr 0.75fr 0.75fr 1fr;
+  grid-template-columns: 1fr 0.5fr 1fr 1fr 0.75fr 0.75fr;
   text-align: center;
 }
 #records > .title {
@@ -39,7 +42,49 @@
   margin: auto;
   border-radius: 45px;
   transition: opacity ease 3s;
-  padding: 0.5rem 0.75rem;
+  /* padding: 0.5rem 0.75rem; */
+  background-color: lightgreen;
+  color: white;
+}
+body {
+  margin: 0px;
+}
+th,
+td {
+  padding: 0.25rem;
+  border: 1px solid black;
+}
+form {
+  display: flex;
+  width: 100%;
+  /* flex: auto 1 1; */
+  margin-bottom: 0.5rem;
+  flex-wrap: nowrap;
+  display: grid;
+  grid-template-columns: 1fr 0.5fr 0.125fr 0.5fr 0.125fr;
+  row-gap: 1em;
+}
+form > input {
+  border: none;
+  border-bottom: 1px solid gray;
+  text-align: center;
+  margin-left: 0.5rem;
+  flex-basis: 3rem;
+  width: 5rem;
+}
+table {
+  border-collapse: collapse;
+  text-align: center;
+  margin: auto;
+}
+td > input[type="button"] {
+  border: none;
+  width: fit-content;
+  text-align: center;
+  margin: auto;
+  border-radius: 45px;
+  transition: opacity ease 3s;
+  /* padding: 0.5rem 0.75rem; */
   background-color: lightgreen;
   color: white;
 }

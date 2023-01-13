@@ -23,7 +23,7 @@ from datetime import date
 from flask_wtf import CSRFProtect
 from form import AddStock, Type_of_Stock, Sales, credentials, Login, CreateAccount,Multi
 from flask_wtf import FlaskForm
-from wtforms import BooleanField,SelectField, StringField, FormField, EmailField, SelectMultipleField, IntegerField, SubmitField, TextAreaField, PasswordField, FieldList
+from wtforms import BooleanField,SelectField, StringField, FormField, EmailField, SelectMultipleField, IntegerField, SubmitField, TextAreaField, PasswordField, FieldList,SearchField
 from wtforms.validators import DataRequired, email, NumberRange
 
 
@@ -53,6 +53,8 @@ app = Flask(__name__)
 app.debug = True
 app.config['SECRET_KEY'] = 'testing'
 app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://b4efcd84e73da2:2d8fc5cf@us-cdbr-east-06.cleardb.net/heroku_4b7312ec17a7f3c"
+app.config['SQLALCHEMY_POOL_RECYCLE'] = 299
+# app.config['SQLALCHEMY_POOL_TIMEOUT'] = 20
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 # app.config['SESSION_PERMANENT']= False 
 # app.config['SESSION_TYPE'] = 'filesystem'
@@ -63,192 +65,16 @@ cli = FlaskGroup(app)
 manager = LoginManager()
 manager.login_view = "login"
 # manager = Manager(app)
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
+# db = SQLAlchemy(app)
 cli.add_command('db', MigrateCommand)
 
-#  ******************** DATABASE MODELS   *********************
-
-class user(db.Model, UserMixin):
-
-    __tablename__ = "user"
-
-    username = db.Column(db.String(255), primary_key=True,unique=True, nullable=False)
-
-    password = db.Column(db.Text(), nullable=False)
-
-    def __init__(self, username, password):
-        self.username = username
-        self.password = password
-
-    def create_password(self, password):
-
-        self.password = sha512(password.encode()).hexdigest()
-
-    def check_password(self, password):
-
-        provided_pass = sha512(password.encode()).hexdigest()
-
-        # compare the passwords
-        if provided_pass != self.password:
-            return False
-        elif provided_pass == self.password:
-            return True
-        else:
-            return 404
-
-    # @manager.user_loader
-    # def load_user(user_id):
-    #     return db.session.query(user).get(user_id)
-
-
-class Stock(db.Model):
-
-    __tablename__ = 'stocklogs'
-
-    index = db.Column(db.Integer, index = True,primary_key = True, unique= True,nullable=False)
-
-    name = db.Column(db.String(50), unique=False, nullable=False)
-
-    size_range = db.Column(LONGTEXT, nullable=False)
-
-    colours = db.Column(LONGTEXT, nullable=False)
-
-    amount = db.Column(db.Integer, nullable=False)
-
-    variation = db.Column(LONGTEXT, nullable=False)
-
-    date = db.Column(db.Date(), default=date.today())
-
-    depletion_date = db.Column(db.Date(), nullable = True)
-
-    def __init__(self, name, size_range, colours, amount, variation, date):
-
-        self.name = name
-        self.size_range = size_range
-        self.colours = colours
-        self.amount = amount
-        self.variation = variation
-        self.date = date
-        # self.depletion_date = depletion_date
-
-
-class SalesLog(db.Model):
-
-    __tablename__ = "sales_logs"
-
-    date_sold = db.Column(db.Date(), primary_key=True, default=date.today(), nullable=False)
-
-    sold_data = db.Column(LONGTEXT, nullable=False)
-
-    no_of_sales = db.Column(db.Integer, nullable=False)
-
-    def __init__(self, date_sold, sold_data, no_of_sales):
-
-        self.date_sold = date_sold
-        self.sold_data = sold_data
-        self.no_of_sales = no_of_sales
-
-
-class AvailableStock(db.Model):
-
-    __tablename__ = "stock_available"
-
-    name = db.Column(db.String(50), primary_key=True,unique=True, nullable=False)
-
-    size_range = db.Column(LONGTEXT, nullable=False)
-
-    colours = db.Column(LONGTEXT, nullable=False)
-
-    amount = db.Column(db.Integer, nullable=False)
-
-    variation = db.Column(LONGTEXT, nullable=False)
-
-    date = db.Column(db.Date(), default=date.today(), nullable=False)
-
-    def __init__(self, name, size_range, colours, amount, variation, date):
-
-        self.name = name
-        self.size_range = size_range
-        self.colours = colours
-        self.amount = amount
-        self.variation = variation
-        self.date = date
-
-class LocalSales(db.Model):
-
-    __tablename__ = "wholesale_sales"
-
-    index = db.Column(db.Integer, index = True,primary_key = True, unique= True,nullable=False)
-
-    product = db.Column(db.String(50), nullable = False )
-
-    size = db.Column(db.Integer, nullable = False)
-
-    colour = db.Column(db.String(50), nullable = False)
-
-    shop_no = db.Column(db.String(10),nullable = False)
-
-    status = db.Column(db.Boolean, nullable = False )
-
-    paid = db.Column(db.Boolean, nullable = False)
-
-    date = db.Column(db.Date(), default= date.today(), nullable=False)
-
-    def __init__(self,product,size,colour,shop_no,status,paid,date):
-
-        # self.index = index
-        self.product = product
-        self.size = size
-        self.colour = colour
-        self.shop_no = shop_no
-        self.status = status
-        self.paid = paid
-        self.date = date
-
-class Ordered(db.Model):
-
-    __tablename__ = "stock_ordered"
-
-    index = db.Column(db.Integer, index = True,primary_key = True, unique= True,nullable=False)
-
-    name = db.Column(db.String(50), unique=False, nullable=False)
-
-    size_range = db.Column(LONGTEXT, nullable=False)
-
-    colours = db.Column(LONGTEXT, nullable=False)
-
-    amount = db.Column(db.Integer, nullable=False)
-
-    variation = db.Column(LONGTEXT, nullable=False)
-
-    order_date = db.Column(db.Date(), default=date.today())
-
-    arrival_date = db.Column(db.Date(), nullable = True)
-
-
-    def __init__(self, name, size_range, colours, amount, variation, order_date, arrival_date):
-
-        self.name = name
-        self.size_range = size_range
-        self.colours = colours
-        self.amount = amount
-        self.variation = variation
-        self.order_date = order_date
-        self.arrival_date = arrival_date
+#  ******************** DATABASE MODELS imports   *********************
+from model import *
+migrate = Migrate(app, db)
+db.init_app(app)
 
 # db.create_all()
 #   **********************  END OF DATABASE MODELS ************************
-
-# define decorator func to verify login
-# def loginreq(func):
-
-#     def required():
-#         if not session.get("logged_in"):
-#             return redirect("/login")
-#         func()
-
-#     return required
 
 
 #   **************************  CREATE FORMS ********************************
@@ -263,7 +89,7 @@ class Wholesale(FlaskForm):
 
     colour = StringField("Color",validators=[DataRequired()], render_kw={"placeholder":"Color"})
 
-    # status = BooleanField("Status",default=False,render_kw={"placeholder":"Color"})
+    # status = BooleanField("Status",default=False,render_kw={"placeholder":"Color"}) 
 
     paid = BooleanField("paid",default = False)
 
@@ -274,7 +100,13 @@ class salesform(FlaskForm):
 
     stock_sold = FieldList(FormField(Wholesale), min_entries=1)
 
-    Submit_data = SubmitField("Submit Sales Data")
+    # Submit_data = SubmitField("Submit Sales Data") 
+
+class Search(FlaskForm):
+
+    string = SearchField("Enter what to search",render_kw={"placeholder":"Search"})
+
+    submit = SubmitField("submit")
 
 
 # ****************************END OF FORMS ***************************
@@ -299,12 +131,12 @@ def index():
                 product.variation = json.loads(product.variation)
                 # print(len(product.variation))
             return render_template("home.html",products = products)
-        except (exc.SQLAlchemyError,exc.DBAPIError,OperationalError,ConnectionResetError):
-            pass
+        except (exc.DBAPIError,err.OperationalError,exc.SQLAlchemyError):
+            pass 
 
 
 
-@app.route("/catalog", methods=['POST', 'GET'])
+@app.route("/catalog", methods=['POST', 'GET']) 
 # @loginreq
 def catalog():
 
@@ -640,14 +472,15 @@ def addStock():
 
 
                     return resp_msg
-            except (exc.SQLAlchemyError,exc.DBAPIError,exc.DatabaseError,OperationalError,ConnectionResetError):
+            except (exc.DBAPIError,err.OperationalError,exc.SQLAlchemyError):
+                pass
 
-                if x == 3:
-                    resp_msg = {"message": "error","error": "PLease ensure you are connected to internet"}
-                    print("*************************CAUGHT*********************")
-                    return  resp_msg
-                else:
-                    continue
+                # if x == 3:
+                #     resp_msg = {"message": "error","error": "PLease ensure you are connected to internet"}
+                #     print("*************************CAUGHT*********************")
+                #     return  resp_msg
+                # else:
+                #     continue
 
 
                 
@@ -685,7 +518,7 @@ def addStock():
 
 @app.route("/test", methods=['GET', 'POST'])
 def test():
-    form = Wholesale()
+    form = Search()
 
     # print("passes")
 
@@ -713,8 +546,8 @@ def changepay():
 
         name,size,colour,shop,ret,pay = itemgetter("name","size","colour","shop","return","pay")(data)
         ret = json_bool(ret)
-        pay=json_bool(pay)
-
+        pay=json_bool(pay) 
+ 
         
         for i in range(3): 
             try: 
@@ -726,11 +559,15 @@ def changepay():
                 response_message = {"message":"success"}
                 return response_message
             except (exc.DBAPIError,err.OperationalError,exc.SQLAlchemyError):
-                pass
+                continue
+        
+        # ret
             
 @app.route("/changereturn",methods=["POST","GET"])
 def changereturn():
     if request.method == "POST":
+
+        response_message = {"message":"success","success":"successfully change status to return"}
 
         data = request.get_json()
         print(data)
@@ -743,18 +580,71 @@ def changereturn():
 
                 # set change into db and push it to remote db
                 sale = LocalSales.query.filter_by(product=name,size=size,colour=colour,shop_no=shop,status=ret,paid=pay).first()
+                
+                if not sale:
+                    response_message = {"message":"error","error":"There is an error with sale please refresh page"}
+                    return response_message
                 sale.status = not ret
                 # db.session.commit() 
 
                 # update available stock 
                 stock = AvailableStock.query.filter_by(name=name).first()
+                
+                # if stock was depleted
+                if not stock:
+
+                    stock = AvailableStock(name=name,size_range=size,colours=colour,amount=1,variation=variation,date=date.today())
+
+                    db.session.add(stock)
+                    db.session.commit()
+
+                    response_message = {"message":"success","success":"successfully change status to return"}
+                
+                variation = json.loads(stock.variation)
+ 
+                # if size not available
+                if not variation[size]:
+
+                    size_var ={}
+                    size_var[colour] = 1
+
+                    variation[size] = size_var
+
+                    # update variation
+                    stock.variation = json.dumps(variation)
+
+                    # update amount
+                    stock.amount = stock.amount + 1
+
+                    db.session.commit()
+
+                    return response_message
+
+                # else if color not available
+
                 stock.amount = stock.amount + 1
 
-                variation = json.loads(stock.variation)
                 # oscillate through the stock variation to update it
                 # get size variation
                 # TODO catch error for stock,size,colour depletion
                 size_var = variation[size]
+                
+                # if colour is not available 
+                if not size_var[colour]:
+                    size[colour] = 1 
+
+                    stock.amount = stock.amount + 1
+
+                    stock.variation = json.dumps(variation)
+
+                    if colour not in json.loads(stock.colours):
+                        colours = json.loads(stock.colours)
+                        colours.append(colour)
+
+                    db.session.commit()
+
+                    return response_message
+                
 
                 # from the size variation get colour variation and update it
                 size_var[colour] = size_var[colour] + 1
@@ -765,10 +655,12 @@ def changereturn():
 
                 # commit and push changes to db
                 db.session.commit()
-                response_message = {"message":"success"}
-                return {"message":"success"}
+                response_message = {"message":"success","success":"successfully change status to return"}
+                return response_message
             except (exc.DBAPIError,err.OperationalError,exc.SQLAlchemyError):
-                pass
+                return {"message":"error","error":"no internet"}
+                # continue
+
             
 # def create_app(config_file):
 

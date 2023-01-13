@@ -21,15 +21,15 @@
     </form>
     {% if sales %}
     <!-- <div id="records"> -->
-    <table>
-      <tr>
+    <table id="sales">
+      <tr id="sales_header">
         <!-- <div class="record--rows title"> -->
         <th>Product</th>
         <th>Size</th>
         <th>Colour</th>
         <th>shop_no</th>
         <th>Returned</th>
-        <th>Paid <i class="fa-solid fa-spinner fa-spin-pulse"></i></th>
+        <th>Paid</th>
       </tr>
       {% for sale in sales %}
       <tr>

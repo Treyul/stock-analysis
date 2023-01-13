@@ -1,23 +1,18 @@
-from flask import Flask
 
+from flask_migrate import Migrate, MigrateCommand
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+from sqlalchemy.dialects.mysql import LONGTEXT
 from hashlib import sha512
 from flask_login import UserMixin
+from datetime import date
+
 db = SQLAlchemy()
-
-# @login_manager.user_unauthorized
-# def load_user(user_id):
-#     return db.session.query(user).get(user_id)
-
-# from app import manager
 
 class user(db.Model, UserMixin):
 
     __tablename__ = "user"
 
-    username = db.Column(db.String(255), primary_key=True,
-                         unique=True, nullable=False)
+    username = db.Column(db.String(255), primary_key=True,unique=True, nullable=False)
 
     password = db.Column(db.Text(), nullable=False)
 
@@ -50,21 +45,21 @@ class Stock(db.Model):
 
     __tablename__ = 'stocklogs'
 
-    name = db.Column(db.String(50), primary_key=True,
-                     unique=False, nullable=False)
+    index = db.Column(db.Integer, index = True,primary_key = True, unique= True,nullable=False)
 
-    size_range = db.Column(db.JSON, nullable=False)
+    name = db.Column(db.String(50), unique=False, nullable=False)
 
-    colours = db.Column(db.JSON, nullable=False)
+    size_range = db.Column(LONGTEXT, nullable=False)
+
+    colours = db.Column(LONGTEXT, nullable=False)
 
     amount = db.Column(db.Integer, nullable=False)
 
-    variation = db.Column(db.JSON, nullable=False)
-    test = db.Column(db.JSON, nullable=False)
+    variation = db.Column(LONGTEXT, nullable=False)
 
-    date = db.Column(db.DateTime(), default=datetime.utcnow())
+    date = db.Column(db.Date(), default=date.today())
 
-    arrival_date = db.Column(db.DateTime(), default=datetime.utcnow())
+    depletion_date = db.Column(db.Date(), nullable = True)
 
     def __init__(self, name, size_range, colours, amount, variation, date):
 
@@ -74,16 +69,16 @@ class Stock(db.Model):
         self.amount = amount
         self.variation = variation
         self.date = date
+        # self.depletion_date = depletion_date
 
 
 class SalesLog(db.Model):
 
     __tablename__ = "sales_logs"
 
-    date_sold = db.Column(db.DateTime(), primary_key=True,
-                          default=datetime.utcnow())
+    date_sold = db.Column(db.Date(), primary_key=True, default=date.today(), nullable=False)
 
-    sold_data = db.Column(db.JSON, nullable=False)
+    sold_data = db.Column(LONGTEXT, nullable=False)
 
     no_of_sales = db.Column(db.Integer, nullable=False)
 
@@ -98,18 +93,17 @@ class AvailableStock(db.Model):
 
     __tablename__ = "stock_available"
 
-    name = db.Column(db.String(50), primary_key=True,
-                     unique=True, nullable=False)
+    name = db.Column(db.String(50), primary_key=True,unique=True, nullable=False)
 
-    size_range = db.Column(db.JSON, nullable=False)
+    size_range = db.Column(LONGTEXT, nullable=False)
 
-    colours = db.Column(db.JSON, nullable=False)
+    colours = db.Column(LONGTEXT, nullable=False)
 
     amount = db.Column(db.Integer, nullable=False)
 
-    variation = db.Column(db.JSON, nullable=False)
+    variation = db.Column(LONGTEXT, nullable=False)
 
-    date = db.Column(db.DateTime(), default=datetime.utcnow(), nullable=False)
+    date = db.Column(db.Date(), default=date.today(), nullable=False)
 
     def __init__(self, name, size_range, colours, amount, variation, date):
 
@@ -118,4 +112,108 @@ class AvailableStock(db.Model):
         self.colours = colours
         self.amount = amount
         self.variation = variation
+        self.date = date
+
+class LocalSales(db.Model):
+
+    __tablename__ = "wholesale_sales"
+
+    index = db.Column(db.Integer, index = True,primary_key = True, unique= True,nullable=False)
+
+    product = db.Column(db.String(50), nullable = False )
+
+    size = db.Column(db.Integer, nullable = False)
+
+    colour = db.Column(db.String(50), nullable = False)
+
+    shop_no = db.Column(db.String(10),nullable = False)
+
+    status = db.Column(db.Boolean, nullable = False )
+
+    paid = db.Column(db.Boolean, nullable = False)
+
+    date = db.Column(db.Date(), default= date.today(), nullable=False)
+
+    def __init__(self,product,size,colour,shop_no,status,paid,date):
+
+        # self.index = index
+        self.product = product
+        self.size = size
+        self.colour = colour
+        self.shop_no = shop_no
+        self.status = status
+        self.paid = paid
+        self.date = date
+
+class Ordered(db.Model):
+
+    __tablename__ = "stock_ordered"
+
+    index = db.Column(db.Integer, index = True,primary_key = True, unique= True,nullable=False)
+
+    name = db.Column(db.String(50), unique=False, nullable=False)
+
+    size_range = db.Column(LONGTEXT, nullable=False)
+
+    colours = db.Column(LONGTEXT, nullable=False)
+
+    amount = db.Column(db.Integer, nullable=False)
+
+    variation = db.Column(LONGTEXT, nullable=False)
+
+    order_price = db.Column(db.Integer,nullable=False)
+
+    shipping_co = db.Column(db.String(100),nullable=True)
+
+    comments = db.Column(LONGTEXT,nullable=True)
+
+    order_date = db.Column(db.Date(), default=date.today())
+
+    arrival_date = db.Column(db.Date(), nullable = True)
+
+
+    def __init__(self, name, size_range, colours, amount, variation,order_price, order_date, arrival_date):
+
+        self.name = name
+        self.size_range = size_range
+        self.colours = colours
+        self.amount = amount
+        self.variation = variation
+        self.order_price = order_price
+        self.order_date = order_date
+        self.arrival_date = arrival_date
+
+
+# table for retail sales
+class RetailSales(db.Model):
+
+    __tablename__   =  "retail_sales"
+
+    index = db.Column(db.Integer, index = True,primary_key = True, unique= True,nullable=False)
+
+    product = db.Column(db.String(50), nullable = False )
+
+    size = db.Column(db.Integer, nullable = False)
+
+    colour = db.Column(db.String(50), nullable = False)
+
+    shop_no = db.Column(db.String(10),nullable = False)
+
+    status = db.Column(db.Boolean, nullable = False )
+
+    paid = db.Column(db.Boolean, nullable = False)
+
+    amount = db.Column(db.Integer,nullable = True)
+
+    date = db.Column(db.Date(), default= date.today(), nullable=False)
+
+    def __init__(self,product,size,colour,shop_no,status,paid,date):
+
+        # self.index = index
+        self.product = product
+        self.size = size
+        self.colour = colour
+        self.shop_no = shop_no
+        self.status = status
+        self.paid = paid
         self.date = date

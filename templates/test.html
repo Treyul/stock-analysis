@@ -9,9 +9,7 @@
   </head>
   <body>
     <form style="display: inline">
-      {{form.csrf_token()}} {% for field in form if fieldname != "crsf_token" %}
-      <div style="display: inline">{{field}}</div>
-      {%endfor%}
+      {% for field in form if fieldname != "crsf_token" %} {{field}} {%endfor%}
     </form>
   </body>
 </html>

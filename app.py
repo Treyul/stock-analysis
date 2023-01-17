@@ -7,10 +7,8 @@ from flask.cli import FlaskGroup
 
 # import for database
 from flask_migrate import Migrate, MigrateCommand
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.dialects.mysql import LONGTEXT
-from hashlib import sha512
-from sqlalchemy import exc
+#  
+from sqlalchemy import exc,or_
 from pymysql import err
 from pymysql import OperationalError
 
@@ -32,6 +30,9 @@ from flask_login import UserMixin,LoginManager, login_user
 
 # imports for destructuring json obj
 from operator import itemgetter
+
+# import for env variables
+from os import getenv
 # import for session management
 # from flask_sessions import Session
 
@@ -45,7 +46,7 @@ def json_bool(value):
     else:
         return True
 
-
+print(getenv("ST_KEY"))
 
 app = Flask(__name__)
 
@@ -119,6 +120,11 @@ def index():
         try:
             products = AvailableStock.query.all()
             logs = Stock.query.all()
+            sale = db.session.query(LocalSales).filter(or_(LocalSales.shop_no.like("test11"),LocalSales.shop_no.like(""))).all()
+            # sale = LocalSales.query.filter_by(shop_no.like(""),shop_no.like("test8"))
+            print(sale)
+            print("*******")
+            print(getenv("ST_KEY"))
             for log in logs:
                 print(log.name)
             print(products,logs)

@@ -54,10 +54,12 @@
 body {
   margin: 0px;
 }
-th,
-td {
-  padding: 0.25rem;
+th {
   border: 1px solid black;
+}
+td {
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid black;
 }
 form {
   display: flex;
@@ -67,7 +69,7 @@ form {
   flex-wrap: nowrap;
   display: grid;
   width: 393px;
-  grid-template-columns: 1fr 0.5fr 0.25fr 1fr;
+  grid-template-columns: 6em 5em 3em 5em;
   row-gap: 1em;
 }
 form > input {
@@ -100,4 +102,7 @@ td > p {
 }
 .hidden {
   display: none;
+}
+td:nth-child(n +5) {
+  border-left: 1px solid black;
 }

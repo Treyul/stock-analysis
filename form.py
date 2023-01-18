@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 
-from wtforms import SelectField, StringField, FormField, EmailField, SelectMultipleField, IntegerField, SubmitField, TextAreaField, PasswordField, FieldList
+from wtforms import HiddenField,SelectField, StringField, FormField, EmailField, SelectMultipleField, IntegerField, SubmitField, TextAreaField, PasswordField, FieldList
 
 from wtforms.validators import DataRequired, email, NumberRange
 
@@ -22,7 +22,7 @@ class Login(FlaskForm):
 
     password = PasswordField("Paasword", validators=[DataRequired()], render_kw={"placeholder": "password"})
     
-    Submit = SubmitField("Create account")
+    Submit = SubmitField("Login")
 # form for account creation
 
 
@@ -55,17 +55,21 @@ class Type_of_Stock(FlaskForm):
 
     name = StringField("Name of stock: ", validators=[DataRequired()], render_kw={"placeholder": "Product name"})
 
-    stock_type = SelectField(u'Type', choices=[('Clothes', 'Clothing'), ('Shoes', 'Shoes')], validators=[DataRequired()], validate_choice=True)
+    stock_type = SelectField(u'Type', choices=[('Alphabetic', 'Alphabetic'), ('Continuous', 'Continuous'),("intervaled","Intervaled"),("Random","Random")], validators=[DataRequired()], validate_choice=True)
 
-    clothing = Multi("Size", choices=[("XXXS", "XXXS"), ("XXS", "XXS"), ("XS", "XS"), ("S", "S"), ("M", "M"), ("L", "L"), ("XL", "XL"), ("XXL", "XXL"), ("XXXL", "XXXL")], validate_choice=True)
+    clothing = Multi("Size", choices=[("3XS", "3XS"), ("2XS", "2XS"), ("XS", "XS"), ("S", "S"), ("M", "M"), ("L", "L"), ("XL", "XL"), ("2XL", "2XL"), ("3XL", "3XL")], validate_choice=True)
 
     max_size = IntegerField("max size: ",validators=[NumberRange(min=0, message="Cannot be less than 0")], render_kw={"placeholder": "Max Size"})
 
     min_size = IntegerField("min size: ",validators=[NumberRange(min=0, message="Cannot be less than 0")], render_kw={"placeholder": "min size"})
 
-    colours = FieldList(StringField("Colour", validators=[DataRequired()], render_kw={"placeholder": "Colour Name"}), min_entries=1,)
+    interval = IntegerField("interval: ",validators=[NumberRange(min=0, message="Cannot be less than 0")], render_kw={"placeholder": "interval"})
 
-    stock_data = StringField("Data: ", validators=[DataRequired()])
+    random = StringField("Random:" ,render_kw={"placeholder":"Random size"})
+    
+    colours = FieldList(StringField("Colour", validators=[DataRequired()], render_kw={"placeholder": "Colour"}), min_entries=1,)
+
+    stock_data = HiddenField("Data: ", validators=[DataRequired()])
 
     add_stock = SubmitField("Add and Confirm stock")
 

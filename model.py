@@ -8,37 +8,43 @@ from datetime import date
 
 db = SQLAlchemy()
 
-class user(db.Model, UserMixin):
+# class user(db.Model, UserMixin):
 
-    __tablename__ = "user"
+#     __tablename__ = "user"
 
-    username = db.Column(db.String(255), primary_key=True,unique=True, nullable=False)
+#     username = db.Column(db.String(255), primary_key=True,unique=True, nullable=False)
 
-    password = db.Column(db.Text(), nullable=False)
+#     password = db.Column(db.Text(), nullable=False)
 
-    def __init__(self, username, password):
-        self.username = username
-        self.password = password
+#     rights = db.Column(db.String(10), nullable=False,default=True)
 
-    def create_password(self, password):
+#     shop = db.Column(db.String(20), nullable= False)
 
-        self.password = sha512(password.encode()).hexdigest()
+#     def __init__(self, username, password, rights):
+#         self.username = username
+#         self.password = password
+#         self.rights = rights
 
-    def check_password(self, password):
 
-        provided_pass = sha512(password.encode()).hexdigest()
+#     def create_password(self, password):
 
-        # compare the passwords
-        if provided_pass != self.password:
-            return False
-        elif provided_pass == self.password:
-            return True
-        else:
-            return 404
+#         self.password = sha512(password.encode()).hexdigest()
 
-    # @manager.user_loader
-    # def load_user(user_id):
-    #     return db.session.query(user).get(user_id)
+#     def check_password(self, password):
+
+#         provided_pass = sha512(password.encode()).hexdigest()
+
+#         # compare the passwords
+#         if provided_pass != self.password:
+#             return False
+#         elif provided_pass == self.password:
+#             return True
+#         else:
+#             return 404
+
+#     # @manager.user_loader
+#     # def load_user(user_id):
+#     #     return db.session.query(user).get(user_id)
 
 
 class Stock(db.Model):

@@ -1,4 +1,4 @@
-from flask_mail import Mail, Message
+# from flask_mail import Mail, Message
 import json
 from flask import Flask, render_template, request, redirect, flash,session
 from flask_cors import CORS
@@ -26,7 +26,7 @@ from wtforms.validators import DataRequired, email, NumberRange
 
 
 # import fro login config
-from flask_login import UserMixin,LoginManager, login_user
+from flask_login import UserMixin,LoginManager, login_user,login_required,current_user
 
 # imports for destructuring json obj
 from operator import itemgetter
@@ -46,7 +46,6 @@ def json_bool(value):
     else:
         return True
 
-print(getenv("ST_KEY"))
 
 app = Flask(__name__)
 
@@ -55,18 +54,24 @@ app.debug = True
 app.config['SECRET_KEY'] = 'testing'
 app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://b4efcd84e73da2:2d8fc5cf@us-cdbr-east-06.cleardb.net/heroku_4b7312ec17a7f3c"
 app.config['SQLALCHEMY_POOL_RECYCLE'] = 299
-# app.config['SQLALCHEMY_POOL_TIMEOUT'] = 20
+app.config['SQLALCHEMY_POOL_TIMEOUT'] = 20
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 # app.config['SESSION_PERMANENT']= False 
 # app.config['SESSION_TYPE'] = 'filesystem'
-# Session(app)
+# app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
+# app.config['MAIL_PORT'] = 587
+# app.config['MAIL_USE_TLS'] = True
+# app.config['MAIL_USERNAME'] = 'emmanuelryley55@gmail.com'  # enter your email here
+# app.config['MAIL_DEFAULT_SENDER'] = 'emmanuelryley55@gmail.com' # enter your email here
+# app.config['MAIL_PASSWORD'] = 'Elwito8'
 
 
 cli = FlaskGroup(app)
-manager = LoginManager()
-manager.login_view = "login"
+# manager = LoginManager()
+login_manager =LoginManager(app)
+login_manager.login_view = "login"
 # manager = Manager(app)
-# db = SQLAlchemy(app)
+# mail = Mail(app)
 cli.add_command('db', MigrateCommand)
 
 #  ******************** DATABASE MODELS imports   *********************
@@ -74,10 +79,49 @@ from model import *
 migrate = Migrate(app, db)
 db.init_app(app)
 
-# db.create_all()
+
 #   **********************  END OF DATABASE MODELS ************************
+class user(db.Model, UserMixin):
+
+    __tablename__ = "user"
+
+    username = db.Column(db.String(255), primary_key=True,unique=True, nullable=False)
+
+    password = db.Column(db.Text(), nullable=False)
+
+    # rights = db.Column(db.String(10), nullable=False,default=True)
+
+    # shop = db.Column(db.String(20), nullable= False)
+
+    def __init__(self, username, password):
+        self.username = username
+        self.password = password
+        # self.rights = rights
 
 
+    def create_password(self, password):
+
+        self.password = sha512(password.encode()).hexdigest()
+
+    def check_password(self, password):
+
+        provided_pass = sha512(password.encode()).hexdigest()
+
+        # compare the passwords
+        if provided_pass != self.password:
+            return False
+        elif provided_pass == self.password:
+            return True
+        else:
+            return 404
+
+    @login_manager.user_loader
+    def load_user(username):
+        return db.session.query(user).get(username)
+
+    def get_id(self):
+        return self.username
+        # return super().get_id()
 #   **************************  CREATE FORMS ********************************
 
 class Wholesale(FlaskForm):
@@ -114,6 +158,7 @@ class Search(FlaskForm):
 
 # configuration of routes
 @app.route("/",methods = ["POST","GET"])
+@login_required
 def index():
 
     for i in range(3):
@@ -125,6 +170,7 @@ def index():
             print(sale)
             print("*******")
             print(getenv("ST_KEY"))
+            print(current_user)
             for log in logs:
                 print(log.name)
             print(products,logs)
@@ -168,11 +214,12 @@ def login():
 
         # get user data
         user_cnt = db.session.query(user).filter(user.username == form.username.data).first()
+        print(sha512(form.password.data.encode()).hexdigest())
 
         # check if user exists and also if passwords match
         if user_cnt and user_cnt.check_password(form.password.data):
             # session["Logged_in"] = True
-            # login_user(user_cnt)
+            login_user(user_cnt)
             return redirect("/")
     return render_template("login.html", form=form)
 
@@ -205,7 +252,7 @@ def create():
 
 
 @app.route('/update', methods=['GET', 'POST'])
-# @login_required
+@login_required
 def update():
     # TODO **last stocklog must be updated also so as to gt depletion date
     form = Type_of_Stock()
@@ -216,8 +263,13 @@ def update():
     # col = Stock.query.with_entities(Stock.colours).all()
     # print(col)
     # form.stock_sold.colours.choices = []
+    print(request.method)
+    print(form.is_submitted())
+    print(form.validate())
 
-    if form.validate_on_submit():
+
+    if form.is_submitted():
+        print("here....")
         name = form.name.data
 
         var = json.loads(form.stock_data.data)
@@ -229,7 +281,7 @@ def update():
         # print(type(json.loads(pass_word)))
         sizes = json.dumps(sizes)
         colour = json.dumps(form.colours.data)
-        print(colour)
+        print(colour,sizes)
 
         amount = 0
         for col in var.values():
@@ -330,7 +382,7 @@ def update():
 
 
 @app.route("/sales", methods=['POST', 'GET'])
-# @login_required
+@login_required
 def addStock():
 
     # get current day sales
@@ -544,6 +596,7 @@ def test():
     return render_template("test.html",form = form)
     
 @app.route("/changepay",methods=["POST","GET"])
+@login_required
 def changepay():
 
     if request.method == "POST":
@@ -570,6 +623,7 @@ def changepay():
         # ret
             
 @app.route("/changereturn",methods=["POST","GET"])
+@login_required
 def changereturn():
     if request.method == "POST":
 

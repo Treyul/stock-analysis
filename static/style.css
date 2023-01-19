@@ -11,12 +11,33 @@ users > div {
   display: inline;
   padding-left: 2rem;
 }
-label {
+#colours > li > label {
   display: none;
 }
-.form {
+form {
+  padding: 1em;
   margin: 1rem 0.5rem;
-  text-align: center;
+  /* text-align: center; */
+  /* display: flex; */
+  display: grid;
+  /* flex-direction: column; */
+  /* grid-template-columns: 6em 8em 8em; */
+  grid-template-columns: 10em 10em 10em;
+  /* align-content: center; */
+  /* flex-wrap: wrap; */
+  align-items: center;
+  justify-content: center;
+  justify-items: center;
+}
+form > #name,
+form > #stock_type {
+  grid-column: span 3;
+}
+form > #random {
+  grid-column: 1 / span 3;
+}
+form > input {
+  width: 8em;
 }
 .form > input {
   background-color: white;
@@ -47,6 +68,143 @@ label[for="max_size"] {
 
 /* *********************** */
 /* *********************** Styles for stock sales page *************************** */
+
+.navbar {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+.navbar > .container-fluid {
+  display: flex;
+  flex-wrap: inherit;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding-right: 0.75rem;
+  padding-left: 0.75rem;
+  margin-right: auto;
+  margin-left: auto;
+}
+.navbar-brand {
+  padding-top: 0.3125rem;
+  padding-bottom: 0.3125rem;
+  margin-right: 1rem;
+  font-size: 1.25rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.navbar-toggler {
+  padding: 0.25rem 0.75rem;
+  font-size: 1.25rem;
+  line-height: 1;
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  transition: box-shadow 0.15s ease-in-out;
+}
+collapse:not(.show) {
+  display: none;
+}
+
+.navbar-nav {
+  display: flex;
+  flex-direction: column;
+  padding-left: 0;
+  margin-bottom: 0;
+  list-style: none;
+}
+.ms-auto {
+  margin-left: auto !important;
+}
+/*********************************************/
+.navbar-nav .nav-link {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.nav-link {
+  display: block;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out;
+}
+.navbar-nav .dropdown-menu {
+  position: static;
+}
+
+.dropdown-menu.show {
+  display: block;
+}
+.dropdown-menu[data-bs-popper] {
+  left: 0;
+  margin-top: 0.125rem;
+}
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  z-index: 1000;
+  display: none;
+  min-width: 10rem;
+  /* padding: 0.5rem 0; */
+  margin: 0;
+  font-size: 1rem;
+  color: #212529;
+  text-align: left;
+  list-style: none;
+  background-color: #fff;
+  background-clip: padding-box;
+  /* border: 1px solid rgba(0, 0, 0, 0.15); */
+  border-radius: 0.25rem;
+}
+.navbar-collapse {
+  flex-basis: 100%;
+  flex-grow: 1;
+  align-items: center;
+}
+.collapse:not(.show) {
+  display: none;
+}
+/* ============ desktop view ============ */
+@media all and (min-width: 992px) {
+  .dropdown-menu li {
+    position: relative;
+  }
+  .dropdown-menu .submenu {
+    display: none;
+    position: absolute;
+    left: 100%;
+    top: -7px;
+  }
+  .dropdown-menu .submenu-left {
+    right: 100%;
+    left: auto;
+  }
+
+  .dropdown-menu > li:hover {
+    background-color: #f1f1f1;
+  }
+  .dropdown-menu > li:hover > .submenu {
+    display: block;
+  }
+}
+/* ============ desktop view .end// ============ */
+
+/* ============ small devices ============ */
+@media (max-width: 991px) {
+  .dropdown-menu .dropdown-menu {
+    margin-left: 0.7rem;
+    margin-right: 0.7rem;
+    margin-bottom: 0.5rem;
+  }
+}
+/* ============ small devices .end// ============ */
+
 tr,
 th,
 td {
@@ -144,7 +302,7 @@ input {
   /* background-color: #f5f5f5; */
   height: fit-content;
   border: none;
-  margin: 0.25rem;
+  /* margin: 0.25rem; */
   border-bottom: 1px rgb(145, 147, 117) solid;
   text-align: center;
 }
@@ -154,7 +312,7 @@ input {
   margin-right: 0.5rem;
 }
 input[type="number"] {
-  width: 4rem;
+  /* width: 4rem; */
 }
 .align {
   align-self: flex-end;
@@ -166,10 +324,11 @@ input:focus-visible {
 }
 input[type="text"],
 input[type="number"] {
-  margin: 1rem;
+  /* margin: 1rem; */
   font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
   letter-spacing: 1.5px;
   font-weight: bold;
+  /* width: fit-content; */
 }
 
 /* *********************** */
@@ -297,4 +456,10 @@ button {
   grid-column: 2 / span 4;
   display: flex;
   flex-wrap: wrap;
+}
+li > a {
+  text-decoration: none;
+}
+li {
+  color: black;
 }

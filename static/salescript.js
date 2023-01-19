@@ -1,12 +1,86 @@
 "use strict";
-
 // select elements
 const table_header = document.getElementById("sales_header");
 const Add = document.getElementById("add_sale");
 const return_status = document.querySelectorAll(".return");
 const pay_status = document.querySelectorAll(".paid");
+const search = document.querySelector(".search");
+const table = document.querySelector("table");
+const form = document.querySelector("form");
+// const search_div = document.getElementById("search_div");
 
-// TODO catch error status response 500
+/****** Bootstrap script *************/
+
+document.addEventListener("DOMContentLoaded", function () {
+  /////// Prevent closing from click inside dropdown
+  document.querySelectorAll(".dropdown-menu").forEach(function (element) {
+    element.addEventListener("click", function (e) {
+      e.stopPropagation();
+    });
+  });
+
+  // make it as accordion for smaller screens
+  if (window.innerWidth < 992) {
+    // close all inner dropdowns when parent is closed
+    document
+      .querySelectorAll(".navbar .dropdown")
+      .forEach(function (everydropdown) {
+        everydropdown.addEventListener("hidden.bs.dropdown", function () {
+          // after dropdown is hidden, then find all submenus
+          this.querySelectorAll(".submenu").forEach(function (everysubmenu) {
+            // hide every submenu as well
+            everysubmenu.style.display = "none";
+          });
+        });
+      });
+
+    document.querySelectorAll(".dropdown-menu a").forEach(function (element) {
+      element.addEventListener("click", function (e) {
+        let nextEl = this.nextElementSibling;
+        if (nextEl && nextEl.classList.contains("submenu")) {
+          // prevent opening link if link needs to open dropdown
+          e.preventDefault();
+          console.log(nextEl);
+          if (nextEl.style.display == "block") {
+            nextEl.style.display = "none";
+          } else {
+            nextEl.style.display = "block";
+          }
+        }
+      });
+    });
+  }
+  // end if innerWidth
+});
+// DOMContentLoaded  end
+
+/*************************************/
+// function to blur element
+const blur_element = (element) => {
+  element.classList.add("blur");
+};
+
+const unblur_element = (element) => {
+  element.classList.remove("blur");
+};
+
+// functions to hide elements
+const hide = (element) => {
+  element.classList.add("hidden");
+};
+const show = (element) => {
+  element.classList.remove("hidden");
+};
+
+// hide modal window
+// hide(search_div);
+//show modal window for searching
+// search.addEventListener("click", function () {
+//   blur_element(form);
+//   blur_element(table);
+//   blur_element(search);
+//   show(search_div);
+// });
 
 // define function for fetching change payment status
 const change_pay = (element) => {

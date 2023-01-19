@@ -54,16 +54,16 @@ app.debug = True
 app.config['SECRET_KEY'] = 'testing'
 app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://b4efcd84e73da2:2d8fc5cf@us-cdbr-east-06.cleardb.net/heroku_4b7312ec17a7f3c"
 app.config['SQLALCHEMY_POOL_RECYCLE'] = 299
-app.config['SQLALCHEMY_POOL_TIMEOUT'] = 20
+app.config['SQLALCHEMY_POOL_TIMEOUT'] = 200
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 # app.config['SESSION_PERMANENT']= False 
 # app.config['SESSION_TYPE'] = 'filesystem'
 # app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
 # app.config['MAIL_PORT'] = 587
 # app.config['MAIL_USE_TLS'] = True
-# app.config['MAIL_USERNAME'] = 'emmanuelryley55@gmail.com'  # enter your email here
-# app.config['MAIL_DEFAULT_SENDER'] = 'emmanuelryley55@gmail.com' # enter your email here
-# app.config['MAIL_PASSWORD'] = 'Elwito8'
+# app.config['MAIL_USERNAME'] = '  # enter your email here
+# app.config['MAIL_DEFAULT_SENDER'] =  # enter your email here
+# app.config['MAIL_PASSWORD'] = 
 
 
 cli = FlaskGroup(app)
@@ -130,11 +130,9 @@ class Wholesale(FlaskForm):
 
     name = StringField("Shop name", validators=[DataRequired()], render_kw={"placeholder":"Shop no/Name"})
 
-    size = IntegerField("size", validators=[DataRequired()], render_kw={"placeholder":"Size"})
+    size = StringField("size", validators=[DataRequired()], render_kw={"placeholder":"Size"})
 
     colour = StringField("Color",validators=[DataRequired()], render_kw={"placeholder":"Color"})
-
-    # status = BooleanField("Status",default=False,render_kw={"placeholder":"Color"}) 
 
     paid = BooleanField("paid",default = False)
 
@@ -721,7 +719,17 @@ def changereturn():
                 return {"message":"error","error":"no internet"}
                 # continue
 
-            
+@app.route("/settings",methods=["POST","GET"])
+def settings():
+    return
+
+@app.route("/retailsale",methods=["POST","GET"])
+def retailsale():
+    return
+
+@app.route("/updateorder",methods=["POST","GET"])
+def updateorder():
+    return
 # def create_app(config_file):
 
 #     # app = Flask(__name__)

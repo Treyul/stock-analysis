@@ -19,6 +19,7 @@ form > #stock_type {
 }
 form > #random {
   grid-column: 1 / span 3;
+  display: none;
 }
 form > input,
 #colours > li > input {
@@ -44,7 +45,7 @@ form > input[type="button"] {
   border-radius: 45px;
 }
 #colours {
-  grid-column: span 2;
+  grid-column: 1/span 2;
 }
 ul {
   list-style-type: none;

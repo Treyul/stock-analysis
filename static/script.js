@@ -62,10 +62,9 @@ stock_type.addEventListener("input", function () {
 });
 
 next_stock_details.addEventListener("click", function (e) {
-  // next_stock_details.classList.add("hidden");
-  colour.classList.add("hidden");
-  // colour.classList.remove("add_sale");
-  submit_stock_details.classList.remove("hidden");
+  // colour.classList.add("hidden");
+  // // colour.classList.remove("add_sale");
+  // submit_stock_details.classList.remove("hidden");
   e.preventDefault();
 
   // create object to store the product variation
@@ -92,6 +91,7 @@ next_stock_details.addEventListener("click", function (e) {
     }
     variation_template += `<th> ${el.value.toLowerCase()}</th>`;
   }
+  console.log("colours");
   variation_template += `<th>Total</th></tr>`;
 
   // Alphabetic system of numbering
@@ -148,7 +148,7 @@ next_stock_details.addEventListener("click", function (e) {
       }, 6000);
       return;
     }
-    // get no of sizes available for the product
+
     let variation = max_size - min_size + 1;
 
     // create table ros for the sizes
@@ -180,7 +180,12 @@ next_stock_details.addEventListener("click", function (e) {
   // close the table and append it to the page
   variation_template += `</table>`;
   colour.insertAdjacentHTML("afterend", variation_template);
-
+  // hide colour and submit stock
+  colour.classList.add("hidden");
+  // colour.classList.remove("add_sale");
+  submit_stock_details.classList.remove("hidden");
+  // get no of sizes available for the product
+  next_stock_details.classList.add("hidden");
   // get all totalling button s and add functionality
   const summation_buttons = document.querySelectorAll(".summation");
 

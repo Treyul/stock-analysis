@@ -5,6 +5,7 @@ from sqlalchemy.dialects.mysql import LONGTEXT
 from hashlib import sha512
 from flask_login import UserMixin
 from datetime import date
+# from app import login_manager
 
 db = SQLAlchemy()
 
@@ -14,16 +15,22 @@ db = SQLAlchemy()
 
 #     username = db.Column(db.String(255), primary_key=True,unique=True, nullable=False)
 
+#     Fullname = db.Column(db.String(255),nullable=False)
+
 #     password = db.Column(db.Text(), nullable=False)
 
-#     rights = db.Column(db.String(10), nullable=False,default=True)
+#     rights = db.Column(db.String(10), nullable=False,default="attendant")
 
 #     shop = db.Column(db.String(20), nullable= False)
 
-#     def __init__(self, username, password, rights):
+#     # Shop_attendants = db.Column()
+
+#     def __init__(self, username, password,Fullname,rights,shop):
 #         self.username = username
 #         self.password = password
+#         self.Fullname = Fullname
 #         self.rights = rights
+#         self.shop = shop
 
 
 #     def create_password(self, password):
@@ -42,10 +49,12 @@ db = SQLAlchemy()
 #         else:
 #             return 404
 
-#     # @manager.user_loader
-#     # def load_user(user_id):
-#     #     return db.session.query(user).get(user_id)
+#     # @login_manager.user_loader
+#     def load_user(username):
+#         return db.session.query(user).get(username)
 
+#     def get_id(self):
+#         return self.username
 
 class Stock(db.Model):
 
@@ -63,9 +72,11 @@ class Stock(db.Model):
 
     variation = db.Column(LONGTEXT, nullable=False)
 
+    Shipper_name = db.Column(db.String(255),nullable=True)
+
     date = db.Column(db.Date(), default=date.today())
 
-    depletion_date = db.Column(db.Date(), nullable = True)
+    depletion_date = db.Column(db.Date(),default= None)
 
     def __init__(self, name, size_range, colours, amount, variation, date):
 
@@ -75,25 +86,6 @@ class Stock(db.Model):
         self.amount = amount
         self.variation = variation
         self.date = date
-        # self.depletion_date = depletion_date
-
-
-class SalesLog(db.Model):
-
-    __tablename__ = "sales_logs"
-
-    date_sold = db.Column(db.Date(), primary_key=True, default=date.today(), nullable=False)
-
-    sold_data = db.Column(LONGTEXT, nullable=False)
-
-    no_of_sales = db.Column(db.Integer, nullable=False)
-
-    def __init__(self, date_sold, sold_data, no_of_sales):
-
-        self.date_sold = date_sold
-        self.sold_data = sold_data
-        self.no_of_sales = no_of_sales
-
 
 class AvailableStock(db.Model):
 
@@ -110,6 +102,8 @@ class AvailableStock(db.Model):
     variation = db.Column(LONGTEXT, nullable=False)
 
     date = db.Column(db.Date(), default=date.today(), nullable=False)
+
+    price = db.Column(db.Integer,nullable = True)
 
     def __init__(self, name, size_range, colours, amount, variation, date):
 
@@ -208,6 +202,8 @@ class RetailSales(db.Model):
     status = db.Column(db.Boolean, nullable = False )
 
     paid = db.Column(db.Boolean, nullable = False)
+
+    buyer = db.Column(db.String(255),nullable= True)
 
     amount = db.Column(db.Integer,nullable = True)
 

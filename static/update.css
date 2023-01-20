@@ -115,6 +115,7 @@ td > input[type="button"] {
 #add_stock {
   border-radius: 45px;
   padding: 0.5rem;
-  background-color: orangered;
-  width: auto;
+  background-color: orange;
+  /* width: auto; */
+  grid-column: span 3;
 }

@@ -1,8 +1,5 @@
 /* *********************** */
 /* *********************** Styles for login *************************** */
-users > div {
-  display: block;
-}
 /* *********************** Styles for stock update page *************************** */
 .hidden {
   display: none;
@@ -37,7 +34,7 @@ form > #random {
   grid-column: 1 / span 3;
 }
 form > input {
-  width: 8em;
+  /* width: 8em; */
 }
 .form > input {
   background-color: white;

@@ -25,10 +25,10 @@
   >
     <h2>Welcome {{current_user.username}}</h2>
 
-    <div id="menu">
+    <!-- <div id="menu">
       <a href="/update">Update stock available</a>
       <a href="/sales">Update sales</a>
-    </div>
+    </div> -->
 
     <!-- menu ********** -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -50,10 +50,10 @@
               <a class="nav-link" href="#">Home </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#"> Settings </a>
+              <a class="nav-link" href="/settings"> Settings </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#"> Analysis </a>
+              <a class="nav-link" href="/analysis"> Analysis </a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/catalog"> Catalog </a>
@@ -73,7 +73,7 @@
                   </a>
                 </li>
                 <li>
-                  <a class="dropdown-item" href="/StockOrder">
+                  <a class="dropdown-item" href="/updateorder">
                     Update stock ordered
                   </a>
                 </li>

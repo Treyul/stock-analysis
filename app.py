@@ -1,3 +1,7 @@
+# imports for exceptions
+import logging
+import traceback
+
 # from flask_mail import Mail, Message
 import json
 from flask import Flask, render_template, request, redirect, flash,session
@@ -19,7 +23,7 @@ from datetime import date
 
 # import for flask forms
 from flask_wtf import CSRFProtect
-from form import AddStock, Type_of_Stock, Sales, credentials, Login, CreateAccount,Multi
+from form import *
 from flask_wtf import FlaskForm
 from wtforms import BooleanField,SelectField, StringField, FormField, EmailField, SelectMultipleField, IntegerField, SubmitField, TextAreaField, PasswordField, FieldList,SearchField
 from wtforms.validators import DataRequired, email, NumberRange
@@ -72,12 +76,12 @@ login_manager =LoginManager(app)
 login_manager.login_view = "login"
 # manager = Manager(app)
 # mail = Mail(app)
-cli.add_command('db', MigrateCommand)
 
 #  ******************** DATABASE MODELS imports   *********************
 from model import *
 migrate = Migrate(app, db)
 db.init_app(app)
+cli.add_command('db', MigrateCommand)
 
 
 #   **********************  END OF DATABASE MODELS ************************
@@ -87,16 +91,22 @@ class user(db.Model, UserMixin):
 
     username = db.Column(db.String(255), primary_key=True,unique=True, nullable=False)
 
+    Fullname = db.Column(db.String(255),nullable=False)
+
     password = db.Column(db.Text(), nullable=False)
 
-    # rights = db.Column(db.String(10), nullable=False,default=True)
+    rights = db.Column(db.String(10), nullable=False,default="attendant")
 
-    # shop = db.Column(db.String(20), nullable= False)
+    shop = db.Column(db.String(20), nullable= False)
 
-    def __init__(self, username, password):
+    # Shop_attendants = db.Column()
+
+    def __init__(self, username, password,Fullname,rights,shop):
         self.username = username
         self.password = password
-        # self.rights = rights
+        self.Fullname = Fullname
+        self.rights = rights
+        self.shop = shop
 
 
     def create_password(self, password):
@@ -121,29 +131,8 @@ class user(db.Model, UserMixin):
 
     def get_id(self):
         return self.username
-        # return super().get_id()
-#   **************************  CREATE FORMS ********************************
-
-class Wholesale(FlaskForm):
-
-    product = StringField("Product name", validators=[DataRequired()], render_kw={"placeholder":"Item"})
-
-    name = StringField("Shop name", validators=[DataRequired()], render_kw={"placeholder":"Shop no/Name"})
-
-    size = StringField("size", validators=[DataRequired()], render_kw={"placeholder":"Size"})
-
-    colour = StringField("Color",validators=[DataRequired()], render_kw={"placeholder":"Color"})
-
-    paid = BooleanField("paid",default = False)
-
-    add_sale = SubmitField("Add sale")
-
-
-class salesform(FlaskForm):
-
-    stock_sold = FieldList(FormField(Wholesale), min_entries=1)
-
-    # Submit_data = SubmitField("Submit Sales Data") 
+#         # return super().get_id()
+# #   **************************  CREATE FORMS ********************************
 
 class Search(FlaskForm):
 
@@ -181,7 +170,8 @@ def index():
                 product.variation = json.loads(product.variation)
                 # print(len(product.variation))
             return render_template("home.html",products = products)
-        except (exc.DBAPIError,err.OperationalError,exc.SQLAlchemyError):
+        except  exc.SQLAlchemyError:
+            print("*************CAUGHT!!!   ************")
             pass 
 
 
@@ -213,6 +203,7 @@ def login():
         # get user data
         user_cnt = db.session.query(user).filter(user.username == form.username.data).first()
         print(sha512(form.password.data.encode()).hexdigest())
+        print(user_cnt.check_password(form.password.data))
 
         # check if user exists and also if passwords match
         if user_cnt and user_cnt.check_password(form.password.data):
@@ -226,23 +217,27 @@ def login():
 def create():
 
     form = CreateAccount()
+    print(form.validate_on_submit())
     if form.validate_on_submit():
 
         if form.password.data == form.confirm_password.data:
 
             # TODO catc error for none similar passwords
-            username = form.name.data
+            try:
+                username = form.username.data
             # print("run through")
 
-            password = sha512(form.password.data.encode()).hexdigest()
+                password = sha512(form.password.data.encode()).hexdigest()
 
-            new_user = user(username=username, password= password)
+                new_user = user(username=username, Fullname=form.name.data, password= password,rights=form.owner.data,shop=form.shop.data)
 
             # TODO catch error for duplicate users
 
-            db.session.add(new_user)
+                db.session.add(new_user)
 
-            db.session.commit()
+                db.session.commit()
+            except Exception as error:
+                print(type(error).__name__)
 
         return redirect("/login")
 
@@ -528,7 +523,8 @@ def addStock():
 
 
                     return resp_msg
-            except (exc.DBAPIError,err.OperationalError,exc.SQLAlchemyError):
+            except Exception as error:
+                print("****************CAUGHT!!!!!!**************")
                 pass
 
                 # if x == 3:
@@ -720,16 +716,55 @@ def changereturn():
                 # continue
 
 @app.route("/settings",methods=["POST","GET"])
+@login_required
 def settings():
-    return
+    return render_template("settings.html")
 
 @app.route("/retailsale",methods=["POST","GET"])
+@login_required
 def retailsale():
-    return
+    Current_day_sales = db.session.query(RetailSales).filter(RetailSales.date == date.today()).all()
+    return render_template("record.html",form=Retail_sales(),sales = Current_day_sales[::-1])
 
 @app.route("/updateorder",methods=["POST","GET"])
+@login_required
 def updateorder():
-    return
+
+    form = Order_Form()
+
+    if form.is_submitted():
+        name = form.name.data
+
+        var = json.loads(form.stock_data.data)
+        variation = form.stock_data.data
+
+        sizes = []
+        for size in var.keys():
+            sizes.append(size)
+        # print(type(json.loads(pass_word)))
+        sizes = json.dumps(sizes)
+        colour = json.dumps(form.colours.data)
+        print(colour,sizes)
+
+        amount = 0
+        for col in var.values():
+            for am in col.values():
+                amount = amount + am
+
+        stock_details = Ordered(name=name, size_range=sizes, colours=colour, amount=amount, variation=variation, order_price=form.price.data, order_date=date.today(), arrival_date=form.arrival.data)
+
+        if form.Shipper.data:
+            stock_details.shipping_co = form.Shipper.data
+            
+        db.session.add(stock_details)
+
+        db.session.commit()
+    return render_template("index.html",form= form)
+
+@app.route("/analysis", methods=["POST","GET"])
+@login_required
+def analysis():
+    pass
 # def create_app(config_file):
 
 #     # app = Flask(__name__)
@@ -769,7 +804,7 @@ def updateorder():
 
 
 if __name__ == "__main__":
-    # app = create_app("config.py")
+#     # app = create_app("config.py")
     # cli()
 
     app.run(debug=True)

@@ -58,8 +58,8 @@ app.debug = True
 app.config['SECRET_KEY'] = 'testing'
 app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://b4efcd84e73da2:2d8fc5cf@us-cdbr-east-06.cleardb.net/heroku_4b7312ec17a7f3c"
 app.config['SQLALCHEMY_POOL_RECYCLE'] = 299
-app.config['SQLALCHEMY_POOL_TIMEOUT'] = 200
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+# app.config['SQLALCHEMY_POOL_TIMEOUT'] = 200
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # app.config['SESSION_PERMANENT']= False 
 # app.config['SESSION_TYPE'] = 'filesystem'
 # app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
@@ -150,26 +150,24 @@ def index():
 
     for i in range(3):
         try:
+
+            # Query database for available stock, odered stock and sale data
             products = AvailableStock.query.all()
-            logs = Stock.query.all()
-            sale = db.session.query(LocalSales).filter(or_(LocalSales.shop_no.like("test11"),LocalSales.shop_no.like(""))).all()
-            # sale = LocalSales.query.filter_by(shop_no.like(""),shop_no.like("test8"))
-            print(sale)
-            print("*******")
-            print(getenv("ST_KEY"))
-            print(current_user)
-            for log in logs:
-                print(log.name)
-            print(products,logs)
+            order_list = Ordered.query.filter(Ordered.arrival_date >= date.today()).all()
+            print(order_list)
+
+            # Convert Available stock json literal strings into JSON objects
             for product in products:
-                
-                # convert json strings into objects
                 product.size_range = json.loads(product.size_range)
                 product.colours = json.loads(product.colours)
-                # print(product.name)
                 product.variation = json.loads(product.variation)
-                # print(len(product.variation))
-            return render_template("home.html",products = products)
+
+            # Convert Ordered stock json literal strings into JSON objects
+            for order in order_list:
+                order.size_range = json.loads(order.size_range)
+                order.colours = json.loads(order.colours)
+                order.variation = json.loads(order.variation)
+            return render_template("home.html",products = products, pending_order = order_list)
         except  exc.SQLAlchemyError:
             print("*************CAUGHT!!!   ************")
             pass 
@@ -755,7 +753,7 @@ def updateorder():
 
         if form.Shipper.data:
             stock_details.shipping_co = form.Shipper.data
-            
+
         db.session.add(stock_details)
 
         db.session.commit()

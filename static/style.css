@@ -1,5 +1,3 @@
-/* *********************** */
-/* *********************** Styles for login *************************** */
 /* *********************** Styles for stock update page *************************** */
 .hidden {
   display: none;
@@ -122,6 +120,7 @@ collapse:not(.show) {
 .navbar-nav .nav-link {
   padding-right: 0;
   padding-left: 0;
+  color: black;
 }
 
 .nav-link {
@@ -330,7 +329,19 @@ input[type="number"] {
 
 /* *********************** */
 /* *********************** Styles for home page *************************** */
-
+#notify {
+  text-align: center;
+  margin: 1rem;
+  font-weight: bold;
+  letter-spacing: 1.1px;
+  line-height: 1rem;
+  font-size: larger;
+}
+.dropdown-list {
+  margin: 0.5rem;
+  color: black;
+}
+.dropdown-list > a {color: black;}
 #available {
   background-color: rgb(211, 211, 211);
   /* border-radius: 45px; */
@@ -459,4 +470,6 @@ li > a {
 }
 li {
   color: black;
+  letter-spacing: 1.5px;
+  font-weight: 800;
 }

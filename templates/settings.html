@@ -4,12 +4,54 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/static/settings.css" />
+    <script defer src="/static/settings.js"></script>
     <title>Document</title>
   </head>
   <body>
-    <h2>{{current_user.Fullname}}</h2>
-    <p>{{current_user.shop}}</p>
-    <p>Account details</p>
-    <p>Reset password</p>
+    <nav>
+      <div class="links" data-tab="1">Account details</div>
+      <div class="links" data-tab="2">Set prices</div>
+      <div class="links" data-tab="3">Change prices</div>
+      <div class="links" data-tab="4">Reset password</div>
+      <a></a>
+    </nav>
+    <div class="content">
+      <h2>{{current_user.Fullname}}</h2>
+      <div class="contents content-01 contents--active">
+        <p>{{current_user.shop}}</p>
+      </div>
+      <div class="contents content-02">
+        {%if unpriced_stock %} {%for stock in unpriced_stock%}
+        <div>
+          <p>{{stock.name}}</p>
+          <p>{% for size in stock.size_range %} {{size}}, {% endfor %}</p>
+          <p>{% for colour in stock.colours %} {{colour}}, {% endfor %}</p>
+          <p>{{stock.amount}}</p>
+          <button>Set price</button>
+        </div>
+        {%endfor%} {%else%}
+        <div>All stock as been priced</div>
+        {%endif%}
+      </div>
+      <div class="contents content-03">
+        {% if priced_stock %} {%for stock in priced_stock%}
+        <div>
+          <p class="start">{{stock.name}}</p>
+          <p>{% for size in stock.size_range %} {{size}}, {% endfor %}</p>
+          <p>{% for colour in stock.colours %} {{colour}}, {% endfor %}</p>
+          <p>{{stock.amount}}</p>
+          <button>Change price</button>
+        </div>
+        {%endfor%} {%else%}
+        <div>No stock in the shop</div>
+        {%endif%}
+      </div>
+      <div class="contents content-04">
+        <input type="text" placeholder="old password" />
+        <input type="text" placeholder="new password" />
+        <input type="text" placeholder="confirm new password" />
+      </div>
+    </div>
   </body>
 </html>

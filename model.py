@@ -114,6 +114,11 @@ class AvailableStock(db.Model):
         self.variation = variation
         self.date = date
 
+    # function to return the worth of goods in stock
+    def worth(self):
+        return self.amount * self.price
+    
+
 class LocalSales(db.Model):
 
     __tablename__ = "wholesale_sales"
@@ -133,6 +138,8 @@ class LocalSales(db.Model):
     paid = db.Column(db.Boolean, nullable = False)
 
     date = db.Column(db.Date(), default= date.today(), nullable=False)
+
+    # price = db.Column(db.Integer, nullable=False)
 
     def __init__(self,product,size,colour,shop_no,status,paid,date):
 

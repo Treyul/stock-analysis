@@ -11,8 +11,8 @@ from flask.cli import FlaskGroup
 
 # import for database
 from flask_migrate import Migrate, MigrateCommand
-#  
-from sqlalchemy import exc,or_
+from sqlalchemy import exc,or_,and_
+from sqlalchemy.sql import func
 from pymysql import err
 from pymysql import OperationalError
 
@@ -22,11 +22,9 @@ from datetime import datetime
 from datetime import date
 
 # import for flask forms
-from flask_wtf import CSRFProtect
 from form import *
 from flask_wtf import FlaskForm
-from wtforms import BooleanField,SelectField, StringField, FormField, EmailField, SelectMultipleField, IntegerField, SubmitField, TextAreaField, PasswordField, FieldList,SearchField
-from wtforms.validators import DataRequired, email, NumberRange
+from wtforms import   SubmitField,SearchField
 
 
 # import fro login config
@@ -37,6 +35,7 @@ from operator import itemgetter
 
 # import for env variables
 from os import getenv
+
 # import for session management
 # from flask_sessions import Session
 
@@ -57,7 +56,7 @@ app = Flask(__name__)
 app.debug = True
 app.config['SECRET_KEY'] = 'testing'
 app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://b4efcd84e73da2:2d8fc5cf@us-cdbr-east-06.cleardb.net/heroku_4b7312ec17a7f3c"
-app.config['SQLALCHEMY_POOL_RECYCLE'] = 299
+app.config['SQLALCHEMY_POOL_RECYCLE'] = 3600
 # app.config['SQLALCHEMY_POOL_TIMEOUT'] = 200
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # app.config['SESSION_PERMANENT']= False 
@@ -377,20 +376,11 @@ def update():
 def addStock():
 
     # get current day sales
-
-
     day_sales = db.session.query(LocalSales).filter(LocalSales.date.like(f"%{date.today()}%")).all()
     day_sale = LocalSales.query.all()
-    print(day_sales,date.today(),type(day_sale),day_sale[::-1])
-
-    if day_sale:
-        print("***********NOT EMPTY **************")
-
-    
 
     if request.method == "POST":
         sales_data = request.get_json()
-        print(sales_data)
         sold = 0
 
         # Ensure that stock data provided is correct
@@ -401,23 +391,20 @@ def addStock():
 
                         # check product exists
                         stock = AvailableStock.query.filter_by(name=key).first()
-                        # print(stock.variation)
 
                         if not stock:
                             resp_msg = {"message": "error","error": f"The product {key} does not exist"}
                             return resp_msg
-
+                        
+                        # cange JSON strings to JSON obj
                         available_stock = json.loads(stock.variation)
                         available_sizes = json.loads(stock.size_range)
-                        # print(available_stock["23"])
-                        # print(available_stock[" 23"],"second")
                         sold_stock = sales_data[key]
-                        amount_sold = 0
+                        amount_sold = 0 
 
                         # check size exists
                         for size in sold_stock:
 
-                            # create var to store no sold
                             # return error if size is not available in database
                             if size not in available_stock:
                                 resp_msg = {"message":"error","error":f"size {size} not found"}
@@ -430,19 +417,13 @@ def addStock():
 
                                 color = sold_color["color"]
                                 shop = sold_color["name"]
-                                # covert status and paid strings to boolean values
-                                # status = sold_color["status"]
-                                # if status == "false":
-                                #     status = False
-                                # elif status == "true":
-                                #     status = True
+                                # covert paid string to boolean value
                                 status = False
                                 paid = sold_color["paid"]
                                 if paid == "false":
                                     paid = False
                                 elif paid == "true":
                                     paid = True
-                                print("tis",shop)
 
                                 # Check if the color is available
                                 if color not in old_color:
@@ -464,23 +445,25 @@ def addStock():
                                         if len(old_color) == 0:
                                             del available_stock[size]
 
+
                                             # Update size lists
                                             available_sizes.remove(size)
                                             print(available_sizes)
+
+                                            # update db object
+                                            stock.size_range = json.dumps(available_sizes)
 
 
                                         # test if the stock id depleted altogether
                                         if len(available_stock) == 0:
                                             AvailableStock.query.filter_by(name=key).delete()
-                                            db.session.commit()
-                                            print("****************************************")
                                             
                                             # Stock_log.depletion_date = date.today()
                                             db.session.commit()
                                             resp_msg = {"message":"success","success":f"The ${key} is depleted"}
 
                                             # print(SalesL)
-                                            return resp_msg
+                                            # return resp_msg
 
                                     # TODO delete object from variation
                                     # elif old_color[color]  == 0
@@ -492,16 +475,9 @@ def addStock():
                                     db.session.add(sale)
                                     db.session.commit()
 
-                                    # update available stock
-                                    # TODO if amount is zero delete row
-                                    # stock.amount = stock.amount - 1
-                                    # stock.variation = json.dumps(available_stock)
-                                    # stock.date = date.today()
-
                                         # TODO remove stock color and sizes and product altogether if depleted
 
                                     
-                        sold = sold + amount_sold
                         # update stock amount remaining, variation, date
                         stock.amount = stock.amount - 1
 
@@ -511,6 +487,7 @@ def addStock():
 
                         stock.date = date.today()
 
+                        print(available_sizes)
                         stock.sizes = json.dumps(available_sizes)
 
                         db.session.commit()
@@ -524,44 +501,6 @@ def addStock():
             except Exception as error:
                 print("****************CAUGHT!!!!!!**************")
                 pass
-
-                # if x == 3:
-                #     resp_msg = {"message": "error","error": "PLease ensure you are connected to internet"}
-                #     print("*************************CAUGHT*********************")
-                #     return  resp_msg
-                # else:
-                #     continue
-
-
-                
-
-            # TODO check sold <= remaining
-
-
-                    # for color in sold_color:
-
-                    #     # catch error if color was not available
-                    #     if color not in old_color:
-                    #         resp_msg = {"message":"error","error":f"The colour {color} in size {size} not found"}
-                    #         return resp_msg
-                        
-                    #     elif color in old_color:
-
-                    #         old_color[color] = old_color[color] - sold_color[color]
-                    #         amount_sold = amount_sold + sold_color[color]
-                    #         print(f"summation for sold {sold}, {amount_sold}")
-
-                    #         # catch error for negative entries
-                    #         if old_color[color] < 0:
-                    #             resp_msg = {"message":"error","error":f"Cannot have negative stock amount"}
-                    #             return resp_msg
-
-        # sales = SalesLog(date_sold=date.today(),
-        #                  sold_data=sales_data, no_of_sales=sold)
-
-        # db.session.add(sales)
-
-        # db.session.commit()
 
     return render_template("record.html",form=Wholesale(),sales = day_sale[::-1])
 
@@ -716,7 +655,21 @@ def changereturn():
 @app.route("/settings",methods=["POST","GET"])
 @login_required
 def settings():
-    return render_template("settings.html")
+    unpriced_stock = AvailableStock.query.filter_by(price=None).all()
+    priced_stock = AvailableStock.query.filter(AvailableStock.price != None).all()
+    attendants = user.query.filter_by(shop=current_user.shop).all()
+    # print(unpriced_stock, priced_stock)
+
+    # change json strings into json objects
+    for stock in unpriced_stock:
+        stock.size_range = json.loads(stock.size_range)
+        stock.colours = json.loads(stock.colours)
+        stock.variation = json.loads(stock.variation)
+    for stock in priced_stock:
+        stock.size_range = json.loads(stock.size_range)
+        stock.colours = json.loads(stock.colours)
+        stock.variation = json.loads(stock.variation)
+    return render_template("settings.html",unpriced_stock=unpriced_stock,priced_stock=priced_stock)
 
 @app.route("/retailsale",methods=["POST","GET"])
 @login_required
@@ -762,7 +715,33 @@ def updateorder():
 @app.route("/analysis", methods=["POST","GET"])
 @login_required
 def analysis():
-    pass
+
+    # get current worth of stock in the shop
+    Stock_worth = 0
+    stock_available = AvailableStock.query.all()
+    for stock in stock_available:
+        Stock_worth = Stock_worth + stock.worth()
+
+    # fetch current year analysis
+    current_revenue = []
+    current_volume = []
+
+    # initialize start date to first day of january
+    start = date.today().replace(month=1,day=1)
+    for i in range(1,datetime.now().month):
+        # get data ranges for the month
+        data = LocalSales.query.filter(and_(LocalSales.date>=start,LocalSales.date < start.replace(month=i+1)))
+        # Ordered.query.filter(Ordered.arrival_date >= date.today()).all()
+
+        pass
+    return {"message":"success","success":"successfully set price"}
+
+@app.route("/setprice", methods=["POST",])
+@login_required
+def setprice():
+
+    response_message = {"message":"success","success":"successfully set price"}
+    return response_message
 # def create_app(config_file):
 
 #     # app = Flask(__name__)

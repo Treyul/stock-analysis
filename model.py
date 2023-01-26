@@ -139,9 +139,9 @@ class LocalSales(db.Model):
 
     date = db.Column(db.Date(), default= date.today(), nullable=False)
 
-    # price = db.Column(db.Integer, nullable=False)
+    price = db.Column(db.Integer, nullable=False)
 
-    def __init__(self,product,size,colour,shop_no,status,paid,date):
+    def __init__(self,product,size,colour,shop_no,status,paid,date,price):
 
         # self.index = index
         self.product = product
@@ -151,6 +151,7 @@ class LocalSales(db.Model):
         self.status = status
         self.paid = paid
         self.date = date
+        self.price = price
 
 class Ordered(db.Model):
 

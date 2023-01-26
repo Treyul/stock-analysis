@@ -11,8 +11,11 @@
   <body>
     <nav>
       <div class="links" data-tab="1">Account details</div>
+      {%if unpriced_stock %}
       <div class="links" data-tab="2">Set prices</div>
+      {%endif%} {%if priced_stock%}
       <div class="links" data-tab="3">Change prices</div>
+      {%endif%}
       <div class="links" data-tab="4">Reset password</div>
       <a></a>
     </nav>
@@ -28,7 +31,7 @@
           <p>{% for size in stock.size_range %} {{size}}, {% endfor %}</p>
           <p>{% for colour in stock.colours %} {{colour}}, {% endfor %}</p>
           <p>{{stock.amount}}</p>
-          <button>Set price</button>
+          <button class="prices">Set price</button>
         </div>
         {%endfor%} {%else%}
         <div>All stock as been priced</div>
@@ -41,7 +44,7 @@
           <p>{% for size in stock.size_range %} {{size}}, {% endfor %}</p>
           <p>{% for colour in stock.colours %} {{colour}}, {% endfor %}</p>
           <p>{{stock.amount}}</p>
-          <button>Change price</button>
+          <button class="prices">Change price</button>
         </div>
         {%endfor%} {%else%}
         <div>No stock in the shop</div>

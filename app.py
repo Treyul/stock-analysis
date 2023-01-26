@@ -12,7 +12,7 @@ from flask.cli import FlaskGroup
 # import for database
 from flask_migrate import Migrate, MigrateCommand
 from sqlalchemy import exc,or_,and_
-from sqlalchemy.sql import func
+from sqlalchemy.sql import functions,func
 from pymysql import err
 from pymysql import OperationalError
 
@@ -470,7 +470,7 @@ def addStock():
                                     #     return
 
                                     # upload sale to database
-                                    sale = LocalSales(product=key,size=size,colour=color,shop_no=shop,paid=paid,status=status,date=date.today())
+                                    sale = LocalSales(product=key,size=size,colour=color,shop_no=shop,paid=paid,status=status,date=date.today(),price=stock.price)
 
                                     db.session.add(sale)
                                     db.session.commit()
@@ -728,12 +728,18 @@ def analysis():
 
     # initialize start date to first day of january
     start = date.today().replace(month=1,day=1)
-    for i in range(1,datetime.now().month):
-        # get data ranges for the month
-        data = LocalSales.query.filter(and_(LocalSales.date>=start,LocalSales.date < start.replace(month=i+1)))
+
+    for i in range(0,datetime.now().month):
+        # get revenue and the no of sales for the month
+        data = LocalSales.query.with_entities(functions.sum(LocalSales.price),functions.count()).filter(and_(LocalSales.date>=start,LocalSales.date < start.replace(month=i+2))).first()
+        current_revenue.append(data[0])
+        current_volume.append(data[1])
+
+
+    print(current_revenue,current_volume)
         # Ordered.query.filter(Ordered.arrival_date >= date.today()).all()
 
-        pass
+        # pass
     return {"message":"success","success":"successfully set price"}
 
 @app.route("/setprice", methods=["POST",])
@@ -742,6 +748,11 @@ def setprice():
 
     response_message = {"message":"success","success":"successfully set price"}
     return response_message
+
+@app.route("/search",methods=["POST","GET"])
+@login_required
+def search():
+    pass
 # def create_app(config_file):
 
 #     # app = Flask(__name__)

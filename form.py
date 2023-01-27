@@ -126,3 +126,17 @@ class Wholesale(FlaskForm):
     paid = BooleanField("paid",default = False)
 
     add_sale = SubmitField("Add sale")
+
+
+class Search(FlaskForm):
+
+    product = StringField("product", render_kw={"placeholder":"Product"})
+
+    name = StringField("name",render_kw={"placeholder":"Enter shop"})
+
+    size = StringField("size",render_kw={"placeholder":"Enter sizes"})
+
+    colour = StringField("color",render_kw={"placeholder":"Colours"})
+
+    submit = SubmitField("Submit")
+

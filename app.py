@@ -131,16 +131,6 @@ class user(db.Model, UserMixin):
     def get_id(self):
         return self.username
 #         # return super().get_id()
-# #   **************************  CREATE FORMS ********************************
-
-class Search(FlaskForm):
-
-    string = SearchField("Enter what to search",render_kw={"placeholder":"Search"})
-
-    submit = SubmitField("submit")
-
-
-# ****************************END OF FORMS ***************************
 
 # configuration of routes
 @app.route("/",methods = ["POST","GET"])
@@ -740,7 +730,8 @@ def analysis():
         # Ordered.query.filter(Ordered.arrival_date >= date.today()).all()
 
         # pass
-    return {"message":"success","success":"successfully set price"}
+    # return {"message":"success","success":"successfully set price"}
+    return render_template("analysis.html",priced_stock=current_revenue,worth=Stock_worth)
 
 @app.route("/setprice", methods=["POST",])
 @login_required
@@ -752,7 +743,11 @@ def setprice():
 @app.route("/search",methods=["POST","GET"])
 @login_required
 def search():
-    pass
+
+    if request.method == "POST":
+        pass
+        # return {"message":"success","success":"successfully set price"}
+    return render_template("search.html",form = Search())
 # def create_app(config_file):
 
 #     # app = Flask(__name__)

@@ -706,6 +706,8 @@ def updateorder():
 @login_required
 def analysis():
 
+    # initilaize reponse
+    response_message = {"message":"success"}
     # get current worth of stock in the shop
     Stock_worth = 0
     stock_available = AvailableStock.query.all()
@@ -713,8 +715,8 @@ def analysis():
         Stock_worth = Stock_worth + stock.worth()
 
     # fetch current year analysis
-    current_revenue = []
-    current_volume = []
+    current_year_revenue = []
+    current_year_volume = []
 
     # initialize start date to first day of january
     start = date.today().replace(month=1,day=1)
@@ -722,16 +724,29 @@ def analysis():
     for i in range(0,datetime.now().month):
         # get revenue and the no of sales for the month
         data = LocalSales.query.with_entities(functions.sum(LocalSales.price),functions.count()).filter(and_(LocalSales.date>=start,LocalSales.date < start.replace(month=i+2))).first()
-        current_revenue.append(data[0])
-        current_volume.append(data[1])
+        
+        current_year_revenue.append(data[0])
+        current_year_volume.append(data[1])
+        
+        # set current month values
+        if datetime.now().month == start.month:
+            current_revenue = 8000
+            current_volume = 5
 
 
-    print(current_revenue,current_volume)
+    print(current_year_revenue,current_year_volume)
+    # set dict value for the response message
+    response_message["revenue"] = current_year_revenue
+    response_message["volume"] = current_year_volume
+    # send data to be rendered for graphs
+    if request.method == "POST":
+        print("passed")
+        return response_message
         # Ordered.query.filter(Ordered.arrival_date >= date.today()).all()
 
         # pass
     # return {"message":"success","success":"successfully set price"}
-    return render_template("analysis.html",priced_stock=current_revenue,worth=Stock_worth)
+    return render_template("analysis.html", worth=Stock_worth,revenue=current_revenue,volume=current_volume)
 
 @app.route("/setprice", methods=["POST",])
 @login_required
@@ -745,8 +760,9 @@ def setprice():
 def search():
 
     if request.method == "POST":
-        pass
-        # return {"message":"success","success":"successfully set price"}
+        response = request.get_json()
+        print(response)
+        return {"message":"success","success":"successfully set price"}
     return render_template("search.html",form = Search())
 # def create_app(config_file):
 

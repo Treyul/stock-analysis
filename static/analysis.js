@@ -36,6 +36,7 @@ fetch("/analysis", {
 
       let revenue_data = [];
 
+      // create plotting data
       for (var i = 0; i < revenue.length; i++) {
         var graph = [];
         // push name of the column
@@ -63,6 +64,7 @@ fetch("/analysis", {
 
       let revenue_volume = [];
 
+      // create mapping data
       for (var i = 0; i < volume.length; i++) {
         var graph = [];
         // push name of the column

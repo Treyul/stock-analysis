@@ -24,10 +24,23 @@ menu_links.forEach((element) => {
 change_prices.forEach((element) => {
   // add event listener to each price button
   element.addEventListener("click", function () {
+    // prompt user
+    const new_price = prompt("Enter new price");
+
+    // cancel ops if user cancels
+    if (new_price == null) return;
+    // get parent div element
+    const container = element.closest("div");
+    // get roduct name
+    const product_name = container.querySelector(".start");
+
     let response = fetch("/setprice", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify(saledata),
+      body: JSON.stringify({
+        product: `${product_name.innerHTML}`,
+        price: +new_price,
+      }),
     }).then(function (response) {
       if (response.status != 200) console.log("ERROR");
 

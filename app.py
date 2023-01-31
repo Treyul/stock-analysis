@@ -751,8 +751,27 @@ def analysis():
 @app.route("/setprice", methods=["POST",])
 @login_required
 def setprice():
+    if request.method == "POST":
+        response = request.get_json()
 
-    response_message = {"message":"success","success":"successfully set price"}
+        product_name = response["product"]
+        new_price = response["price"]
+
+        # fetch data from db
+        product = AvailableStock.query.filter_by(name= product_name).first()
+
+        # render error if product does not exist
+        if not product:
+            response_message = {"message":"error","error":"Cannot find product"}
+
+        elif product:
+            # set new price
+            product.price = new_price
+
+            # commit changes to db
+            db.session.commit()
+        
+            response_message = {"message":"success","success":f"successfully set price to {new_price}"}
     return response_message
 
 @app.route("/search",methods=["POST","GET"])

@@ -27,10 +27,11 @@
       <div class="contents content-02">
         {%if unpriced_stock %} {%for stock in unpriced_stock%}
         <div>
-          <p>{{stock.name}}</p>
+          <p class="start">{{stock.name}}</p>
           <p>{% for size in stock.size_range %} {{size}}, {% endfor %}</p>
           <p>{% for colour in stock.colours %} {{colour}}, {% endfor %}</p>
           <p>{{stock.amount}}</p>
+          <p>{{stock.price}}</p>
           <button class="prices">Set price</button>
         </div>
         {%endfor%} {%else%}
@@ -44,6 +45,8 @@
           <p>{% for size in stock.size_range %} {{size}}, {% endfor %}</p>
           <p>{% for colour in stock.colours %} {{colour}}, {% endfor %}</p>
           <p>{{stock.amount}}</p>
+          <p>{{stock.price}}</p>
+
           <button class="prices">Change price</button>
         </div>
         {%endfor%} {%else%}

@@ -727,11 +727,13 @@ def analysis():
         
         current_year_revenue.append(data[0])
         current_year_volume.append(data[1])
+
+        start =  start.replace(month=i+2)
         
         # set current month values
         if datetime.now().month == start.month:
-            current_revenue = 8000
-            current_volume = 5
+            current_revenue = data[0]
+            current_volume = data[1]
 
 
     print(current_year_revenue,current_year_volume)
@@ -783,6 +785,8 @@ def search():
         print(response)
         return {"message":"success","success":"successfully set price"}
     return render_template("search.html",form = Search())
+
+# @app.route("/")
 # def create_app(config_file):
 
 #     # app = Flask(__name__)

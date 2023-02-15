@@ -551,7 +551,7 @@ def changereturn():
         response_message = {"message":"success","success":"successfully change status to return"}
 
         data = request.get_json()
-        print(data)
+
         name,size,colour,shop,ret,pay = itemgetter("name","size","colour","shop","return","pay")(data)
         ret = json_bool(ret) 
         pay=json_bool(pay)
@@ -777,13 +777,33 @@ def setprice():
     return response_message
 
 @app.route("/search",methods=["POST","GET"])
-@login_required
+# @login_required
 def search():
 
     if request.method == "POST":
         response = request.get_json()
-        print(response)
-        return {"message":"success","success":"successfully set price"}
+        # print(response)
+        shop_number = response["shop_no"]
+        product_name = response["product"]
+        shop_number,product_name = itemgetter("shop_no","product")(response)
+        # size = response["size"]
+        print(type((shop_number,product_name)))
+        seeech={"shop_no":shop_number,"product":product_name}
+        print(type(seeech))
+        if shop_number:
+            print(*seeech)
+            sales = RetailSales.query.filter(or_(*seeech))
+        # if product_name:
+        #     sales = sales.filter(or_(RetailSales.product==product_name))
+
+        # sales = []
+        print(sales)
+
+        # # Notify users when no results are found
+        # if not sales:
+        #     return {"message":"none","success":"No sales found"}
+        # return {"message":"success","success":sales}
+        return {"message":"success","success":"sales"}
     return render_template("search.html",form = Search())
 
 # @app.route("/")

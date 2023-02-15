@@ -16,6 +16,8 @@ const MONTHS = [
   "Nov",
   "Dec",
 ];
+
+const QUARTERS = ["Fisrt", "Second", "Third", "Fourth"];
 const date = new Date();
 // fetch data to be rendered using graphs
 fetch("/analysis", {
@@ -59,7 +61,7 @@ fetch("/analysis", {
 
       // initiate drawing the chart
       chart.draw();
-      // get current year volume of saes
+      // get current year volume of sales
       const volume = data["volume"];
 
       let revenue_volume = [];
@@ -87,6 +89,33 @@ fetch("/analysis", {
 
       // initiate drawing the chart
       volume_chart.draw();
+
+      /************** CREATE QUARTERLY GRAPHS *************/
+
+      let quarter_volume_graph = [];
+      let quarter_revenue_graph = [];
+      for (let k = 0; k < Math.ceil(revenue.length / 3); k++) {
+        // get starter value for each month in the quarters
+        var quarter_volume = 0;
+        var quarter_revenue = 0;
+        var vol_graph = [];
+        var rev_graph = [];
+
+        vol_graph.push(QUARTERS[k]);
+        rev_graph.push(QUARTERS[k]);
+        // iterate between the data arrays sent through backend
+        for (let r = k * 3 + 1; r < k * 3 + 4; r++) {
+          quarter_revenue += revenue[r];
+          quarter_volume += volume[r];
+        }
+        // push quarter's data into column
+        vol_graph.push(quarter_volume);
+        rev_graph.push(quarter_revenue);
+
+        // push columns into graph
+        quarter_revenue_graph.push(rev_graph);
+        quarter_volume_graph.push(vol_graph);
+      }
     }
   });
 });

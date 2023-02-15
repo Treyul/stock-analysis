@@ -15,17 +15,18 @@ submit.addEventListener("click", function (e) {
 
   // tets value of the input fields
   if (product.value.trim() != "") {
-    search_object["product"] = product.value.trim().split(" ");
+    search_object["product"] = product.value.trim().split(" ")[0];
   }
   if (shop.value.trim() != "") {
-    search_object["shop"] = shop.value.trim().split(" ");
+    search_object["shop_no"] = shop.value.trim().split(" ")[0];
   }
   if (size.value.trim() != "") {
-    search_object["size"] = size.value.trim().split(" ");
+    search_object["size"] = size.value.trim().split(" ")[0];
   }
   if (colours.value.trim() != "") {
-    search_object["colour"] = colours.value.trim().split(" ");
+    search_object["colour"] = colours.value.trim().split(" ")[0];
   }
+  console.log(search_object);
 
   let response = fetch("/search", {
     method: "POST",

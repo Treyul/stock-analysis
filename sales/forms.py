@@ -2,31 +2,31 @@ from django import forms
 
 class Retail_sales(forms.Form):
 
-    product = forms.CharField("Product name",forms.TextInput(attrs={"placeholder":""}))
+    product = forms.CharField(widget=forms.TextInput(attrs={"placeholder":"Product"}))
     
-    size = forms.CharField("Product name",forms.TextInput(attrs={"placeholder":""}))
+    size = forms.CharField(widget=forms.TextInput(attrs={"placeholder":"size"}))
     
-    colour = forms.CharField("Product name",forms.TextInput(attrs={"placeholder":""}))
+    colour = forms.CharField(widget=forms.TextInput(attrs={"placeholder":"colour"}))
     
-    shop_no = forms.CharField("Product name",forms.TextInput(attrs={"placeholder":""}))
+    shop_no = forms.CharField(widget=forms.TextInput(attrs={"placeholder":""}))
     
-    paid = forms.BooleanField("paid",default = False)
+    paid = forms.BooleanField()
     
-    buyer = forms.CharField("Product name",forms.TextInput(attrs={"placeholder":""}))
+    buyer = forms.CharField(widget=forms.TextInput(attrs={"placeholder":""}))
     
-    amount = forms.IntegerField("Product name",attrs={"placeholder":""})
+    amount = forms.IntegerField(widget = forms.NumberInput(attrs={"placeholder":""}))
     
 
 class Wholesale(forms.Form):
 
-    product = forms.CharField("Product name",  forms.TextInput(attrs={"placeholder":"Item"}))
+    product = forms.CharField(  widget=forms.TextInput(attrs={"placeholder":"Item"}))
 
-    name = forms.CharField("Shop name",  forms.TextInput(attrs={"placeholder":"Shop no/Name"}))
+    name = forms.CharField( widget=forms.TextInput(attrs={"placeholder":"Shop no/Name"}))
 
-    size = forms.CharField("size",  forms.TextInput(attrs={"placeholder":"Size"}))
+    size = forms.CharField(  widget=forms.TextInput(attrs={"placeholder":"Size"}))
 
-    colour = forms.CharField("Color", forms.TextInput(attrs={"placeholder":"Color"}))
+    colour = forms.CharField( widget=forms.TextInput(attrs={"placeholder":"Color"}))
 
-    paid = forms.BooleanField("paid",default = False)
+    paid = forms.BooleanField()
 
     # add_sale = SubmitField("Add sale")

@@ -1,0 +1,144 @@
+#error {
+  width: fit-content;
+  text-align: center;
+  margin: auto;
+  border-radius: 45px;
+  transition: opacity ease 3s;
+  padding: 0.5rem 0.75rem;
+}
+.error {
+  background-color: rgb(241 56 56 / 90%);
+  opacity: 1;
+}
+.success {
+  background-color: lightgreen;
+  opacity: 1;
+}
+.hide {
+  visibility: hidden;
+  /* display: none; */
+  transition: all ease 3s;
+  opacity: 0;
+}
+#records {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+#add_sale {
+  grid-column: 4/5;
+  border-radius: 45px;
+  font-family: cursive;
+  font-weight: 800;
+  color: white;
+  background-color: #76f576;
+}
+.record--rows {
+  grid-column: span 6;
+  display: grid;
+  grid-template-columns: 1fr 0.5fr 1fr 1fr 0.75fr 0.75fr;
+  text-align: center;
+}
+#records > .title {
+  font-weight: bold;
+}
+.status {
+  width: fit-content;
+  text-align: center;
+  margin: auto;
+  border-radius: 45px;
+  transition: opacity ease 3s;
+  /* padding: 0.5rem 0.75rem; */
+  background-color: lightgreen;
+  color: white;
+}
+body {
+  margin: 0px;
+  /* backdrop-filter: blur(136px); */
+  /* filter: blur(1px); */
+}
+th {
+  border: 1px solid black;
+}
+td {
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid black;
+}
+form {
+  /* display: flex; 
+  width: 100%;
+  /* flex: auto 1 1; */
+  margin-bottom: 0.5rem;
+  display: grid;
+  width: 393px;
+  grid-template-columns: 6em 5em 3em 5em;
+  row-gap: 1em;
+  flex-wrap: wrap;
+  /* filter: blur(1px); */
+}
+form > input {
+  border: none;
+  border-bottom: 1px solid gray;
+  text-align: center;
+  margin-left: 0.5rem;
+  flex-basis: 3rem;
+  /* width: 5rem; */
+}
+table {
+  border-collapse: collapse;
+  text-align: center;
+  margin: auto;
+  width: 100%;
+  /* filter: blur(1px); */
+}
+td > input[type="button"] {
+  border: none;
+  width: fit-content;
+  text-align: center;
+  margin: auto;
+  border-radius: 45px;
+  transition: opacity ease 3s;
+  /* padding: 0.5rem 0.75rem; */
+  background-color: lightgreen;
+  color: white;
+}
+td > p {
+  margin: 0em;
+}
+.hidden {
+  display: none;
+}
+td:nth-child(n + 5) {
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+}
+.search {
+  margin: 1rem auto;
+  /* margin: 3rem; */
+  display: flex;
+  background-color: orange;
+  border: none;
+  text-align: center;
+  border-radius: 45px;
+  padding: 0.25em 2em;
+  font-family: cambria;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+}
+.search_div {
+  display: flex;
+  position: absolute;
+  margin: auto;
+  text-align: center;
+  /* filter: blur(0px); */
+  z-index: 10;
+  margin: 0px 10%;
+  width: 80%;
+  justify-content: center;
+}
+.blur {
+  filter: blur(1px);
+}
+#close ~ input {
+  float: right;
+  margin: 1.5em;
+}

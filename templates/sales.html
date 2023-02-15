@@ -6,16 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/static/style.css" />
     <title>Document</title>
+    {% load static %}
   </head>
   <body>
     <form method="post" id="form_add_stock">
-      {{ form.csrf_token()}} {% for field in form if field.name != "csrf_token"
-      %}
-      <div class="form">
-        {{ field.label() }} {{ field }}
-        <!-- {% for error in field.errors %} {{ error }} {% endfor %} -->
-      </div>
-      {% endfor %}
+      {{csrf_token}} {{form}}
+
       <input type="button" id="addSale" value="add Sale" />
     </form>
   </body>

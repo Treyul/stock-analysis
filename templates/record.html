@@ -17,7 +17,8 @@
     <div id="error" class="hide"></div>
 
     <form>
-      {% for field in form if fieldname != "crsf_token" %} {{field}} {%endfor%}
+      {{form}}
+      <input type="button" id="add_sale" value="add Sale" />
     </form>
     {% if sales %}
     <!-- <div id="records"> -->

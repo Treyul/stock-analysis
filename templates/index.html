@@ -4,26 +4,13 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script defer src="/static/script.js"></script>
+    <!-- {% load static %} -->
+    <script defer src="/static/script2.js"></script>
     <link rel="stylesheet" href="/static/update.css" />
     <title>Document</title>
   </head>
   <body>
     <p id="message" class="hidden"></p>
-    <form method="post" id="form_add_stock">
-      {{ form.csrf_token()}} {% for field in form if field.name != "csrf_token"
-      %} {%if field.name == "colours" %} {{field}}
-      <input
-        type="button"
-        id="addColours"
-        class="add_sale"
-        value="add colour"
-      />
-      {%elif field.name == "add_stock"%}{{field}}
-      <input class="" type="button" id="add_stock_next" value="Next page" />
-      {%else%} {{ field }} {%endif%}
-      <!-- {% for error in field.errors %} {{ error }} {% endfor %} -->
-      {% endfor %}
-    </form>
+    <form method="post" id="form_add_stock">{{form}}</form>
   </body>
 </html>

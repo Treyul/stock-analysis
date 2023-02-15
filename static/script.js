@@ -1,10 +1,10 @@
 "use strict";
 
 const colour = document.getElementById("addColours");
-const stock_type = document.getElementById("stock_type");
+const stock_type = document.getElementById("id_stock_type");
 const clothes = document.getElementById("clothing");
-const max_shoes = document.getElementById("max_size");
-const min_shoes = document.getElementById("min_size");
+const max_shoes = document.getElementById("id_max_size");
+const min_shoes = document.getElementById("id_min_size");
 const interval = document.getElementById("interval");
 const Colour_list = document.getElementById("colours");
 const form = document.getElementById("form_add_stock");

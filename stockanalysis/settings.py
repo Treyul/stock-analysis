@@ -89,11 +89,11 @@ DATABASES = {
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'heroku_4b7312ec17a7f3c',
-#         'USER': 'b4efcd84e73da2',
-#         'PASSWORD': '2d8fc5cf',
-#         'HOST':'us-cdbr-east-06.cleardb.net',
-#         # 'PORT':'3306',
+#         'NAME': 'dj2cwb4wlunw53rd',
+#         'USER': 'gk8ahpga6ikaeduz',
+#         'PASSWORD': 'ywsghre10pq5jz9v',
+#         'HOST':'ckshdphy86qnz0bj.cbetxkdyhwsb.us-east-1.rds.amazonaws.com',
+#         'PORT':'3306',
 #     }
 # }
 

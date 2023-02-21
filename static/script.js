@@ -2,10 +2,13 @@
 
 const colour = document.getElementById("addColours");
 const stock_type = document.getElementById("id_stock_type");
-const clothes = document.getElementById("clothing");
-const max_shoes = document.getElementById("id_max_size");
-const min_shoes = document.getElementById("id_min_size");
-const interval = document.getElementById("interval");
+const clothes = document.getElementById("id_clothing");
+// select elements that specify sizing
+const max_size = document.getElementById("id_max_size");
+const min_size = document.getElementById("id_min_size");
+const interval = document.getElementById("id_interval");
+const random = document.getElementById("id_random");
+// select colours
 const Colour_list = document.getElementById("colours");
 const form = document.getElementById("form_add_stock");
 const submit = document.getElementById("stock_det");
@@ -29,17 +32,18 @@ const show = (element) => {
   element.classList.remove("hidden");
 };
 
-// hide max,min and interval sizing
-hide(max_shoes);
-hide(min_shoes);
+// hide max,min, random and interval sizing when initializing document
+hide(max_size);
+hide(min_size);
 hide(interval);
 hide(submit_stock_details);
+hide(random);
 
 // add event listener to enable the systems of numbering
 stock_type.addEventListener("input", function () {
   if (stock_type.value == "Alphabetic") {
-    hide(max_shoes);
-    hide(min_shoes);
+    hide(max_size);
+    hide(min_size);
     hide(interval);
     show(clothes);
   } else if (stock_type.value == "Continuous") {
@@ -47,6 +51,8 @@ stock_type.addEventListener("input", function () {
     hide(interval);
     show(max_size);
     show(min_size);
+
+    // verify data submitted is correct
   } else if (stock_type.value == "intervaled") {
     hide(clothes);
     show(max_size);
@@ -54,11 +60,18 @@ stock_type.addEventListener("input", function () {
     show(interval);
   } else if (stock_type.value == "Random") {
   }
-  // clothes.classList.toggle("hidden");
-  // max_shoes.classList.toggle("hidden");
-  // min_shoes.classList.toggle("hidden");
-  // max_shoes.classList.toggle("inline");
-  // min_shoes.classList.toggle("inline");
+
+  // catch error in sizes
+  if (stock_type.value == "Continuous" || stock_type.value == "intervaled") {
+    if (max_size < min_size) {
+      alert_msg.innerHTML = "Max size canot be smaller than min size";
+      alert_msg.classList.remove("hidden");
+      // hide the alert after 5 seconds
+      setTimeout(5000, function () {
+        alert_msg.classList.add("hidden");
+      });
+    }
+  }
 });
 
 next_stock_details.addEventListener("click", function (e) {
@@ -135,8 +148,8 @@ next_stock_details.addEventListener("click", function (e) {
 
   //Continuos numbering system
   else if (stock_type.value == "Continuous") {
-    const max_size = +max_shoes.value;
-    let min_size = +min_shoes.value;
+    const max_size = +max_size.value;
+    let min_size = +min_size.value;
 
     console.log(max_size, min_size);
     if (min_size > max_size) {

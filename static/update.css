@@ -12,8 +12,8 @@ form {
   justify-content: center;
   justify-items: center;
 }
-form > #name,
-form > #stock_type {
+form > #id_name,
+form > #id_stock_type {
   grid-column: span 3;
   margin: 1rem;
 }
@@ -22,7 +22,7 @@ form > #random {
   display: none;
 }
 form > input,
-#colours > li > input {
+#id_colours > li > input {
   width: 8em;
   margin: 1em;
   outline: none;
@@ -31,21 +31,21 @@ form > input,
   border-bottom: 1px solid black;
 }
 form > input:focus-visible,
-#colours > li > input:focus-visible {
+#id_colours > li > input:focus-visible {
   border-bottom: 1px solid blue;
 }
 .hidden {
   display: none;
 }
-#colours > li > label {
+#id_colours > li > label {
   display: none;
 }
 form > input[type="button"] {
   border: none;
   border-radius: 45px;
 }
-#colours {
-  grid-column: 1/span 2;
+#id_colours {
+  grid-column: 1 / span 2;
 }
 ul {
   list-style-type: none;
@@ -62,12 +62,12 @@ form > input[type="number"] {
   background-color: #78cde9;
   padding: 0.25rem;
 }
-#clothing {
+#id_clothing {
   grid-column: span 3;
-  display: flex;
+  /* display: flex; */
   flex-wrap: wrap;
 }
-#clothing > li {
+#id_clothing > div {
   margin: 0.5rem;
 }
 
@@ -100,16 +100,20 @@ td > input[type="button"] {
   border-radius: 45px;
   border: none;
 }
-#message {
+.message {
   width: fit-content;
   text-align: center;
   margin: auto;
   border-radius: 45px;
   transition: opacity ease 3s;
   padding: 0.5rem 0.75rem;
+  position: absolute;
+  display: flex;
+  justify-content: space-evenly;
+  margin-left: 32%;
 }
 .error {
-  background-color: rgb(241 56 56 / 90%);
+  background-color: rgb(241 56 56 / 88%);
   opacity: 1;
 }
 #add_stock {

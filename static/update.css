@@ -54,17 +54,35 @@ ul {
 form > input[type="number"] {
   width: 5rem;
 }
-#addColours {
-  padding: 0.25rem;
+.add_Colours {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
   background-color: orange;
+  grid-column: 3/3;
 }
+.remove_colours {
+  background-color: rgb(241 56 56 / 88%);
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  grid-column: 2/2;
+}
+
+label[for^="id_Colour"] {
+  grid-column: 1/1;
+}
+input[id^="id_Colour"] {
+  grid-column: span 2;
+}
+
 #add_stock_next {
   background-color: #78cde9;
   padding: 0.25rem;
+  margin-top: 1.25rem;
+  grid-column: 3/3;
 }
-#id_clothing {
+.clothing {
   grid-column: span 3;
-  /* display: flex; */
+  display: flex;
   flex-wrap: wrap;
 }
 #id_clothing > div {

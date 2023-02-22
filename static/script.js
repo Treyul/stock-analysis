@@ -9,7 +9,7 @@ const min_size = document.getElementById("id_min_size");
 const interval = document.getElementById("id_interval");
 const random = document.getElementById("id_random");
 // select colours
-const Colour_list = document.getElementById("colours");
+const Colour_list = document.getElementById("id_colours");
 const form = document.getElementById("form_add_stock");
 const submit = document.getElementById("stock_det");
 const next_stock_details = document.getElementById("add_stock_next");
@@ -32,12 +32,21 @@ const show = (element) => {
   element.classList.remove("hidden");
 };
 
+// function to hide the alphabetic sizing
+const hide_clothes = (clothing) => {
+  clothing.classList.remove("clothing");
+};
+const show_clothes = (clothing) => {
+  clothing.classList.add("clothing");
+};
+
 // hide max,min, random and interval sizing when initializing document
 hide(max_size);
 hide(min_size);
 hide(interval);
 hide(submit_stock_details);
 hide(random);
+show_clothes(clothes);
 
 // add event listener to enable the systems of numbering
 stock_type.addEventListener("input", function () {
@@ -46,8 +55,10 @@ stock_type.addEventListener("input", function () {
     hide(min_size);
     hide(interval);
     show(clothes);
+    show_clothes(clothes);
   } else if (stock_type.value == "Continuous") {
     hide(clothes);
+    hide_clothes(clothes);
     hide(interval);
     show(max_size);
     show(min_size);
@@ -55,25 +66,38 @@ stock_type.addEventListener("input", function () {
     // verify data submitted is correct
   } else if (stock_type.value == "intervaled") {
     hide(clothes);
+    hide_clothes(clothes);
     show(max_size);
     show(min_size);
     show(interval);
   } else if (stock_type.value == "Random") {
   }
-
-  // catch error in sizes
-  if (stock_type.value == "Continuous" || stock_type.value == "intervaled") {
-    if (max_size < min_size) {
-      alert_msg.innerHTML = "Max size canot be smaller than min size";
-      alert_msg.classList.remove("hidden");
-      // hide the alert after 5 seconds
-      setTimeout(5000, function () {
-        alert_msg.classList.add("hidden");
-      });
-    }
-  }
 });
 
+/******************COLOUR LIST */
+// const addButton = document.getElementById('add-item');
+// const removeButton = document.getElementById('remove-item');
+// const items = {{ form.items|length }};
+
+// addButton.addEventListener('click', () => {
+//   const item = document.createElement('input');
+//   item.type = 'text';
+//   item.name = `item_${items}`;
+//   item.required = true;
+//   const label = document.createElement('label');
+//   label.innerHTML = `Item ${items + 1}: `;
+//   label.appendChild(item);
+//   const container = document.querySelector('form');
+//   container.insertBefore(label, addButton);
+//   items++;
+//   document.querySelector('#id_num_items').value = items;
+// });
+
+// removeButton.addEventListener('click', () => {
+//   const labels = document.querySelectorAll('label');
+//   if (labels.length > 1) {
+//     const lastLabel = labels[labels.length - 1];
+//     lastLabel.parentNode.removeChild(last)}})
 next_stock_details.addEventListener("click", function (e) {
   // colour.classList.add("hidden");
   // // colour.classList.remove("add_sale");
@@ -261,16 +285,16 @@ next_stock_details.addEventListener("click", function (e) {
 });
 
 let count = 1;
-colour.addEventListener("click", function (e) {
-  e.preventDefault();
-  let label = `colours-${count}`;
+// colour.addEventListener("click", function (e) {
+//   e.preventDefault();
+//   let label = `colours-${count}`;
 
-  Colour_list.insertAdjacentHTML(
-    "beforeend",
-    `<li>
-  <label for="${label}">Colour</label>
-  <input id="${label}" name="${label}" type="text" placeholder="Colour">
-  </li>`
-  );
-  count++;
-});
+//   Colour_list.insertAdjacentHTML(
+//     "beforeend",
+//     `<li>
+//   <label for="${label}">Colour</label>
+//   <input id="${label}" name="${label}" type="text" placeholder="Colour">
+//   </li>`
+//   );
+//   count++;
+// });

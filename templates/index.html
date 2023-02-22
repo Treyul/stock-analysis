@@ -12,13 +12,20 @@
   <body>
     <p id="message" class="message hidden"></p>
     <form method="post" id="form_add_stock">
-      {{form}}
+      {{form}} {{form.colours}}
       <input
         type="button"
-        id="addColours"
-        class="add_sale"
+        id="remove-item"
+        class="remove_colours"
+        value="remove colour"
+      />
+      <input
+        type="button"
+        id="add-item"
+        class="add_Colours"
         value="add colour"
       />
+
       <input class="" type="button" id="add_stock_next" value="Next page" />
       <input type="submit" id="add_stock" />
     </form>

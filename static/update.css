@@ -118,7 +118,7 @@ td > input[type="button"] {
   border-radius: 45px;
   border: none;
 }
-.message {
+/* .message {
   width: fit-content;
   text-align: center;
   margin: auto;
@@ -129,8 +129,18 @@ td > input[type="button"] {
   display: flex;
   justify-content: space-evenly;
   margin-left: 32%;
-}
+} */
 .error {
+  width: fit-content;
+  text-align: center;
+  margin: auto;
+  border-radius: 45px;
+  transition: opacity ease 3s;
+  padding: 0.5rem 0.75rem;
+  position: absolute;
+  display: flex;
+  justify-content: space-evenly;
+  margin-left: 32%;
   background-color: rgb(241 56 56 / 88%);
   opacity: 1;
 }

@@ -12,7 +12,7 @@
   <body>
     <p id="message" class="message hidden"></p>
     <form method="post" id="form_add_stock">
-      {{form}} {{form.colours}}
+      {% csrf_token %} {{form}} {{form.colours}}
       <input
         type="button"
         id="remove-item"

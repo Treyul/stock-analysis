@@ -45,7 +45,7 @@ class Stock(models.Model):
 
     date = models.DateField(default=date.today)
 
-    depletion_date = models.DateField(default= None)
+    depletion_date = models.DateField(null=True,default= None)
 
 
 

@@ -1,6 +1,6 @@
 "use strict";
 
-const colour = document.getElementById("addColours");
+// const colour = document.getElementById("addColours");
 const stock_type = document.getElementById("id_stock_type");
 const clothes = document.getElementById("id_clothing");
 // select elements that specify sizing
@@ -9,12 +9,14 @@ const min_size = document.getElementById("id_min_size");
 const interval = document.getElementById("id_interval");
 const random = document.getElementById("id_random");
 // select colours
-const Colour_list = document.getElementById("id_colours");
+const addButton = document.getElementById("add-item");
+const removeButton = document.getElementById("remove-item");
+// const Colour_list = document.getElementById("id_colours");
 const form = document.getElementById("form_add_stock");
 const submit = document.getElementById("stock_det");
 const next_stock_details = document.getElementById("add_stock_next");
 const submit_stock_details = document.getElementById("add_stock");
-const stock_data = document.getElementById("stock_data");
+const stock_data = document.getElementById("id_stock_data");
 const alert_msg = document.getElementById("message");
 
 /*
@@ -75,40 +77,59 @@ stock_type.addEventListener("input", function () {
 });
 
 /******************COLOUR LIST */
-// const addButton = document.getElementById('add-item');
-// const removeButton = document.getElementById('remove-item');
-// const items = {{ form.items|length }};
+// Add colours
+var items = 1;
+addButton.addEventListener("click", () => {
+  const item = document.createElement("input");
+  item.type = "text";
+  item.name = `Colour ${items}`;
+  item.id = `id_Colour ${items}`;
+  item.required = true;
+  const label = document.createElement("label");
+  label.innerHTML = `Colour ${items + 1}: `;
+  label.for = `id_Colour ${items}`;
+  const container = document.querySelector("form");
+  container.insertBefore(label, removeButton);
+  container.insertBefore(item, removeButton);
+  items++;
+  document.querySelector("#id_num_items").value = items;
+});
 
-// addButton.addEventListener('click', () => {
-//   const item = document.createElement('input');
-//   item.type = 'text';
-//   item.name = `item_${items}`;
-//   item.required = true;
-//   const label = document.createElement('label');
-//   label.innerHTML = `Item ${items + 1}: `;
-//   label.appendChild(item);
-//   const container = document.querySelector('form');
-//   container.insertBefore(label, addButton);
-//   items++;
-//   document.querySelector('#id_num_items').value = items;
-// });
+// remove colours
+removeButton.addEventListener("click", () => {
+  // get the array of colours
+  const colours = document.querySelectorAll("input[id^='id_Colour']");
+  const colour_labels = document.querySelectorAll("label[for^='id_Colour']");
 
-// removeButton.addEventListener('click', () => {
-//   const labels = document.querySelectorAll('label');
-//   if (labels.length > 1) {
-//     const lastLabel = labels[labels.length - 1];
-//     lastLabel.parentNode.removeChild(last)}})
+  // show error message if length is less than 2
+  if (colours.length <= 2) {
+    alert_msg.innerHTML = "Colours cannot be less than 1";
+    alert_msg.classList.add("error");
+    show(alert_msg);
+    setTimeout(() => {
+      hide(alert_msg);
+      alert_msg.classList.remove("error");
+      console.log("this");
+    }, 5000);
+  } else {
+    colours[colours.length - 1].remove();
+    colour_labels[colour_labels - 1].remove();
+    items--;
+    document.querySelector("#id_num_items").value = items;
+  }
+});
+
 next_stock_details.addEventListener("click", function (e) {
-  // colour.classList.add("hidden");
-  // // colour.classList.remove("add_sale");
-  // submit_stock_details.classList.remove("hidden");
   e.preventDefault();
 
   // create object to store the product variation
   let stock_json = {};
 
   // get colours available and their number
-  const colours = Colour_list.getElementsByTagName("input");
+  const colours = document.querySelectorAll("input[id^='id_Colour']");
+  const form_colour = document.getElementById("id_colour");
+  var colour_array = [];
+  console.log(colours);
   const len = colours.length;
 
   // create table to allow use input for the product variation
@@ -122,13 +143,18 @@ next_stock_details.addEventListener("click", function (e) {
       alert_msg.classList.add("error");
       show(alert_msg);
       setTimeout(() => {
+        alert_msg.classList.remove("error");
         hide(alert_msg);
       }, 5000);
       return;
     }
     variation_template += `<th> ${el.value.toLowerCase()}</th>`;
+    colour_array.push(el.value.toLowerCase());
   }
-  console.log("colours");
+
+  // append the colour data to its field
+  form_colour.value = JSON.stringify(colour_array);
+
   variation_template += `<th>Total</th></tr>`;
 
   // Alphabetic system of numbering
@@ -181,6 +207,7 @@ next_stock_details.addEventListener("click", function (e) {
       alert_msg.classList.add("error");
       show(alert_msg);
       setTimeout(function () {
+        alert_msg.classList.remove("error");
         hide(alert_msg);
       }, 6000);
       return;
@@ -216,9 +243,12 @@ next_stock_details.addEventListener("click", function (e) {
 
   // close the table and append it to the page
   variation_template += `</table>`;
-  colour.insertAdjacentHTML("afterend", variation_template);
+  colours[colours.length - 1].insertAdjacentHTML(
+    "afterend",
+    variation_template
+  );
   // hide colour and submit stock
-  colour.classList.add("hidden");
+  // colours.classList.add("hidden");
   // colour.classList.remove("add_sale");
   submit_stock_details.classList.remove("hidden");
   // get no of sizes available for the product
@@ -229,6 +259,7 @@ next_stock_details.addEventListener("click", function (e) {
   summation_buttons.forEach((element) => {
     element.addEventListener("click", function () {
       // get row to be totalled  and columns
+      console.log("here");
       const parent = element.closest("tr");
       const siblings = parent.getElementsByTagName("td");
 

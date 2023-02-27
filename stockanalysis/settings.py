@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     "analysis",
     "sales",
     "stock",
-    "utils"
+    "utils",
+    "Home"
 ]
 
 MIDDLEWARE = [
@@ -149,3 +150,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # default redirect when user logins
 LOGIN_REDIRECT_URL = "/"
+
+# APPEND_SLASH=False

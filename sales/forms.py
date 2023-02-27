@@ -8,13 +8,13 @@ class Retail_sales(forms.Form):
     
     colour = forms.CharField(label="",widget=forms.TextInput(attrs={"placeholder":"colour"}))
     
-    shop_no = forms.CharField(label="",widget=forms.TextInput(attrs={"placeholder":""}))
+    name = forms.CharField(required=False,label="",widget=forms.TextInput(attrs={"placeholder":"Name"}))
     
     paid = forms.BooleanField()
     
-    buyer = forms.CharField(label="",widget=forms.TextInput(attrs={"placeholder":""}))
+    buyer = forms.CharField(label="",widget=forms.TextInput(attrs={"placeholder":"Buyer Name"}))
     
-    amount = forms.IntegerField(label="",widget = forms.NumberInput(attrs={"placeholder":""}))
+    amount = forms.IntegerField(label="",widget = forms.NumberInput(attrs={"placeholder":"Amount"}))
     
 
 class Wholesale(forms.Form):

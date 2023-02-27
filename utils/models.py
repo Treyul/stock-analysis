@@ -117,6 +117,8 @@ class Ordered(models.Model):
 
     arrival_date = models.DateField( null = True)
 
+    arrived = models.BooleanField(default=False,null=False)
+
 class users(models.Model):
 
     username = models.CharField(max_length =255, primary_key=True,unique=True, null=False)

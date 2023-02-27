@@ -306,12 +306,12 @@ Add.addEventListener("click", function (e) {
   console.log("print");
 
   let saledata = {};
-  const product = document.getElementById("product");
-  const name = document.getElementById("name");
-  const size = document.getElementById("size");
-  const colour = document.getElementById("colour");
-  const status = document.getElementById("status");
-  const paid = document.getElementById("paid");
+  const product = document.getElementById("id_product");
+  const name = document.getElementById("id_name");
+  const size = document.getElementById("id_size");
+  const colour = document.getElementById("id_colour");
+  // const status = document.getElementById("id_status");
+  const paid = document.getElementById("id_paid");
 
   const product_data = {
     color: `${colour.value}`,
@@ -323,7 +323,7 @@ Add.addEventListener("click", function (e) {
   saledata[product.value] = {};
   saledata[product.value][size.value] = product_data;
 
-  let response = fetch("/sales", {
+  let response = fetch("/sales/retail", {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify(saledata),

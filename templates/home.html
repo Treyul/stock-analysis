@@ -68,12 +68,12 @@
               </a>
               <ul class="dropdown-menu">
                 <li class="dropdown-list">
-                  <a class="dropdown-item" href="/update">
+                  <a class="dropdown-item" href="/stock/updateAvailable">
                     Update available stock
                   </a>
                 </li>
                 <li class="dropdown-list">
-                  <a class="dropdown-item" href="/updateorder">
+                  <a class="dropdown-item" href="/stock/Addorders">
                     Update stock ordered
                   </a>
                 </li>
@@ -92,7 +92,7 @@
                   <a class="dropdown-item" href="/sales"> Wholesale sales </a>
                 </li>
                 <li class="dropdown-list">
-                  <a class="dropdown-item" href="/retailsale">Retail sales</a>
+                  <a class="dropdown-item" href="/sales/retail">Retail sales</a>
                 </li>
               </ul>
             </li>
@@ -121,16 +121,14 @@
         <p>{{product.amount}}</p>
         <button>Show</button>
         <div class="hidden">
-          {% for size in product.variation %}
+          {% for size,colours in product.variation.items %}
           <div class="availdata">
-            {# Render size variation#}
             <p>{{size}}</p>
             <div class="coldata">
-              {%set colours = product.variation[size] %} {% for color in colours
-              %}
+              {% for color,amount in colours.items %}
               <div>
                 <p>{{color}}</p>
-                <p>{{colours[color]}}</p>
+                <p>{{amount}}</p>
               </div>
               {% endfor %}
             </div>
@@ -138,9 +136,8 @@
           {% endfor %}
         </div>
       </div>
-      {% endfor %}
     </div>
-    {%else%}
+    {% endfor %} {%else%}
     <div id="notify">No stock available</div>
     {%endif%} {% if pending_order %}
     <div class="contain" id="pending">
@@ -160,15 +157,15 @@
         <p>{{order.amount}}</p>
         <button>Show</button>
         <div class="hidden">
-          {%for size in order.variation%}
+          {%for size,colours in order.variation.items%}
           <div class="availdata">
             <p>{{size}}</p>
             <div class="coldata">
-              {%set colours = order.variation[size] %} {% for color in colours
-              %}
+              {# with colours = order.variation[size] #} {% for color,amount in
+              colours.items %}
               <div>
                 <p>{{color}}</p>
-                <p>{{colours[color]}}</p>
+                <p>{{amount}}</p>
               </div>
               {% endfor %}
             </div>
@@ -176,7 +173,6 @@
           {%endfor%}
         </div>
       </div>
-      {%endfor%}
     </div>
     {%else%}
     <div id="notify">No orders pending arrival</div>

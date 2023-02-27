@@ -14,7 +14,8 @@ def update_available_stock(request):
             product_sizes =[]
             product_data = form.cleaned_data["stock_data"]
             product_data_json = json.loads(product_data)
-            product_colours = json.loads(form.cleaned_data["colour"])
+            product_colours = form.cleaned_data["colour"]
+            product_colours_json = json.loads(form.cleaned_data["colour"])
 
             # create a list for the product sizes
             for size in product_data_json.keys():
@@ -39,6 +40,11 @@ def update_available_stock(request):
 
             # if it does not exist
             if not Available_product:
+
+                # convert variables into JSON strings
+                
+
+                # create db object and commit to db
                 Available_product = AvailableStock(name=product_name,size_range=product_sizes,colours=product_colours,amount=Total_amount,variation= product_data,date=date.today())
                 Available_product.save()
 
@@ -84,7 +90,7 @@ def update_available_stock(request):
                 
                 #uodate colours
                 previous_colour = json.loads(Available_product.colours)
-                for colour in product_colours:
+                for colour in product_colours_json:
                     if colour not in previous_colour:
                         previous_colour.append(colour)
 
@@ -92,7 +98,7 @@ def update_available_stock(request):
                 Available_product.size_range = json.dumps(previous_sizes)
                 Available_product.colours = json.dumps(previous_colour)
                 Available_product.amount = Total_amount
-                Available_product.variation = product_data_json
+                Available_product.variation = json.dumps(product_data_json)
 
                 Available_product.save()
 

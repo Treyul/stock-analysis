@@ -12,7 +12,7 @@ class RetailSales(models.Model):
 
     product = models.CharField(max_length=50,null = False)
 
-    size = models.IntegerField( null = False)
+    size = models.CharField(max_length=50, null = False)
 
     colour = models.CharField(max_length=50,null = False)
 
@@ -78,7 +78,7 @@ class LocalSales(models.Model):
 
     product = models.CharField(max_length =50, null = False )
 
-    size = models.IntegerField (null = False)
+    size = models.CharField (max_length=50,null = False)
 
     colour = models.CharField(max_length =50, null = False)
 

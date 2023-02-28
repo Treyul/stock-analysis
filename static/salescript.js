@@ -9,6 +9,16 @@ const table = document.querySelector("table");
 const form = document.querySelector("form");
 // const search_div = document.getElementById("search_div");
 
+// get the cookie in the website
+const cookies = document.cookie;
+
+// create a cookie array
+const cookie_array = cookies.split("=");
+
+// get index of the crsf key word
+const crsf_key = cookie_array.indexOf("csrftoken");
+const crsf_token = cookie_array[crsf_key + 1];
+console.log(crsf_token);
 /****** Bootstrap script *************/
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -323,15 +333,21 @@ Add.addEventListener("click", function (e) {
   saledata[product.value] = {};
   saledata[product.value][size.value] = product_data;
 
-  let response = fetch("/sales/retail", {
+  let response = fetch("/sales/", {
     method: "POST",
-    headers: { "content-type": "application/json" },
+    headers: {
+      "content-type": "application/json",
+      "X-CSRFToken": `${crsf_token}`,
+    },
     body: JSON.stringify(saledata),
   }).then(function (response) {
     if (response.status !== 200) {
       console.log("ERROR");
     }
+    // console.log(response.json());
     response.json().then(function (data) {
+      console.log(data);
+      console.log("here");
       if (data["message"] == "error") {
         const error = document.getElementById("error");
 

@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     "sales",
     "stock",
     "utils",
-    "Home"
+    "Home",
+    "settings"
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/static/menu.css" />
+    <script defer src="/static/menu.js"></script>
+  </head>
+  <body>
+    <!-- Create the menu container -->
+    <div id="menu">
+      <!-- Create the hamburger display -->
+      <div id="hamburger">
+        <div id="one" class="ham-item"></div>
+        <div id="two" class="ham-item"></div>
+        <div id="three" class="ham-item"></div>
+      </div>
+      <div id="main-menu" class="hidden">
+        <ul>
+          <li>
+            <a href="/Home">Home</a>
+          </li>
+          <li>
+            <a class="nav-dropdown">Stock</a>
+            <ul>
+              <li><a>Update stock available</a></li>
+              <li><a>Update stock ordered</a></li>
+            </ul>
+          </li>
+          <li>
+            <a class="nav-dropdown">Sales</a>
+            <ul>
+              <li><a>Wholesale</a></li>
+              <li><a>Retail Sales</a></li>
+            </ul>
+          </li>
+          <li>Catalog</li>
+          <li>
+            <a>Analysis</a>
+          </li>
+          <li>
+            <a>Settings</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>

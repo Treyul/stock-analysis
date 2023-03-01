@@ -6,6 +6,7 @@ from datetime import date
 import json
 
 # TODO show client when colour or size is depleted
+#TODO for retail sales price is gotten from client
 # Create your views here.
 def baseSales(request):
     form = Wholesale()

@@ -1,0 +1,41 @@
+/**********  STYLES FOR THE HAMBURGER  ********/
+div[id="hamburger"] {
+  width: 2rem;
+}
+
+div[id="hamburger"] div {
+  margin: 0.3rem;
+  background-color: black;
+  height: 0.15rem;
+}
+.ham-item {
+  transition: all ease 0.5s;
+  transform-origin: 1px;
+}
+
+.item-one {
+  transform: rotate(45deg);
+}
+.item-two {
+  transform: translate(1.25rem);
+  opacity: 0;
+}
+.item-three {
+  transform: rotate(-45deg);
+}
+/********* STYLES FOR THE MENU  *********/
+div[id="main-menu"] ul {
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  list-style: none;
+  padding-inline-start: 0px;
+}
+div[id="main-menu"] ul li {
+  margin: 0.75rem;
+}
+div[id="main-menu"] ul li a {
+  text-decoration: none;
+  color: black;
+}
+.hidden {
+  display: none;
+}

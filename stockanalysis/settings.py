@@ -154,4 +154,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # default redirect when user logins
 LOGIN_REDIRECT_URL = "/"
 
-# APPEND_SLASH=False
+ALLOWED_HOSTS = [
+    'http://mk-dubai.herokuapp.com/',
+'https://mk-dubai.herokuapp.com/',
+'mk-dubai.herokuapp.com',
+'mk-dubai.herokuapp.com/',
+]

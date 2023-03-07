@@ -1,4 +1,4 @@
-#users {
+form {
   margin-top: 4rem;
   margin-bottom: 2rem;
   display: flex;
@@ -8,7 +8,8 @@
   justify-content: center;
 }
 
-#users > input {
+form > input,
+input[id="id_owner"] {
   font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
   letter-spacing: 1.5px;
   font-weight: bold;
@@ -20,16 +21,24 @@
   outline: none;
 }
 
-#users > input:focus-visible {
+form > input:focus-visible {
   border-bottom: 1.99px blue solid;
 }
 
-#users > input[type="submit"] {
+form > input[type="submit"] {
   border-radius: 45px;
   padding: 0.125rem 0.75rem;
   background-color: orange;
 }
 
-#users > div {
-  display: flex;
+form > button {
+  /* display: flex; */
+  border-radius: 45px;
+  border: none;
+  background-color: orange;
+  padding: 0.25rem 2em;
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  font-weight: bold;
+  letter-spacing: 1.5px;
+  margin-top: 2rem;
 }

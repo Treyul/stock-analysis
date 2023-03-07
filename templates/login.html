@@ -4,24 +4,15 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login</title>
     <link rel="stylesheet" href="/static/signin.css" />
+    <title>Document</title>
   </head>
   <body>
-    <form id="users" method="post">
-      {{form.csrf_token()}} {% for field in form if fieldname != "crsf_token" %}
-      {% if field.name == "owner" %}
-      <div>
-        <p>Are you the owner?</p>
-        {{field}}
-      </div>
-      {%elif field.name == "submit" %} {{field}}
-      <a>Forgot your password?</a>
-
-      <p>
-        Don't have an account? <a href="/createaccount">click here to create</a>
-      </p>
-      {%else%} {{field}} {%endif%} {%endfor%}
+    <form method="post">
+      {% csrf_token %} {%for field in form%} {%if field.name == "owner" %}
+      <div><label for="owner">Are you the owner?</label>{{field}}</div>
+      {%else%} {{field}} {%endif%}{%endfor%}
+      <button type="submit">Log In</button>
     </form>
   </body>
 </html>

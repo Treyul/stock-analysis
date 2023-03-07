@@ -24,7 +24,7 @@ urlpatterns = [
     path("analysis/",include("analysis.urls")),
     path("sales/",include("sales.urls")),
     path("stock/",include("stock.urls")),
-    path("login/",include("django.contrib.auth.urls")),
+    path("login/",include("login.urls")),
     path("Home/",include("Home.urls")),
     path("settings", include("settings.urls"))
 ]

@@ -8,7 +8,7 @@
 # flask-wtf
 # flask-mail
 # flask_cors
-# gunicorn
+gunicorn
 # flask-login
 django
 python-dateutil

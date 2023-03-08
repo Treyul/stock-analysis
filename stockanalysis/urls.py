@@ -31,4 +31,4 @@ urlpatterns = [
     path("settings", include("settings.urls"))
 ]
 
-urlpatterns += static(settings.STATIC_URL)
+# urlpatterns += static(settings.STATIC_URL)

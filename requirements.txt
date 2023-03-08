@@ -13,3 +13,4 @@ gunicorn
 django
 python-dateutil
 mysqlclient
+whitenoise

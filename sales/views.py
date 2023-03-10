@@ -4,10 +4,13 @@ from .forms import Wholesale,Retail_sales
 from utils.models import AvailableStock,RetailSales,LocalSales
 from datetime import date
 import json
+from django.contrib.auth.decorators import login_required
 
 # TODO show client when colour or size is depleted
 #TODO for retail sales price is gotten from client
-# Create your views here.
+
+#View for local sales 
+@login_required
 def baseSales(request):
     form = Wholesale()
 
@@ -133,6 +136,9 @@ def baseSales(request):
 
     return render(request,"record.html",{"form": form})
 
+
+# view for retail sales
+@login_required
 def RetailSales(request):
 
     form = Retail_sales()

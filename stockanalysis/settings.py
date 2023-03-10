@@ -23,9 +23,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-u@uv_^r)1pk66k*xwl4^g10^kj$p_5(-7h3s=$5^(*(kre-=^s'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
 
-ALLOWED_HOSTS = []
+LOGIN_REDIRECT_URL = '/Home'
+LOGIN_URL = '/login'
+LOGOUT_REDIRECT_URL = '/login'
+LOGOUT_URL = '/logout'
+
+# ALLOWED_HOSTS = []
 
 AUTH_USER_MODEL = 'login.Users'
 
@@ -160,7 +165,7 @@ STATICFILES_FINDERS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # default redirect when user logins
-LOGIN_REDIRECT_URL = "/"
+
 
 # APPEND_SLASH=False
 ALLOWED_HOSTS = [

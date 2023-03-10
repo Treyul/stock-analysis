@@ -1,10 +1,12 @@
 from django.shortcuts import render
 from utils.models import AvailableStock,Ordered
 from datetime import date
+from django.contrib.auth.decorators import login_required
 import json
 
 
-# Create your views here.
+# Home page view
+@login_required(login_url="/login")
 def Home(request):
 
     # get products available

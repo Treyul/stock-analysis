@@ -2,8 +2,10 @@ from django.shortcuts import render,redirect
 from .forms import Login,CreateAccount
 from .models import Users
 from hashlib import sha512
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login
 
-# Create your views here.
+# view fo loggin in users
 def Signin(request):
 
     form = Login()
@@ -15,12 +17,13 @@ def Signin(request):
 
             username = form.cleaned_data["username"]
 
-            password = form.cleaned_data["password"]
+            password = form.cleaned_data["passwordLg"]
 
-            user = Users.objects.filter(username = username, password = sha512(password.encode()).hexdigest())
+            user = Users.objects.filter(username = username, password = sha512(password.encode()).hexdigest()).first()
             
             if user:
                 print("yeah")
+                login(request, user)
                 return redirect("/")
             else:
                 print("umm..")
@@ -28,6 +31,7 @@ def Signin(request):
 
     return render(request,"login.html",{"form":form})
 
+# view for creating users
 def Signup(request):
 
     form = CreateAccount()

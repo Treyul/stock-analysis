@@ -1,7 +1,7 @@
 const menu_hamburger = document.getElementById("hamburger");
+const drop_down_submenus = document.querySelectorAll(".nav-dropdown");
 
 menu_hamburger.addEventListener("click", function () {
-  console.log("clicked");
   //   select the hamburger items
   const item_one = menu_hamburger.querySelector("#one");
   const item_two = menu_hamburger.querySelector("#two");
@@ -15,4 +15,14 @@ menu_hamburger.addEventListener("click", function () {
   item_two.classList.toggle("item-two");
   item_three.classList.toggle("item-three");
   menu.classList.toggle("hidden");
+});
+
+// add toggling of submenus
+drop_down_submenus.forEach((Element) => {
+  Element.addEventListener("click", function () {
+    // get the submenus
+    const submenus = Element.nextElementSibling;
+
+    submenus.classList.toggle("hidden");
+  });
 });

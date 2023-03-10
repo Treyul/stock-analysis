@@ -35,7 +35,14 @@ div[id="main-menu"] ul li {
 div[id="main-menu"] ul li a {
   text-decoration: none;
   color: black;
+  padding: 0.25rem;
+  cursor: pointer;
 }
+
 .hidden {
   display: none;
+}
+
+.dropdown-items {
+  /* display: none; */
 }

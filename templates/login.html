@@ -4,14 +4,21 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    {% load staticfiles %}
-    <link rel="stylesheet" href="/static/signin.css" />
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'signin.css' %}" />
     <title>Document</title>
   </head>
   <body>
     <form method="post">
       {% csrf_token %} {%for field in form%} {%if field.name == "owner" %}
       <div><label for="owner">Are you the owner?</label>{{field}}</div>
+      {% elif field.name == "passwordLg" %}{{field}}
+      <p>Forgot your password?</p>
+
+      <p>
+        Don't have an account?
+        <a href="createaccount">click here to create</a>
+      </p>
       {%else%} {{field}} {%endif%}{%endfor%}
       <button type="submit">Log In</button>
     </form>

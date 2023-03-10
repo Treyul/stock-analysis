@@ -37,9 +37,11 @@ const show = (element) => {
 // function to hide the alphabetic sizing
 const hide_clothes = (clothing) => {
   clothing.classList.remove("clothing");
+  hide(clothing);
 };
 const show_clothes = (clothing) => {
   clothing.classList.add("clothing");
+  show(clothing);
 };
 
 // hide max,min, random and interval sizing when initializing document
@@ -56,10 +58,8 @@ stock_type.addEventListener("input", function () {
     hide(max_size);
     hide(min_size);
     hide(interval);
-    show(clothes);
     show_clothes(clothes);
   } else if (stock_type.value == "Continuous") {
-    hide(clothes);
     hide_clothes(clothes);
     hide(interval);
     show(max_size);
@@ -67,7 +67,6 @@ stock_type.addEventListener("input", function () {
 
     // verify data submitted is correct
   } else if (stock_type.value == "intervaled") {
-    hide(clothes);
     hide_clothes(clothes);
     show(max_size);
     show(min_size);
@@ -76,18 +75,26 @@ stock_type.addEventListener("input", function () {
   }
 });
 
-/******************COLOUR LIST */
+/******************COLOUR LIST *********************/
 // Add colours
+// get the number of colours
 var items = 1;
+
+// add eventlister to add colour button
 addButton.addEventListener("click", () => {
+  // create colour input element and set its attributes
   const item = document.createElement("input");
   item.type = "text";
   item.name = `Colour ${items}`;
   item.id = `id_Colour ${items}`;
   item.required = true;
+
+  // create the inputs lable and set its attributes
   const label = document.createElement("label");
   label.innerHTML = `Colour ${items + 1}: `;
   label.for = `id_Colour ${items}`;
+
+  //select container to add the label and input field
   const container = document.querySelector("form");
   container.insertBefore(label, removeButton);
   container.insertBefore(item, removeButton);
@@ -95,9 +102,10 @@ addButton.addEventListener("click", () => {
   document.querySelector("#id_num_items").value = items;
 });
 
-// remove colours
+/*************  remove colours  ****************/
+// Add event listener to rthe remove colour button
 removeButton.addEventListener("click", () => {
-  // get the array of colours
+  // get the array of colours inputs and labels
   const colours = document.querySelectorAll("input[id^='id_Colour']");
   const colour_labels = document.querySelectorAll("label[for^='id_Colour']");
 
@@ -112,6 +120,7 @@ removeButton.addEventListener("click", () => {
       console.log("this");
     }, 5000);
   } else {
+    // delete the elements from the array
     colours[colours.length - 1].remove();
     colour_labels[colour_labels - 1].remove();
     items--;
@@ -198,11 +207,11 @@ next_stock_details.addEventListener("click", function (e) {
 
   //Continuos numbering system
   else if (stock_type.value == "Continuous") {
-    const max_size = +max_size.value;
-    let min_size = +min_size.value;
+    const max_size_value = +max_size.value;
+    let min_size_value = +min_size.value;
 
-    console.log(max_size, min_size);
-    if (min_size > max_size) {
+    console.log(max_size_value, min_size_value);
+    if (min_size_value > max_size_value) {
       alert_msg.innerHTML = "mimimum size cannot be greater than maximum size";
       alert_msg.classList.add("error");
       show(alert_msg);
@@ -213,16 +222,20 @@ next_stock_details.addEventListener("click", function (e) {
       return;
     }
 
-    let variation = max_size - min_size + 1;
+    let variation = max_size_value - min_size_value + 1;
 
     // create table ros for the sizes
-    for (min_size; min_size <= max_size + 1; min_size++) {
+    for (
+      min_size_value;
+      min_size_value <= max_size_value + 1;
+      min_size_value++
+    ) {
       // create final tallying row
-      if (min_size == max_size + 1) {
+      if (min_size_value == max_size_value + 1) {
         variation_template += `<tr><td>Total</td>`;
       } else {
         // size row
-        variation_template += `<tr><td>${min_size}</td>`;
+        variation_template += `<tr><td>${min_size_value}</td>`;
       }
 
       // create input fields for the number of shoes in a colour and size

@@ -14,3 +14,4 @@ django
 python-dateutil
 mysqlclient
 whitenoise
+django-on-heroku 

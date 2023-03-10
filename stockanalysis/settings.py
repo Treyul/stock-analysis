@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-u@uv_^r)1pk66k*xwl4^g10^kj$p_5(-7h3s=$5^(*(kre-=^s'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
+DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -49,7 +49,7 @@ INSTALLED_APPS = [
 ]
 
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
@@ -170,3 +170,6 @@ ALLOWED_HOSTS = [
 'mk-dubai.herokuapp.com/',
 "127.0.0.1"
 ]
+
+import django_on_heroku 
+django_on_heroku.settings(locals())

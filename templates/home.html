@@ -1,11 +1,14 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/static/style.css" />
-    <script defer src="/static/home.js"></script>
+    <link rel="stylesheet" href="{% static '/static/style.css' %}" />
+    <!-- <link rel="stylesheet" href="{% static 'css/your.css' %}"> -->
+    <script defer src="{% static '/static/home.js' %}"></script>
+    <!-- <script src="{% static 'main/js/jquery.min.js' %}"></script> -->
     <!-- <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css"
       rel="stylesheet"

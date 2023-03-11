@@ -24,6 +24,12 @@ div[id="hamburger"] div {
   transform: rotate(-45deg);
 }
 /********* STYLES FOR THE MENU  *********/
+div[id="main-menu"] {
+  position: absolute;
+  background-color: #1c768f;
+  opacity: 0.98;
+  /* padding: 0.25rem 3rem; */
+}
 div[id="main-menu"] ul {
   font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
   list-style: none;
@@ -31,11 +37,13 @@ div[id="main-menu"] ul {
 }
 div[id="main-menu"] ul li {
   margin: 0.75rem;
+  padding: 0.25rem 0rem;
 }
 div[id="main-menu"] ul li a {
   text-decoration: none;
   color: black;
-  padding: 0.25rem;
+  padding: 0.5rem 4rem;
+  /* margin: 0.25rem; */
   cursor: pointer;
 }
 

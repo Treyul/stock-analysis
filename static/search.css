@@ -1,0 +1,72 @@
+form {
+  text-align: center;
+  display: grid;
+  row-gap: 0.5rem;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+form div input {
+  text-align: center;
+  /* margin: 0.5rem; */
+  border: none;
+  border-bottom: 1px solid black;
+}
+
+form div input:focus-visible {
+  outline: none;
+  border-bottom: 1px solid #7ef37e;
+}
+#submit {
+  border-radius: 45px;
+  border: none;
+  padding: 0.25rem 1.5rem;
+  letter-spacing: 1px;
+  background: #7ef37e;
+  font-weight: bold;
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  /* float: right; */
+  grid-column: 3/3;
+}
+
+/* style for the error  */
+#error {
+  /* position: absolute; */
+  width: fit-content;
+  text-align: center;
+  margin: auto;
+  border-radius: 45px;
+  transition: opacity ease 3s;
+  padding: 0.5rem 0.75rem;
+}
+.error {
+  background-color: rgb(241 56 56 / 90%);
+  opacity: 1;
+}
+.hidden {
+  /* display: none; */
+  visibility: hidden;
+}
+input[id="id_size"] {
+  width: 3rem;
+}
+input[id="id_colour"] {
+  width: 5rem;
+}
+input[name="product"] {
+  width: 6rem;
+}
+input[id="id_shop_number"] {
+  width: 4rem;
+}
+table {
+  border-collapse: collapse;
+  border-radius: 11px;
+  width: -webkit-fill-available;
+  margin-top: 1rem;
+}
+tr,
+th,
+td {
+  border: 1px solid black;
+  padding: 0.25rem;
+  text-align: center;
+}

@@ -1,4 +1,5 @@
 from django import forms
+from datetime import date
 
 class Retail_sales(forms.Form):
 
@@ -10,7 +11,7 @@ class Retail_sales(forms.Form):
     
     name = forms.CharField(required=False,label="",widget=forms.TextInput(attrs={"placeholder":"Name"}))
     
-    paid = forms.BooleanField()
+    paid = forms.BooleanField(label="")
     
     buyer = forms.CharField(label="",widget=forms.TextInput(attrs={"placeholder":"Buyer Name"}))
     
@@ -30,3 +31,25 @@ class Wholesale(forms.Form):
     paid = forms.BooleanField()
 
     # add_sale = SubmitField("Add sale")
+
+class Search_sales(forms.Form):
+
+    product = forms.CharField(label="",required=False, widget=forms.TextInput(attrs={"placeholder":"Product name"}))
+
+    shop_number = forms.CharField(label="",required=False,widget=forms.TextInput(attrs={"placeholder":"Shop no"}))
+
+    size = forms.CharField(label = "", required=False,widget = forms.TextInput(attrs={"placeholder":"size"}))
+
+    colour = forms.CharField(label="" ,required=False, widget = forms.TextInput(attrs = {"placeholder":"colour"}))
+    
+    start_date = forms.DateTimeField(required=False, widget = forms.DateInput(
+        format=('%Y-%m-%d'),
+        attrs={'class': 'form-control', 'placeholder': 'Select a date','type': 'date'})
+        )
+    
+    # end_date = forms.DateField(required=False,widget=forms.DateInput())
+    end_date = forms.DateTimeField(required=False, widget = forms.DateInput(
+        format=('%Y-%m-%d'),
+        attrs={'class': 'form-control', 'placeholder': 'Select a date','type': 'date', "value":date.today()})
+        )
+    

@@ -17,8 +17,20 @@
     <div id="error" class="hide"></div>
 
     <form method="post">
-      {{form}}
-      <input type="button" id="add_sale" value="add Sale" />
+      {% for field in form%} {% if field.name == "paid"%}
+      <div>
+        <label for="paid"> Paid?</label>
+        {{field}}
+      </div>
+      {%else%}{{field}}{% endif %} {% endfor %}
+      <input
+        type="button"
+        id="remove-item"
+        class="remove-sale"
+        value="Delete sale"
+      />
+      <input type="button" id="add-item" class="add-sale" value="Add sale" />
+      <input type="submit" id="submit_sales" value="Submit Sale" />
     </form>
     {% if sales %}
     <!-- <div id="records"> -->

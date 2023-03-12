@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from .forms import Wholesale,Retail_sales
+from .forms import Wholesale,Retail_sales,Search_sales
 from utils.models import AvailableStock,RetailSales,LocalSales
 from datetime import date
 import json
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 
 # TODO show client when colour or size is depleted
 #TODO for retail sales price is gotten from client
@@ -139,14 +140,14 @@ def baseSales(request):
 
 # view for retail sales
 @login_required
-def RetailSales(request):
+def Retailsales(request):
 
     form = Retail_sales()
 
     # get data if 
     if request.method == "POST":
 
-        sales_data = request.POST.get("saledata")
+        sales_data = json.load(request)
 
         # Iterate through the sales Objects
         for key in sales_data:
@@ -280,3 +281,42 @@ def RetailSales(request):
         #     pass
 
     return render(request,"record.html",{"form":form})
+
+@login_required
+def search(request):
+
+    form = Search_sales()
+
+    # get data sent using fetch
+    if request.method == 'POST':
+
+        search_filters = json.load(request)
+
+        # build a query
+        query = Q()
+        # build query
+        if search_filters.get("product"):
+            query &= Q(product=search_filters["product"])
+            # pass
+        if search_filters.get("shop_no"):
+            query &= Q(shop_no = search_filters["shop_no"])
+            # pass
+        if search_filters.get("size"):
+            query &= Q(size = search_filters["size"])
+            # pass
+        if search_filters.get("colour"):
+            query &= Q(colour = search_filters["colour"])
+            # pass
+        if search_filters.get("start_date"):
+            query &= Q(date__range = [search_filters["start_date"],search_filters["end_date"]])
+            # pass
+
+        retail_results = RetailSales.objects.filter(query).all().values()
+        print(RetailSales.objects.filter(query).all())
+
+        wholesale_results = LocalSales.objects.filter(query).all().values()
+
+        response_message = {"message":"success", "retail results": list(retail_results),"wholesale results": list(wholesale_results)}
+        return JsonResponse(response_message)
+
+    return render(request ,"search.html",{"form":form})

@@ -69,19 +69,44 @@ form {
   /* flex: auto 1 1; */
   margin-bottom: 0.5rem;
   display: grid;
-  width: 393px;
+  /* display: flex; */
+  /* width: 393px; */
   grid-template-columns: 6em 5em 3em 5em;
   row-gap: 1em;
+  /* grid-template-columns: 1fr 1fr 1fr 1fr; */
   flex-wrap: wrap;
   /* filter: blur(1px); */
+  justify-content: space-between;
 }
-form > input {
+form > input[type="text"],
+form > input[type="number"] {
   border: none;
+  size: auto;
   border-bottom: 1px solid gray;
   text-align: center;
   margin-left: 0.5rem;
+  resize: both;
   flex-basis: 3rem;
   /* width: 5rem; */
+}
+form > input[type="button"],
+form > input[type="submit"] {
+  border: none;
+  border-radius: 45px;
+}
+#submit_sales {
+  background-color: #84f584;
+  grid-column: 4/4;
+  /* color: white; */
+}
+#remove-item {
+  background-color: rgb(241 56 56 / 88%);
+  grid-column: 1/2;
+  padding: 0.125rem 0.5rem;
+}
+#add-item {
+  background-color: #78cde9;
+  grid-column: 4/4;
 }
 table {
   border-collapse: collapse;

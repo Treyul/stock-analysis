@@ -27,7 +27,10 @@ div[id="hamburger"] div {
 div[id="main-menu"] {
   position: absolute;
   background-color: #1c768f;
-  opacity: 0.98;
+  /* opacity: 0.98; */
+  /* height: 100%; */
+  padding-right: 2rem;
+  transition: all ease 1s;
   /* padding: 0.25rem 3rem; */
 }
 div[id="main-menu"] ul {
@@ -46,9 +49,14 @@ div[id="main-menu"] ul li a {
   /* margin: 0.25rem; */
   cursor: pointer;
 }
+.show {
+  transform: translateX(0rem);
+  opacity: 0.98;
+}
 
-.hidden {
-  display: none;
+.menuhidden {
+  transform: translateX(-10rem);
+  opacity: 0;
 }
 
 .dropdown-items {

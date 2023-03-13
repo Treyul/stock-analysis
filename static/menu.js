@@ -11,10 +11,11 @@ menu_hamburger.addEventListener("click", function () {
   const menu = document.getElementById("main-menu");
 
   //   toggle the class for view and close menu
+  menu.classList.toggle("show");
   item_one.classList.toggle("item-one");
   item_two.classList.toggle("item-two");
   item_three.classList.toggle("item-three");
-  menu.classList.toggle("hidden");
+  menu.classList.toggle("menuhidden");
 });
 
 // add toggling of submenus

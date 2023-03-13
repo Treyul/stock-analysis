@@ -30,7 +30,7 @@
         <div id="two" class="ham-item"></div>
         <div id="three" class="ham-item"></div>
       </div>
-      <div id="main-menu" class="hidden">
+      <div id="main-menu" class="">
         <ul>
           <li>
             <a href="/Home">Home</a>
@@ -96,8 +96,9 @@
           {% endfor %}
         </div>
       </div>
+      {% endfor %}
     </div>
-    {% endfor %} {%else%}
+    {%else%}
     <div id="notify">No stock available</div>
     {%endif%} {% if pending_order %}
     <div class="contain" id="pending">

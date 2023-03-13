@@ -38,7 +38,7 @@ class Update_Available(forms.Form):
 
     stock_type = forms.ChoiceField(label="", choices=[('Alphabetic', 'Alphabetic'), ('Continuous', 'Continuous'),("intervaled","Intervaled"),("Random","Random")])
 
-    clothing = forms.MultipleChoiceField(label="",widget=forms.CheckboxSelectMultiple(), choices=[("3XS", "3XS"), ("2XS", "2XS"), ("XS", "XS"), ("S", "S"), ("M", "M"), ("L", "L"), ("XL", "XL"), ("2XL", "2XL"), ("3XL", "3XL")])
+    clothing = forms.MultipleChoiceField(required=False,label="",widget=forms.CheckboxSelectMultiple(), choices=[("3XS", "3XS"), ("2XS", "2XS"), ("XS", "XS"), ("S", "S"), ("M", "M"), ("L", "L"), ("XL", "XL"), ("2XL", "2XL"), ("3XL", "3XL")])
 
     max_size = forms.IntegerField(required=False,label="", widget=forms.NumberInput(attrs={"placeholder": "Max Size"}))
 

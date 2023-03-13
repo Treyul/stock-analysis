@@ -73,7 +73,9 @@ label[for^="id_Colour"] {
 input[id^="id_Colour"] {
   grid-column: span 2;
 }
-
+.green {
+  background-color: rgb(89, 230, 89);
+}
 #add_stock_next {
   background-color: #78cde9;
   padding: 0.25rem;

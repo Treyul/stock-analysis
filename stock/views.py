@@ -9,9 +9,12 @@ def update_available_stock(request):
     # get form data if post request is made
     if request.method == "POST":
         form = Update_Available(request.POST)
+        print(form.is_valid())
         if form.is_valid():
+            print(form.cleaned_data)
             product_name = form.cleaned_data["name"]
             product_sizes =[]
+            product_sizes_json = []
             product_data = form.cleaned_data["stock_data"]
             product_data_json = json.loads(product_data)
             product_colours = form.cleaned_data["colour"]
@@ -20,6 +23,7 @@ def update_available_stock(request):
             # create a list for the product sizes
             for size in product_data_json.keys():
                 product_sizes.append(size)
+                product_sizes_json.append(size)
 
             # change data type of the product sizes,colours to be compliant with the datatype of db column
             product_sizes = json.dumps(product_sizes)
@@ -84,7 +88,7 @@ def update_available_stock(request):
 
                 # update size range
                 previous_sizes = json.loads(Available_product.size_range)
-                for size in product_sizes:
+                for size in product_sizes_json:
                     if size not in previous_sizes:
                         previous_sizes.append(size)
                 

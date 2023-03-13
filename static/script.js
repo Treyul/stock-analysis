@@ -75,7 +75,7 @@ stock_type.addEventListener("input", function () {
   }
 });
 
-/******************COLOUR LIST *********************/
+/****************** COLOUR LIST *********************/
 // Add colours
 // get the number of colours
 var items = 1;

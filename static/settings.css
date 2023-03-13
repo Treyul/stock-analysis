@@ -1,16 +1,16 @@
 nav {
   background: rgba(5, 68, 104, 0.95);
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 33%;
-  height: 100%;
+  position: absolute;
+  /* top: 0; */
+  /* left: 0; */
+  /* width: 33%; */
+  /* height: 100%; */
   padding: 20px 0;
   transition: all 0.5s ease;
 }
 .content {
   /* position: relative; */
-  margin-left: 33%;
+  /* margin-left: 33%; */
 }
 nav a {
   display: block;
@@ -30,4 +30,46 @@ nav a {
 }
 .links:hover {
   color: white;
+}
+
+div[id="main-menu"] {
+  height: 100%;
+}
+.stock-data p {
+  margin: 0px;
+}
+.stock-data {
+  /* display: flex; */
+  border-bottom: 1px solid black;
+  border-top: 1px solid black;
+  display: grid;
+  grid-template-columns: 0.5fr 1fr 1fr 1fr 1fr;
+  row-gap: 1.25rem;
+  margin-bottom: 1.25rem;
+  text-align: center;
+  padding: 0.5rem 0px;
+}
+.stock-data p:nth-child(even) {
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+}
+
+.stock-data input[type="button"] {
+  border-radius: 45px;
+  border: none;
+  padding: 0.25rem 0.5rem;
+  /* width: fit-content; */
+  /* text-align: center; */
+}
+
+table {
+  border-collapse: collapse;
+  text-align: center;
+}
+
+tr,
+td,
+th {
+  border: 1px solid black;
+  padding: 0.25rem;
 }

@@ -1,15 +1,25 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/static/settings.css" />
-    <script defer src="/static/settings.js"></script>
+    <link rel="stylesheet" href="{% static 'settings.css' %}" />
+    <script defer src="{% static 'settings.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'menu.css' %}" />
+    <script defer src="{% static 'menu.js' %}"></script>
     <title>Document</title>
   </head>
   <body>
-    <nav>
+    <div id="menu">
+      <!-- Create the hamburger display -->
+      <div id="hamburger">
+        <div id="one" class="ham-item"></div>
+        <div id="two" class="ham-item"></div>
+        <div id="three" class="ham-item"></div>
+      </div>
+      <div id="main-menu" class="menuhidden">
       <div class="links" data-tab="1">Account details</div>
       {%if unpriced_stock %}
       <div class="links" data-tab="2">Set prices</div>
@@ -18,38 +28,47 @@
       {%endif%}
       <div class="links" data-tab="4">Reset password</div>
       <a></a>
-    </nav>
+   </div>
     <div class="content">
-      <h2>{{current_user.Fullname}}</h2>
+      <h2>{{request.user.first_name}}</h2>
       <div class="contents content-01 contents--active">
-        <p>{{current_user.shop}}</p>
+        <p>{{request.user.shop_number}}</p>
       </div>
       <div class="contents content-02">
-        {%if unpriced_stock %} {%for stock in unpriced_stock%}
-        <div>
-          <p class="start">{{stock.name}}</p>
-          <p>{% for size in stock.size_range %} {{size}}, {% endfor %}</p>
-          <p>{% for colour in stock.colours %} {{colour}}, {% endfor %}</p>
-          <p>{{stock.amount}}</p>
-          <p>{{stock.price}}</p>
-          <button class="prices">Set price</button>
-        </div>
-        {%endfor%} {%else%}
+        {%if unpriced_stock %}
+        <table>
+          <tr><th>Product</th><th>sizes</th><th>Colour</th><th>Amount</th></tr>
+         {%for stock in unpriced_stock%}
+<tr>
+        <!-- <div class="stock-data"> -->
+          <!-- <p class="start">{{stock.name}}</p> -->
+        <td class="start">{{stock.name}}</td>
+
+          <td>{% for size in stock.size_range %} {{size}}, {% endfor %}</td>
+          <td>{% for colour in stock.colours %} {{colour}}, {% endfor %}</td>
+          <td>{{stock.amount}}</td>
+         <td><input type="button" value="Set prices" class="prices" /></td>
+        <!-- </div> --></tr>
+      
+        {%endfor%}</table> {%else%}
         <div>All stock as been priced</div>
         {%endif%}
       </div>
       <div class="contents content-03">
-        {% if priced_stock %} {%for stock in priced_stock%}
-        <div>
-          <p class="start">{{stock.name}}</p>
-          <p>{% for size in stock.size_range %} {{size}}, {% endfor %}</p>
-          <p>{% for colour in stock.colours %} {{colour}}, {% endfor %}</p>
-          <p>{{stock.amount}}</p>
-          <p>{{stock.price}}</p>
-
-          <button class="prices">Change price</button>
-        </div>
-        {%endfor%} {%else%}
+        {% if priced_stock %} 
+        {%for stock in priced_stock%}
+        <tr>
+          <!-- <div class="stock-data"> -->
+            <!-- <p class="start">{{stock.name}}</p> -->
+          <td class="start">{{stock.name}}</td>
+  
+            <td>{% for size in stock.size_range %} {{size}}, {% endfor %}</td>
+            <td>{% for colour in stock.colours %} {{colour}}, {% endfor %}</td>
+            <td>{{stock.amount}}</td>
+           <td><input type="button" value="Set prices" class="prices" /></td>
+          <!-- </div> --></tr>
+        
+          {%endfor%}</table> {%else%}
         <div>No stock in the shop</div>
         {%endif%}
       </div>

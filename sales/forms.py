@@ -9,11 +9,11 @@ class Retail_sales(forms.Form):
     
     colour = forms.CharField(label="",widget=forms.TextInput(attrs={"placeholder":"colour"}))
     
-    name = forms.CharField(required=False,label="",widget=forms.TextInput(attrs={"placeholder":"Name"}))
+    name = forms.CharField(required=False,label="",widget=forms.TextInput(attrs={"placeholder":"shop"}))
     
     paid = forms.BooleanField(label="")
     
-    buyer = forms.CharField(label="",widget=forms.TextInput(attrs={"placeholder":"Buyer Name"}))
+    buyer = forms.CharField( required=False,label="",widget=forms.TextInput(attrs={"placeholder":"buyer"}))
     
     amount = forms.IntegerField(label="",widget = forms.NumberInput(attrs={"placeholder":"Amount"}))
     

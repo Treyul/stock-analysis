@@ -26,6 +26,8 @@ class RetailSales(models.Model):
 
     amount = models.IntegerField(null = True)
 
+    balanced_out = models.BooleanField(default=False)
+
     date = models.DateField( default= date.today, null=False)
 
 
@@ -130,3 +132,12 @@ class users(models.Model):
     rights = models.CharField(max_length =15, null=False,default="attendant")
 
     shop = models.CharField(max_length =20, null= False)
+
+class Shop(models.Model):
+    name = models.CharField(max_length=100)
+    location = models.CharField(max_length=100)
+
+class User(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    shop = models.ForeignKey(Shop, on_delete=models.CASCADE)

@@ -9,9 +9,7 @@ def update_available_stock(request):
     # get form data if post request is made
     if request.method == "POST":
         form = Update_Available(request.POST)
-        print(form.is_valid())
         if form.is_valid():
-            print(form.cleaned_data)
             product_name = form.cleaned_data["name"]
             product_sizes =[]
             product_sizes_json = []

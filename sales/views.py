@@ -127,6 +127,7 @@ def baseSales(request):
 
             stock.sizes = json.dumps(available_sizes)
 
+            stock.save()
             
             response_message = {"message":"success"}
             # for key in sales_data:
@@ -164,7 +165,6 @@ def Retailsales(request):
             available_stock = json.loads(stock.variation)
             available_sizes = json.loads(stock.size_range)
             sold_stock = sales_data[key]
-            amount_sold = 0 
 
             # check if size exists
             for size in sold_stock:
@@ -186,10 +186,12 @@ def Retailsales(request):
                     sold_color = sold_stock[size]
 
                     color = sold_color["color"]
-                    shop = sold_color["name"]
+                    shop = sold_color.get("name")
+                    buyer = sold_color.get("buyer")
+                    price = sold_color["amount"]
+                    paid = sold_color["paid"]
                     # covert paid string to boolean value
                     status = False
-                    paid = sold_color["paid"]
                     if paid == "false":
                         paid = False
                     elif paid == "true":
@@ -239,9 +241,25 @@ def Retailsales(request):
                         #     return
 
                         # upload sale to database
-                        sale = LocalSales(product=key,size=size,colour=color,shop_no=shop,paid=paid,status=status,date=date.today(),price=stock.price)
+                        print(shop,buyer)
+                        if shop and not buyer:
+                            print("1")
+                            sale = RetailSales(product=key,size=size,colour=color,shop_no=shop,paid=paid,status=status,date=date.today(),amount=price)
+                            sale.save() 
+                        elif buyer and not shop:
+                            print("2")
+                            sale = RetailSales(product=key,size=size,colour=color,buyer=buyer,paid=paid,status=status,date=date.today(),amount=price)
+                            sale.save() 
+                        elif buyer and shop:
+                            print("3")
+                            sale = RetailSales(product=key,size=size,colour=color,shop_no=shop,buyer=buyer,paid=paid,status=status,date=date.today(),amount=price)
+                            sale.save()
+                        elif not buyer and not shop:
+                            print("4")
+                            sale = RetailSales(product=key,size=size,colour=color,paid=paid,status=status,date=date.today(),amount=price)
+                            sale.save()
 
-                        sale.save()
+            
                             # TODO remove stock color and sizes and product altogether if depleted
 
                         
@@ -255,6 +273,8 @@ def Retailsales(request):
             stock.date = date.today()
 
             stock.sizes = json.dumps(available_sizes)
+
+            stock.save()
 
             
             response_message = {"message":"success"}
@@ -280,7 +300,7 @@ def Retailsales(request):
         #     amount = form.cleaned_data["amount"]
         #     pass
 
-    return render(request,"record.html",{"form":form})
+    return render(request,"retailrecords.html",{"form":form})
 
 @login_required
 def search(request):
@@ -311,10 +331,9 @@ def search(request):
             query &= Q(date__range = [search_filters["start_date"],search_filters["end_date"]])
             # pass
 
-        retail_results = RetailSales.objects.filter(query).all().values()
-        print(RetailSales.objects.filter(query).all())
+        retail_results = RetailSales.objects.filter(query).all().values().order_by("-date")
 
-        wholesale_results = LocalSales.objects.filter(query).all().values()
+        wholesale_results = LocalSales.objects.filter(query).all().values().order_by("-date")
 
         response_message = {"message":"success", "retail results": list(retail_results),"wholesale results": list(wholesale_results)}
         return JsonResponse(response_message)

@@ -14,8 +14,23 @@
       src="https://cdn.anychart.com/releases/8.11.0/js/anychart-cartesian.min.js"
     ></script>
     <script defer src="/static/analysis.js"></script>
+    <link rel="stylesheet" href="/static/analysis.css" />
   </head>
   <body>
+    <div id="menu">
+      <!-- Create the hamburger display -->
+      <div id="hamburger">
+        <div id="one" class="ham-item"></div>
+        <div id="two" class="ham-item"></div>
+        <div id="three" class="ham-item"></div>
+      </div>
+      <div id="main-menu" class="hidden"></div>
+    </div>
+    <div class="retail-data">
+      {% for sum in localsum %} {% for k,i in sum.items %} {{i}}{%endfor%}
+      <input type="button" value="Show details" />
+      {% endfor %}
+    </div>
     <div>
       <p>Current stock worth</p>
       <p>{{worth}}</p>

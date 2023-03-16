@@ -316,12 +316,18 @@ Submit_sales.addEventListener("click", function (e) {
         setTimeout(function () {
           console.log("test");
           error.classList.add("hide");
+          error.classList.remove("error");
         }, 5000);
       } else if (data["message"] != "error") {
         // show user sale was successfully added
         error.innerHTML = "Successfully added sale";
         error.classList.remove("hide");
         error.classList.add("success");
+        setTimeout(function () {
+          console.log("test");
+          error.classList.add("hide");
+          error.classList.remove("success");
+        }, 5000);
 
         // append data to sales table
         // initialize template

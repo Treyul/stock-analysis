@@ -27,22 +27,50 @@
       <div id="main-menu" class="hidden"></div>
     </div>
     <div class="retail-data">
-      {% for sum in localsum %} {% for k,i in sum.items %} {{i}}{%endfor%}
-      <input type="button" value="Show details" />
+      <div style="text-align: center"><h3>Shop sales</h3></div>
+      <div class="headers">
+        <p>shop number</p>
+        <p>quantity</p>
+        <p>Total</p>
+        <p></p>
+      </div>
+      {% for sum in localsum %}
+      <div>
+        <div class="retail-summary">
+          <p>{{sum.shop_no}}</p>
+          <p>{{sum.count}}</p>
+          <p>{{sum.sum}}</p>
+
+          <input type="button" value="Show details" class="retail-show-btn" />
+        </div>
+        <div class="retail-details hidden">
+          <table>
+            {% for obj in sum.data %}
+            <tr>
+              <td><p>{{obj.product}}</p></td>
+              <td><p>{{obj.price}}</p></td>
+              <td><p>{{obj.colour}}</p></td>
+              <td><p>{{obj.size}}</p></td>
+              <td><p>{{obj.paid}}</p></td>
+              <td><input type="button" value="sorted" /></td>
+            </tr>
+            {% endfor %}
+          </table>
+        </div>
+      </div>
       {% endfor %}
     </div>
-    <div>
-      <p>Current stock worth</p>
-      <p>{{worth}}</p>
+    {% if retailsum %}
+    <div class="retail-data">
+      <div style="text-align: center"><h3>Brokered sales</h3></div>
+      <div class="headers">
+        <p>shop number</p>
+        <p>quantity</p>
+        <p>Total</p>
+        <p></p>
+      </div>
     </div>
-    <div>
-      <p>Current Month sales worth</p>
-      <p>{{revenue}}</p>
-    </div>
-    <div>
-      <p>Current Month sales volume</p>
-      <p>{{volume}}</p>
-    </div>
+    {% endif %}
     <!-- div tag for the graphs -->
     <div id="current_year_revenue"></div>
     <div id="current_year_volume"></div>

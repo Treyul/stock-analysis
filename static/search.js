@@ -77,13 +77,15 @@ submit.addEventListener("click", function (e) {
         //create tables fro the results if they exist
         if (retail_results.length > 0 || wholesale_results.length > 0) {
           // initialize template
-          let retail_template = `<table>
-          <tr><th colspan=4>Retail sales</th><tr/>
+          let retail_template = `<table class="retail">
+          <tr><th colspan=6>Retail sales</th><tr/>
           <tr>
           <th>Product</th>
           <th>Shop no</th>
           <th>size</th>
           <th>Colour</th>
+          <th>paid</th>
+          <th>return</th>
           </tr>`;
 
           // insert data into table
@@ -92,20 +94,33 @@ submit.addEventListener("click", function (e) {
             for (let i = 0; i < retail_results.length; i++) {
               const result = retail_results[i];
               retail_template += `<tr>
-              <td>${result["product"]}</td><td>${result["shop_no"]}</td><td>${result["size"]}</td><td>${result["colour"]}</td>`;
+              <td>${result["product"]}</td><td>${result["shop_no"]}</td><td>${
+                result["size"]
+              }</td><td>${result["colour"]}</td><td>${
+                result["paid"] == false
+                  ? `False <input type="button" value="Change" class="status paid" />`
+                  : "returned"
+              }</td>
+              <td>${
+                result["status"] == false
+                  ? `False <input type="button" value="Change" class="status return" />`
+                  : returned
+              }</td></tr>`;
             }
 
             // append template into the page
             form.insertAdjacentHTML("afterend", retail_template);
           }
 
-          let wholesale_template = `<table>
-          <tr><th colspan=4>Wholesale sales</th><tr/>
+          let wholesale_template = `<table class="wholesale">
+          <tr><th colspan=5>Wholesale sales</th><tr/>
         <tr>
         <th>Product</th>
         <th>Shop no</th>
         <th>size</th>
         <th>Colour</th>
+        <th>Paid</th>
+        <th>return</th>
         </tr>`;
           if (wholesale_results.length > 0) {
             // create table and headings for the wholesale results
@@ -114,12 +129,68 @@ submit.addEventListener("click", function (e) {
             for (let i = 0; i < wholesale_results.length; i++) {
               const result = wholesale_results[i];
               wholesale_template += `<tr>
-              <td>${result["product"]}</td><td>${result["shop_no"]}</td><td>${result["size"]}</td><td>${result["colour"]}</td>`;
+              <td>${result["product"]}</td><td>${result["shop_no"]}</td><td>${
+                result["size"]
+              }</td><td>${result["colour"]}</td><td>${
+                result["paid"] == false
+                  ? `False <input type="button" value="Change" class="status paid" />`
+                  : "paid"
+              }</td>
+              <td>${
+                result["status"] == false
+                  ? `False <input type="button" value="Change" class="status return" />`
+                  : "returned"
+              }</td></tr>`;
             }
             form.insertAdjacentHTML("afterend", wholesale_template);
           }
 
-          // push table template into the page
+          // select tables
+          const retail_table = document.querySelector("table[class='retail']");
+          const wholesale_table = document.querySelector(
+            "table[class='wholesale']"
+          );
+
+          //select the buttons for changing the return and payment status
+          const retail_pay_btns = retail_table.querySelectorAll(".paid");
+          const retail_return_btns = retail_table.querySelectorAll(".return");
+          const wholesale_pay_btns = wholesale_table.querySelectorAll(".paid");
+          const wholesale_return_btns =
+            wholesale_table.querySelectorAll(".return");
+
+          // add event listners to th buttons
+          retail_pay_btns.forEach((button) => {
+            button.addEventListener("click", function () {
+              // select the parent table row
+              const parent = button.closest("tr");
+              console.log(parent);
+            });
+          });
+          retail_return_btns.forEach((button) =>
+            button.addEventListener("click", function () {
+              // select the parent table row
+              const parent = button.closest("tr");
+              console.log(parent);
+            })
+          );
+          wholesale_pay_btns.forEach((button) =>
+            button.addEventListener("click", function () {
+              // select the parent table row
+              const parent = button.closest("tr");
+              console.log(parent);
+            })
+          );
+          wholesale_return_btns.forEach((button) =>
+            button.addEventListener("click", function () {
+              // select the parent table row
+              const parent = button.closest("tr");
+              console.log(parent);
+            })
+          );
+
+          console.log(retail_pay_btns, retail_return_btns);
+
+          //
         } else {
         }
       }

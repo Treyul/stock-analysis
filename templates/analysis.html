@@ -69,6 +69,32 @@
         <p>Total</p>
         <p></p>
       </div>
+        {% for sum in retailsum %}
+        <div>
+          <div class="retail-summary">
+            <p>{{sum.shop_no}}</p>
+            <p>{{sum.count}}</p>
+            <p>{{sum.sum}}</p>
+
+            <input type="button" value="Show details" class="retail-show-btn" />
+          </div>
+          <div class="retail-details hidden">
+            <table>
+              {% for obj in sum.data %}
+              <tr>
+                <td><p>{{obj.product}}</p></td>
+                <td><p>{{obj.amount}}</p></td>
+                <td><p>{{obj.colour}}</p></td>
+                <td><p>{{obj.size}}</p></td>
+                <td><p>{{obj.paid}}</p></td>
+                <td><input type="button" value="sorted" /></td>
+              </tr>
+              {% endfor %}
+            </table>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
     </div>
     {% endif %}
     <!-- div tag for the graphs -->

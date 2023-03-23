@@ -8,6 +8,7 @@ const pay_status = document.querySelectorAll(".paid");
 const search = document.querySelector(".search");
 const table = document.querySelector("table");
 const form = document.querySelector("form");
+const error = document.getElementById("error");
 // const search_div = document.getElementById("search_div");
 
 // get the cookie in the website
@@ -257,14 +258,27 @@ pay_status.forEach((element) => {
     // console.log(bool);
   });
 });
-
+// create function to verify correct data is sent
+const form_verify = (element) => {
+  if (element.value == "") {
+    console.log(element.value == "");
+    error.innerHTML = `${element.name} should be included`;
+    error.classList.add("error");
+    error.classList.remove("hide");
+    setTimeout(() => {
+      error.classList.add("hide");
+      error.classList.remove("error");
+    }, 5000);
+    return false;
+  } else return true;
+};
+//
 Submit_sales.addEventListener("click", function (e) {
   e.preventDefault();
 
   // TODO ensure field are not empty
 
   // initialize sales record object
-  form.checkValidity();
   let saledata = {};
   const product = document.getElementById("id_product");
   const name = document.getElementById("id_name");
@@ -274,6 +288,23 @@ Submit_sales.addEventListener("click", function (e) {
   const buyer = document.getElementById("id_buyer");
   // const status = document.getElementById("id_status");
   const paid = document.getElementById("id_paid");
+
+  // catch error in data to be submitted
+  if (!form_verify(product)) return;
+  else if (!form_verify(size)) return;
+  else if (!form_verify(colour)) return;
+  else if (!form_verify(name)) return;
+  console.log(form_verify(name));
+  if (amount.value == "" || +amount.value <= 0) {
+    error.innerHTML = "Price should be included";
+    error.classList.add("error");
+    error.classList.remove("hide");
+    setTimeout(() => {
+      error.classList.add("hide");
+      error.classList.remove("error");
+    }, 5000);
+    return;
+  }
 
   const product_data = {
     color: `${colour.value}`,

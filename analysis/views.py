@@ -13,7 +13,7 @@ def get_debts_and_credits_summation(request):
     local_owed = LocalSales.objects.filter(status=False,paid= False).values("shop_no").order_by("shop_no").annotate(sum= Sum("price"),count=Count("price")) 
     
     # get unpaid retail summation
-    retail_owe = RetailSales.objects.filter(~Q(shop_no= request.user.shop_number),balanced_out = False).values("shop_no").order_by("shop_no").annotate(count = Sum("amount"))
+    retail_owe = RetailSales.objects.filter(~Q(shop_no= request.user.shop_number),balanced_out = False).values("shop_no").order_by("shop_no").annotate(count = Count("amount"),sum= Sum("amount"))
 
 
     return local_owed,retail_owe

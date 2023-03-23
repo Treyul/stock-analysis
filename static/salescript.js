@@ -69,9 +69,12 @@ const change_pay = (element) => {
       sale_data["return"] = parent[4].firstElementChild.innerHTML;
       sale_data["pay"] = value;
 
-      let reponse = fetch("/changepay", {
+      let reponse = fetch("changepay", {
         method: "POST",
-        headers: { "content-type": "application/json" },
+        headers: {
+          "content-type": "application/json",
+          "X-CSRFToken": `${crsf_token}`,
+        },
         body: JSON.stringify(sale_data),
       }).then(function (response) {
         if (response.status !== 200) {
@@ -123,9 +126,12 @@ const change_return = (element) => {
       sale_data["return"] = value;
       sale_data["pay"] = parent[5].firstElementChild.innerHTML;
 
-      let reponse = fetch("/changereturn", {
+      let reponse = fetch("changereturn", {
         method: "POST",
-        headers: { "content-type": "application/json" },
+        headers: {
+          "content-type": "application/json",
+          "X-CSRFToken": `${crsf_token}`,
+        },
         body: JSON.stringify(sale_data),
       }).then(function (response) {
         if (response.status !== 200) {
@@ -138,6 +144,7 @@ const change_return = (element) => {
               "returned" == value ? "False" : "returned";
             element.nextElementSibling.remove();
             element.classList.remove("hidden");
+            element.remove();
             alert("successfully changed status");
           }
         });
@@ -178,9 +185,12 @@ return_status.forEach((element) => {
       sale_data["pay"] = parent[5].firstElementChild.innerHTML;
 
       // fetch endpoint
-      let response = fetch("/changereturn", {
+      let response = fetch("changereturn", {
         method: "POST",
-        headers: { "content-type": "application/json" },
+        headers: {
+          "content-type": "application/json",
+          "X-CSRFToken": `${crsf_token}`,
+        },
         body: JSON.stringify(sale_data),
       }).then(function (response) {
         if (response.status != 200) {
@@ -193,6 +203,7 @@ return_status.forEach((element) => {
               "returned" == value ? "False" : "returned";
             element.classList.remove("hidden");
             element.nextElementSibling.remove();
+            element.remove();
             // element.removeAttribute("disabled")
           }
           console.log(data);
@@ -234,9 +245,12 @@ pay_status.forEach((element) => {
       sale_data["shop"] = parent[3].innerHTML;
       sale_data["return"] = parent[4].firstElementChild.innerHTML;
       sale_data["pay"] = value;
-      let response = fetch("/changepay", {
+      let response = fetch("changepay", {
         method: "POST",
-        headers: { "content-type": "application/json" },
+        headers: {
+          "content-type": "application/json",
+          "X-CSRFToken": `${crsf_token}`,
+        },
         body: JSON.stringify(sale_data),
       }).then(function (response) {
         if (response.status != 200) {
@@ -261,7 +275,10 @@ pay_status.forEach((element) => {
 Submit_sales.addEventListener("click", function (e) {
   e.preventDefault();
 
+  // TODO ensure field are not empty
+
   // initialize sales record object
+  form.checkValidity();
   let saledata = {};
   const product = document.getElementById("id_product");
   const name = document.getElementById("id_name");
@@ -311,7 +328,7 @@ Submit_sales.addEventListener("click", function (e) {
         }, 5000);
       } else if (data["message"] != "error") {
         // show user sale was successfully added
-        error.innerHTML = "Successfully added sale";
+        error.innerHTML = data["success"];
         error.classList.remove("hide");
         error.classList.add("success");
 

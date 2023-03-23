@@ -34,7 +34,7 @@
     </form>
     {% if sales %}
     <!-- <div id="records"> -->
-    <input type="button" value="Search sales." class="search" />
+    <!-- <input type="button" value="Search sales." class="search" /> -->
     <!-- <div id="search_div" class="search_div" class="hidden">
       <div id="close">&times;</div>
       <input type="date" />
@@ -63,8 +63,8 @@
           <p>returned</p>
           {%else%}
           <p>{{sale.status}}</p>
-          {%endif%}
           <input type="button" value="Change" class="status return" />
+          {%endif%}
         </td>
         <td>
           {%if sale.paid == True%}

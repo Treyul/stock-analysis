@@ -6,9 +6,15 @@ from datetime import date
 import json
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-
+from operator import itemgetter
 # TODO show client when colour or size is depleted
 #TODO for retail sales price is gotten from client
+# Define function to set json strings to Boolena values
+def json_bool(value):
+    if value == "False":
+        return False
+    else:
+        return True
 
 #View for local sales 
 @login_required
@@ -83,10 +89,12 @@ def baseSales(request):
                         # delete color if it is depeleted
                         elif old_color[color] == 0:
                             del old_color[color]
+                            response_message = {"message":"success","success":f"{color} in {size} is now depleted"}
 
                             # test also if stock size is depleted
                             if len(old_color) == 0:
                                 del available_stock[size]
+                                response_message = {"message":"success","success":f"{size} is now depleted"}
 
 
                                 # Update size lists
@@ -98,10 +106,13 @@ def baseSales(request):
 
                             # test if the stock id depleted altogether
                             if len(available_stock) == 0:
-                                AvailableStock.query.filter_by(name=key).delete()
+                                stock.delete()
+                                sale = LocalSales(product=key,size=size,colour=color,shop_no=shop,paid=paid,status=status,date=date.today(),price=stock.price)
+
+                                sale.save()
                                 
                                 # Stock_log.depletion_date = date.today()
-                                response_message = {"message":"success","success":f"The ${key} is now depleted"}
+                                response_message = {"message":"success","success":f"{key} is now depleted"}
 
                                 return JsonResponse(response_message)
 
@@ -129,14 +140,14 @@ def baseSales(request):
 
             stock.save()
             
-            response_message = {"message":"success"}
-            # for key in sales_data:
-            sales_data =  json.dumps(sales_data)
+            # sales_data =  json.dumps(sales_data)
 
 
             return JsonResponse(response_message)
 
-    return render(request,"record.html",{"form": form})
+    # fetch  the sales for the day
+    sales = LocalSales.objects.filter(date=date.today())
+    return render(request,"record.html",{"form": form,"sales":sales})
 
 
 # view for retail sales
@@ -149,6 +160,17 @@ def Retailsales(request):
     if request.method == "POST":
 
         sales_data = json.load(request)
+
+        # check if it is a retail sale or a brokering sale
+        for key in sales_data:
+            for size in sales_data[key]:
+                sale_size = sales_data[key][size]
+                shop_number = sale_size.get("name")
+                print(shop_number)
+
+                if shop_number != request.user.shop_number:
+                    response = brokering(request,sales_data)
+                    return JsonResponse(response)
 
         # Iterate through the sales Objects
         for key in sales_data:
@@ -229,7 +251,7 @@ def Retailsales(request):
 
                             # test if the stock id depleted altogether
                             if len(available_stock) == 0:
-                                AvailableStock.query.filter_by(name=key).delete()
+                                stock.delete()
                                 
                                 # Stock_log.depletion_date = date.today()
                                 response_message = {"message":"success","success":f"The ${key} is now depleted"}
@@ -303,6 +325,47 @@ def Retailsales(request):
     return render(request,"retailrecords.html",{"form":form})
 
 @login_required
+def brokering(request,sales_object):
+
+    for key in sales_object:
+
+        product = key
+
+        sale_data = sales_object[product]
+
+        for size in sale_data:
+
+            sale_size = size
+
+            sale_details = sale_data[size]
+
+            color = sale_details["color"]
+            shop = sale_details.get("name")
+            buyer = sale_details.get("buyer")
+            price = sale_details["amount"]
+            paid = sale_details["paid"]
+
+        # if not 
+            if paid == "false":
+                paid = False
+            elif paid == "true":
+                paid = True
+
+            # save the object
+            if buyer:
+                sale = RetailSales(product=product,size=sale_size,colour=color,shop_no=shop,buyer=buyer,paid=paid,status=False,date=date.today(),amount=price)
+                sale.save()
+                response_message = {"message":"success"}
+                return response_message
+            elif not buyer:
+                sale = RetailSales(product=product,size=sale_size,colour=color,shop_no=shop,paid=paid,status=False,date=date.today(),amount=price)
+                sale.save()
+                response_message = {"message":"success"}
+                return response_message
+
+
+
+@login_required
 def search(request):
 
     form = Search_sales()
@@ -339,3 +402,171 @@ def search(request):
         return JsonResponse(response_message)
 
     return render(request ,"search.html",{"form":form})
+
+
+@login_required
+def changepay(request):
+
+    if request.method == "POST":
+
+        sale_object = json.load(request)
+
+        # get attributes of the sale object
+        name,size,colour,shop,ret,pay = itemgetter("name","size","colour","shop","return","pay")(sale_object)
+
+        ret = json_bool(ret)
+        pay = json_bool(pay)
+
+        # get the db object
+        sale_db_object = LocalSales.objects.filter(product=name,size=size,colour=colour,shop_no=shop,status=ret,paid=pay).first()
+
+        # set the new status
+        if sale_db_object:
+            sale_db_object.paid = not pay
+            sale_db_object.save()
+            response_message = {"message":"success"}
+        elif not sale_db_object:
+            response_message = {"message":"error","error":"Please refresh page and try again"}    
+            
+        return JsonResponse(response_message)
+
+
+@login_required
+def changepayretail(request):
+
+    if request.method == "POST":
+
+        sale_object = json.load(request)
+
+        # get attributes of the sale object
+        name,size,colour,shop,ret,pay = itemgetter("name","size","colour","shop","return","pay")(sale_object)
+
+        ret = json_bool(ret)
+        pay = json_bool(pay)
+
+        # get the db object
+        sale_db_object = RetailSales.objects.filter(product=name,size=size,colour=colour,shop_no=shop,status=ret,paid=pay).first()
+
+        # set the new status
+        if sale_db_object:
+            sale_db_object.paid = not pay
+            sale_db_object.save()
+            response_message = {"message":"success"}
+        elif not sale_db_object:
+            response_message = {"message":"error","error":"Please refresh page and try again"}    
+            
+        return JsonResponse(response_message)
+
+def changereturn(request):
+    
+    if request.method == "POST":
+
+        sale_object = json.load(request)
+
+        #get attributes of the sale object
+        name,size,colour,shop,ret,pay = itemgetter("name","size","colour","shop","return","pay")(sale_object)
+        
+        # change the json strings value to truthy values
+        ret = json_bool(ret)
+        pay = json_bool(pay)
+
+        # get the db object
+        sale_db_object = LocalSales.objects.filter(product=name,size=size,colour=colour,shop_no=shop,status=ret,paid=pay).first()
+        
+        # set the new status and save the changes
+        if sale_db_object:
+            sale_db_object.status = not ret
+
+            # Add the returned stock to available stock
+            available_stock = AvailableStock.objects.filter(name = name).first()
+
+            # product was not depleted
+            if available_stock:
+
+                #store the data in variables
+                available_sizes = json.loads(available_stock.size_range)
+                available_colours = json.loads(available_stock.colours)
+                avaiable_variation = json.loads(available_stock.variation)
+
+                # add the returned product to db
+                if size not in available_sizes:
+                    available_sizes.append(size)
+
+                if colour not in available_colours:
+                    available_colours.append(colour)
+
+                # get the size in variation
+                object_sizes = avaiable_variation.get(size)
+                
+                # check if the size was still available
+                if object_sizes:
+
+                    # check if the colour for the size was still available
+                    object_colour = object_sizes.get(colour)
+
+                    if object_colour:
+                        object_sizes[colour] = object_colour + 1
+                    elif not object_colour:
+                        object_sizes[colour] = 1
+
+                elif not object_sizes:
+                    # create object for the size
+                    new_object = {}
+                    new_object[colour] = 1
+                    avaiable_variation[size] = new_object
+                
+            # product was depleted
+            elif not available_stock:
+
+                # initialize the arrays and object to store the data
+                available_sizes = []
+                available_colours = []
+                avaiable_variation = {}
+                
+                available_sizes.append(size)
+                available_colours.append(colour)
+
+                # create object for the colour
+                new_object = {}
+                new_object[colour] = 1
+
+                avaiable_variation[size] = new_object
+                
+                returned_stock = AvailableStock(name=name,size_range = json.dumps(available_sizes),colours = json.dumps(available_colours), amount=1, variation = json.dumps(avaiable_variation),date= date.today())
+                returned_stock.save()
+            
+            # save the object
+            sale_db_object.save()
+            # print(sale_db_object)
+            response_message = {"message":"success"}
+        elif not sale_db_object:
+            response_message = {"message":"error","error":"Please refresh page and try again"}
+        return JsonResponse(response_message)        
+
+
+
+def changereturnretail(request):
+    
+    if request.method == "POST":
+
+        sale_object = json.load(request)
+
+        #get attributes of the sale object
+        name,size,colour,shop,ret,pay = itemgetter("name","size","colour","shop","return","pay")(sale_object)
+        
+        # change the json strings value to truthy values
+        ret = json_bool(ret)
+        pay = json_bool(pay)
+
+        # get the db object
+        sale_db_object = LocalSales.objects.filter(product=name,size=size,colour=colour,shop_no=shop,status=ret,paid=pay).first()
+        
+        # set the new status and save the changes
+        if sale_db_object:
+            sale_db_object.status = not ret
+            sale_db_object.save()
+            print(sale_db_object)
+            response_message = {"message":"success"}
+        elif not sale_db_object:
+            response_message = {"message":"error","error":"Please refresh page and try again"}
+        return JsonResponse(response_message)        

@@ -9,8 +9,11 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-import os
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-u@uv_^r)1pk66k*xwl4^g10^kj$p_5(-7h3s=$5^(*(kre-=^s'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
+DEBUG = True
 
 LOGIN_REDIRECT_URL = '/Home'
 LOGIN_URL = '/login'
@@ -97,21 +100,21 @@ WSGI_APPLICATION = 'stockanalysis.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 # mysql+pymysql://b4efcd84e73da2:2d8fc5cf@us-cdbr-east-06.cleardb.net/heroku_4b7312ec17a7f3c
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'dj2cwb4wlunw53rd',
-        'USER': 'gk8ahpga6ikaeduz',
-        'PASSWORD': 'ywsghre10pq5jz9v',
-        'HOST':'ckshdphy86qnz0bj.cbetxkdyhwsb.us-east-1.rds.amazonaws.com',
+        'NAME': os.getenv("JAWS_DB"),
+        'USER': os.getenv("JAWS_username"),
+        'PASSWORD': os.getenv("JAWS_password"),
+        'HOST': os.getenv("JAWS_HOST"),
         'PORT':'3306',
     }
 }

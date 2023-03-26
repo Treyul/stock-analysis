@@ -35,12 +35,6 @@
     {% if sales %}
     <!-- <div id="records"> -->
     <input type="button" value="Search sales." class="search" />
-    <!-- <div id="search_div" class="search_div" class="hidden">
-      <div id="close">&times;</div>
-      <input type="date" />
-      <input type="date" />
-      <input type="button" value="Search" />
-    </div> -->
     <table id="sales">
       <tr id="sales_header">
         <!-- <div class="record--rows title"> -->
@@ -79,13 +73,19 @@
       </tr>
       {% endfor %}
     </table>
-    <!-- </div> -->
 
     {% else %}
     <div>No sales today</div>
     {% endif %}
   </body>
 </html>
+
+<!-- <div id="search_div" class="search_div" class="hidden">
+      <div id="close">&times;</div>
+      <input type="date" />
+      <input type="date" />
+      <input type="button" value="Search" />
+    </div> -->
 
 <!-- <div id="error" class="hide success">This is an success</div> -->
 <!-- 

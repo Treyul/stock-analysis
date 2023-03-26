@@ -41,6 +41,9 @@ div[id="main-menu"] ul {
 div[id="main-menu"] ul li {
   margin: 0.75rem;
   padding: 0.25rem 0rem;
+  color: black;
+  letter-spacing: 1.5px;
+  font-weight: 800;
 }
 div[id="main-menu"] ul li a {
   text-decoration: none;
@@ -55,7 +58,7 @@ div[id="main-menu"] ul li a {
 }
 
 .menuhidden {
-  transform: translateX(-10rem);
+  transform: translateX(-20rem);
   opacity: 0;
 }
 

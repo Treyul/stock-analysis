@@ -1,91 +1,85 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- <link rel="stylesheet" href="/static/style.css" /> -->
-    <link rel="stylesheet" href="/static/sales.css" />
-    <script defer src="/static/salescript.js"></script>
-    <script
-      src="https://kit.fontawesome.com/04885ca4bc.js"
-      crossorigin="anonymous"
-    ></script>
-    <title>Document</title>
-  </head>
-  <body>
-    <div id="error" class="hide"></div>
+{% extends "menu.html" %} {%block script %}
+<link rel="stylesheet" href="/static/sales.css" />
+<script defer src="/static/salescript.js"></script>
+<script
+  src="https://kit.fontawesome.com/04885ca4bc.js"
+  crossorigin="anonymous"
+></script>
+<!-- <title>Document</title> -->
+{%endblock%}
+<!-- <body> -->
+{% block body%}
+<div id="error" class="hide"></div>
 
-    <form method="post">
-      {% for field in form%} {% if field.name == "paid"%}
-      <div>
-        <label for="paid"> Paid?</label>
-        {{field}}
-      </div>
-      {%else%}{{field}}{% endif %} {% endfor %}
-      <input
-        type="button"
-        id="remove-item"
-        class="remove-sale"
-        value="Delete sale"
-      />
-      <input type="button" id="add-item" class="add-sale" value="Add sale" />
-      <input type="submit" id="submit_sales" value="Submit Sale" />
-    </form>
-    {% if sales %}
-    <!-- <div id="records"> -->
-    <!-- <input type="button" value="Search sales." class="search" /> -->
-    <!-- <div id="search_div" class="search_div" class="hidden">
+<form method="post">
+  {% for field in form%} {% if field.name == "paid"%}
+  <div>
+    <label for="paid"> Paid?</label>
+    {{field}}
+  </div>
+  {%else%}{{field}}{% endif %} {% endfor %}
+  <input
+    type="button"
+    id="remove-item"
+    class="remove-sale"
+    value="Delete sale"
+  />
+  <input type="button" id="add-item" class="add-sale" value="Add sale" />
+  <input type="submit" id="submit_sales" value="Submit Sale" />
+</form>
+{% if sales %}
+<table id="sales">
+  <tr id="sales_header">
+    <!-- <div class="record--rows title"> -->
+    <th>Product</th>
+    <th>Size</th>
+    <th>Colour</th>
+    <th>shop_no</th>
+    <th>Returned</th>
+    <th>Paid</th>
+  </tr>
+  {% for sale in sales %}
+  <tr>
+    <!-- <div class="record--rows"> -->
+    <td>{{sale.product}}</td>
+    <td>{{sale.size}}</td>
+    <td>{{sale.colour}}</td>
+    <td>{{sale.shop_no}}</td>
+    <td>
+      {%if sale.status == True%}
+      <p>returned</p>
+      {%else%}
+      <p>{{sale.status}}</p>
+      <input type="button" value="Change" class="status return" />
+      {%endif%}
+    </td>
+    <td>
+      {%if sale.paid == True%}
+      <p>paid</p>
+      {%else%}
+      <p>{{sale.paid}}</p>
+      {%endif%}
+      <input type="button" value="Change" class="status paid" />
+    </td>
+    <!-- <td></td> -->
+    <!-- </div> -->
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<div>No sales today</div>
+{% endif %} {% endblock %}
+<!-- </body> -->
+<!-- </html> -->
+
+<!-- <div id="records"> -->
+<!-- <input type="button" value="Search sales." class="search" /> -->
+<!-- <div id="search_div" class="search_div" class="hidden">
       <div id="close">&times;</div>
       <input type="date" />
       <input type="date" />
       <input type="button" value="Search" />
     </div> -->
-    <table id="sales">
-      <tr id="sales_header">
-        <!-- <div class="record--rows title"> -->
-        <th>Product</th>
-        <th>Size</th>
-        <th>Colour</th>
-        <th>shop_no</th>
-        <th>Returned</th>
-        <th>Paid</th>
-      </tr>
-      {% for sale in sales %}
-      <tr>
-        <!-- <div class="record--rows"> -->
-        <td>{{sale.product}}</td>
-        <td>{{sale.size}}</td>
-        <td>{{sale.colour}}</td>
-        <td>{{sale.shop_no}}</td>
-        <td>
-          {%if sale.status == True%}
-          <p>returned</p>
-          {%else%}
-          <p>{{sale.status}}</p>
-          <input type="button" value="Change" class="status return" />
-          {%endif%}
-        </td>
-        <td>
-          {%if sale.paid == True%}
-          <p>paid</p>
-          {%else%}
-          <p>{{sale.paid}}</p>
-          {%endif%}
-          <input type="button" value="Change" class="status paid" />
-        </td>
-        <!-- <td></td> -->
-        <!-- </div> -->
-      </tr>
-      {% endfor %}
-    </table>
-    <!-- </div> -->
-
-    {% else %}
-    <div>No sales today</div>
-    {% endif %}
-  </body>
-</html>
 
 <!-- <div id="error" class="hide success">This is an success</div> -->
 <!-- 

@@ -25,6 +25,8 @@ def baseSales(request):
 
         # get JSON data sent through fetch
         sales_data = json.load(request)
+
+        colour_in_question = ""
         
         # Iterate through the sales Objects
         for key in sales_data:
@@ -64,6 +66,7 @@ def baseSales(request):
 
                     color = sold_color["color"]
                     shop = sold_color["name"]
+                    colour_in_question =sold_color["color"]
                     # covert paid string to boolean value
                     status = False
                     paid = sold_color["paid"]
@@ -80,6 +83,8 @@ def baseSales(request):
                     elif color in old_color:
 
                         old_color[color] = old_color[color] - 1
+
+                        response_message = {"message":"success","success":f"sale added successfully"}
                         
                         #Incase of incorrect data in db catch error of zero stock
                         if old_color[color] < 0:
@@ -90,6 +95,8 @@ def baseSales(request):
                         elif old_color[color] == 0:
                             del old_color[color]
                             response_message = {"message":"success","success":f"{color} in {size} is now depleted"}
+
+                            # TODO check if the colour still exists in the stock
 
                             # test also if stock size is depleted
                             if len(old_color) == 0:
@@ -131,6 +138,25 @@ def baseSales(request):
             stock.amount = stock.amount - 1
 
             # if stock.amount
+            # iterate thought the variation available
+            color_present = False
+            for size in available_stock:
+                for color in available_stock[size].keys():
+                    if color_present:
+                        continue
+                    else:
+                        color_present = color == colour_in_question
+            
+            # check the color bool value
+            if not color_present:
+                print("pass")
+                available_colours = json.loads(stock.colours)
+
+                if colour_in_question in available_colours:
+                    response_message = {"message":"success","success":f"{color} in {key} is now depleted"}
+                    available_colours.remove(colour_in_question)
+                stock.colours=json.dumps(available_colours)
+                    
 
             stock.variation = json.dumps(available_stock)
 

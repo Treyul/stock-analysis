@@ -70,3 +70,7 @@ td {
   padding: 0.25rem;
   text-align: center;
 }
+
+td p {
+  margin: 0px;
+}

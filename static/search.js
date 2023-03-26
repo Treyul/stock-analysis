@@ -1,3 +1,117 @@
+/*************    Defination of functions  **************/
+const change_pay = (element) => {
+  element.addEventListener("click", function () {
+    let value = element.previousElementSibling.innerHTML;
+    let bool = false;
+
+    // if status is false
+    if (value == "False") {
+      bool = confirm("Do you want to change status to paid");
+    } else {
+      bool = confirm("Do you want to change status to not paid");
+    }
+
+    if (bool == true) {
+      // declare object to be sent to servers and set its properties
+      const parent = element.closest("tr").cells;
+      element.insertAdjacentHTML(
+        "afterend",
+        `<i class="fa-solid fa-spinner fa-spin-pulse"></i>`
+      );
+      element.classList.add("hidden");
+      // element.setAttribute("d")
+      let sale_data = {};
+      // const sales_data{"name","data"} = "yes",
+      sale_data["name"] = parent[0].innerHTML;
+      sale_data["size"] = parent[1].innerHTML;
+      sale_data["colour"] = parent[2].innerHTML;
+      sale_data["shop"] = parent[3].innerHTML;
+      sale_data["return"] = parent[4].firstElementChild.innerHTML;
+      sale_data["pay"] = value;
+
+      let reponse = fetch("/sales/changepay", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "X-CSRFToken": `${crsf_token}`,
+        },
+        body: JSON.stringify(sale_data),
+      }).then(function (response) {
+        if (response.status !== 200) {
+          console.log("ERROR");
+        }
+        response.json().then(function (data) {
+          console.log(data);
+          if ((data["message"] = "success")) {
+            element.previousElementSibling.innerHTML =
+              "paid" == value ? "False" : "paid";
+            element.nextElementSibling.remove();
+            element.classList.remove("hidden");
+            alert("successfully changed status");
+          }
+        });
+      });
+    }
+  });
+};
+
+const change_return = (element) => {
+  element.addEventListener("click", function () {
+    let value = element.previousElementSibling.innerHTML;
+    let bool = false;
+
+    // if status is false
+    if (value == "False") {
+      bool = confirm("Do you want to change status to returned");
+    } else {
+      bool = confirm("Do you want to change status to not returned");
+    }
+
+    if (bool == true) {
+      // declare object to be sent to servers and set its properties
+      const parent = element.closest("tr").cells;
+      element.insertAdjacentHTML(
+        "afterend",
+        `<i class="fa-solid fa-spinner fa-spin-pulse"></i>`
+      );
+      element.classList.add("hidden");
+      // element.setAttribute("d")
+      let sale_data = {};
+      // const sales_data{"name","data"} = "yes",
+      sale_data["name"] = parent[0].innerHTML;
+      sale_data["size"] = parent[1].innerHTML;
+      sale_data["colour"] = parent[2].innerHTML;
+      sale_data["shop"] = parent[3].innerHTML;
+      sale_data["return"] = value;
+      sale_data["pay"] = parent[5].firstElementChild.innerHTML;
+
+      let reponse = fetch("/changereturn", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "X-CSRFToken": `${crsf_token}`,
+        },
+        body: JSON.stringify(sale_data),
+      }).then(function (response) {
+        if (response.status !== 200) {
+          console.log("ERROR");
+        }
+        response.json().then(function (data) {
+          console.log(data);
+          if ((data["message"] = "success")) {
+            element.previousElementSibling.innerHTML =
+              "returned" == value ? "False" : "returned";
+            element.nextElementSibling.remove();
+            element.classList.remove("hidden");
+            alert("successfully changed status");
+          }
+        });
+      });
+    }
+  });
+};
+
+/************   selct elements  ******************/
 const submit = document.getElementById("submit");
 const form = document.querySelector("form");
 
@@ -81,11 +195,11 @@ submit.addEventListener("click", function (e) {
           <tr><th colspan=6>Retail sales</th><tr/>
           <tr>
           <th>Product</th>
-          <th>Shop no</th>
           <th>size</th>
           <th>Colour</th>
-          <th>paid</th>
+          <th>Shop no</th>
           <th>return</th>
+          <th>paid</th>
           </tr>`;
 
           // insert data into table
@@ -94,33 +208,61 @@ submit.addEventListener("click", function (e) {
             for (let i = 0; i < retail_results.length; i++) {
               const result = retail_results[i];
               retail_template += `<tr>
-              <td>${result["product"]}</td><td>${result["shop_no"]}</td><td>${
-                result["size"]
-              }</td><td>${result["colour"]}</td><td>${
-                result["paid"] == false
-                  ? `False <input type="button" value="Change" class="status paid" />`
-                  : "returned"
-              }</td>
+              <td>${result["product"]}</td>
+              <td>${result["size"]}</td>
+              <td>${result["colour"]}</td>
+              <td>${result["shop_no"]}</td>
               <td>${
                 result["status"] == false
                   ? `False <input type="button" value="Change" class="status return" />`
                   : returned
-              }</td></tr>`;
+              }</td>
+            <td>${
+              result["paid"] == false
+                ? `False <input type="button" value="Change" class="status paid" />`
+                : "returned"
+            }</td>
+              </tr>`;
             }
 
             // append template into the page
             form.insertAdjacentHTML("afterend", retail_template);
+
+            // select tables
+            const retail_table = document.querySelector(
+              "table[class='retail']"
+            );
+
+            //select the buttons for changing the return and payment status
+            const retail_pay_btns = retail_table.querySelectorAll(".paid");
+            const retail_return_btns = retail_table.querySelectorAll(".return");
+
+            // add event listners to th buttons
+            retail_pay_btns.forEach((button) => {
+              button.addEventListener("click", function () {
+                // select the parent table row
+                const parent = button.closest("tr");
+                console.log(parent);
+              });
+            });
+            retail_return_btns.forEach((button) =>
+              button.addEventListener("click", function () {
+                // select the parent table row
+                const parent = button.closest("tr");
+                console.log(parent);
+              })
+            );
           }
 
           let wholesale_template = `<table class="wholesale">
           <tr><th colspan=5>Wholesale sales</th><tr/>
         <tr>
         <th>Product</th>
-        <th>Shop no</th>
         <th>size</th>
         <th>Colour</th>
-        <th>Paid</th>
+        <th>Shop no</th>
         <th>return</th>
+        <th>Paid</th>
         </tr>`;
           if (wholesale_results.length > 0) {
             // create table and headings for the wholesale results
@@ -129,66 +271,35 @@ submit.addEventListener("click", function (e) {
             for (let i = 0; i < wholesale_results.length; i++) {
               const result = wholesale_results[i];
               wholesale_template += `<tr>
-              <td>${result["product"]}</td><td>${result["shop_no"]}</td><td>${
-                result["size"]
-              }</td><td>${result["colour"]}</td><td>${
-                result["paid"] == false
-                  ? `False <input type="button" value="Change" class="status paid" />`
-                  : "paid"
-              }</td>
+              <td>${result["product"]}</td>
+              <td>${result["size"]}</td>
+              <td>${result["colour"]}</td>
+              <td>${result["shop_no"]}</td>
               <td>${
                 result["status"] == false
-                  ? `False <input type="button" value="Change" class="status return" />`
-                  : "returned"
-              }</td></tr>`;
+                  ? `<p>False</p> <input type="button" value="Change" class="status return" />`
+                  : "<p>returned</p>"
+              }</td>
+              <td>${
+                result["paid"] == false
+                  ? `<p>False</p> <input type="button" value="Change" class="status paid" />`
+                  : '<p>paid </p> <input type="button" value="Change" class="status paid" />'
+              }</td>
+              </tr>`;
             }
             form.insertAdjacentHTML("afterend", wholesale_template);
+            const wholesale_table = document.querySelector(
+              "table[class='wholesale']"
+            );
+            const wholesale_pay_btns =
+              wholesale_table.querySelectorAll(".paid");
+            const wholesale_return_btns =
+              wholesale_table.querySelectorAll(".return");
+            wholesale_pay_btns.forEach((button) => change_pay(button));
+            wholesale_return_btns.forEach((button) => change_return(button));
           }
 
-          // select tables
-          const retail_table = document.querySelector("table[class='retail']");
-          const wholesale_table = document.querySelector(
-            "table[class='wholesale']"
-          );
-
-          //select the buttons for changing the return and payment status
-          const retail_pay_btns = retail_table.querySelectorAll(".paid");
-          const retail_return_btns = retail_table.querySelectorAll(".return");
-          const wholesale_pay_btns = wholesale_table.querySelectorAll(".paid");
-          const wholesale_return_btns =
-            wholesale_table.querySelectorAll(".return");
-
-          // add event listners to th buttons
-          retail_pay_btns.forEach((button) => {
-            button.addEventListener("click", function () {
-              // select the parent table row
-              const parent = button.closest("tr");
-              console.log(parent);
-            });
-          });
-          retail_return_btns.forEach((button) =>
-            button.addEventListener("click", function () {
-              // select the parent table row
-              const parent = button.closest("tr");
-              console.log(parent);
-            })
-          );
-          wholesale_pay_btns.forEach((button) =>
-            button.addEventListener("click", function () {
-              // select the parent table row
-              const parent = button.closest("tr");
-              console.log(parent);
-            })
-          );
-          wholesale_return_btns.forEach((button) =>
-            button.addEventListener("click", function () {
-              // select the parent table row
-              const parent = button.closest("tr");
-              console.log(parent);
-            })
-          );
-
-          console.log(retail_pay_btns, retail_return_btns);
+          // console.log(retail_pay_btns, retail_return_btns);
 
           //
         } else {

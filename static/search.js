@@ -111,7 +111,7 @@ const change_return = (element) => {
   });
 };
 
-/************   selct elements  ******************/
+/************   select elements  ******************/
 const submit = document.getElementById("submit");
 const form = document.querySelector("form");
 

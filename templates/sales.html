@@ -1,22 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/static/sales.css" />
-    <title>Document</title>
-    {% load static %}
-  </head>
-  <body>
-    <form method="post" id="form_add_stock">
-      <!-- {{csrf_token}} -->
-      {{form}}
+{% extends "menu.html" %}{% block script %}
+<link rel="stylesheet" href="/static/sales.css" />
+<title>Document</title>
+{# load static #} {% endblock %}
 
-      <input type="button" id="add_sale" value="add Sale" />
-    </form>
-  </body>
-  <script async defer>
+<!-- <body> -->
+{% block body %}
+<form method="post" id="form_add_stock">
+  <!-- {{csrf_token}} -->
+  {{form}}
+
+  <input type="button" id="add_sale" value="add Sale" />
+</form>
+{% endblock %}
+<!-- </body> -->
+<!-- <script async defer>
     const Stock_container = document.getElementById("stock_sold");
     let count = 1;
     const btn = document.getElementById("addSale");
@@ -27,5 +24,5 @@
       Stock_container.insertAdjacentHTML("beforeend", template);
       count++;
     });
-  </script>
-</html>
+  </script> -->
+<!-- </html> -->

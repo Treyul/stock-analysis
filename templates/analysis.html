@@ -45,6 +45,14 @@
         </div>
         <div class="retail-details hidden">
           <table>
+            <tr>
+              <th>Product</th>
+              <th>price</th>
+              <th>colour</th>
+              <th>size</th>
+              <th>paid</th>
+              <th>Date</th>
+            </tr>
             {% for obj in sum.data %}
             <tr>
               <td><p>{{obj.product}}</p></td>
@@ -52,7 +60,8 @@
               <td><p>{{obj.colour}}</p></td>
               <td><p>{{obj.size}}</p></td>
               <td><p>{{obj.paid}}</p></td>
-              <td><input type="button" value="sorted" /></td>
+              <td><p>{{obj.date |date:"d-m-Y" }}</p></td>
+              <td><input type="button" value="sorted" class="brokered" /></td>
             </tr>
             {% endfor %}
           </table>
@@ -86,7 +95,7 @@
                 <td><p>{{obj.amount}}</p></td>
                 <td><p>{{obj.colour}}</p></td>
                 <td><p>{{obj.size}}</p></td>
-                <td><p>{{obj.paid}}</p></td>
+                <td><p>{{obj.paid|date:"d-m-Y"}}</p></td>
                 <td><input type="button" value="sorted" /></td>
               </tr>
               {% endfor %}

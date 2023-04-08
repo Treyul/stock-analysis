@@ -3,6 +3,7 @@ import json
 from .forms import Update_Available, Order_Form
 from utils.models import AvailableStock,Stock,Ordered
 from datetime import date
+from django.contrib import messages
 
 # Create your views here.
 def update_available_stock(request):
@@ -49,6 +50,8 @@ def update_available_stock(request):
                 # create db object and commit to db
                 Available_product = AvailableStock(name=product_name,size_range=product_sizes,colours=product_colours,amount=Total_amount,variation= product_data,date=date.today())
                 Available_product.save()
+
+                messages.add_message(request, messages.INFO, "successfully added stock")
 
             # if there exists a similar product
             elif Available_product:
@@ -102,7 +105,7 @@ def update_available_stock(request):
                 Available_product.amount = Total_amount
                 Available_product.variation = json.dumps(product_data_json)
 
-                Available_product.save()
+                # Available_product.save()
 
 
     #default rendering for get request

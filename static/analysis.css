@@ -1,81 +1,50 @@
-/**********  STYLES FOR THE HAMBURGER  ********/
-div[id="hamburger"] {
-  width: 2rem;
-}
-
-div[id="hamburger"] div {
-  margin: 0.3rem;
-  background-color: black;
-  height: 0.15rem;
-}
-.ham-item {
-  transition: all ease 0.5s;
-  transform-origin: 1px;
-}
-
-.item-one {
-  transform: rotate(45deg);
-}
-.item-two {
-  transform: translate(1.25rem);
-  opacity: 0;
-}
-.item-three {
-  transform: rotate(-45deg);
-}
-/********* STYLES FOR THE MENU  *********/
-div[id="main-menu"] {
-  position: absolute;
-  background-color: #1c768f;
-  /* opacity: 0.98; */
-  /* height: 100%; */
-  padding-right: 2rem;
-  transition: all ease 1s;
-  /* padding: 0.25rem 3rem; */
-}
-div[id="main-menu"] ul {
-  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
-  list-style: none;
-  padding-inline-start: 0px;
-}
-div[id="main-menu"] ul li {
-  margin: 0.75rem;
-  padding: 0.25rem 0rem;
-}
-div[id="main-menu"] ul li a {
-  text-decoration: none;
-  color: black;
-  padding: 0.5rem 4rem;
-  /* margin: 0.25rem; */
-  cursor: pointer;
-}
 .show {
   transform: translateX(0rem);
   opacity: 0.98;
-}
-
-.menuhidden {
-  transform: translateX(-10rem);
-  opacity: 0;
 }
 
 .dropdown-items {
   /* display: none; */
 }
 .retail-details table {
-  border-collapse: collapse;
+  /* border-collapse: collapse; */
   width: -webkit-fill-available;
   text-align: center;
+  /* border: 18px solid black; */
+  border-radius: 21px;
+  border: 1px solid darkorange;
+  padding: 4px;
+  border-spacing: 0px;
+  background-color: antiquewhite;
 }
+.retail-data h3 {
+  margin: 0.125rem;
+}
+
+.retail-data {
+  margin-bottom: 1.75rem;
+}
+
 .retail-details table td,
 th {
-  border: 1px solid black;
-  /* padding-left: 0.25rem; */
-  /* margin: 0px; */
-  /* padding: 0px; */
+  border: none;
+  border-bottom: 1px solid darkorange;
+  /* padding: 10px; */
+}
+.retail-details table tr:last-child td {
+  border-bottom: none;
+}
+.retail-details table tr td p {
+  margin: 0.35rem;
+}
+.retail-details table tr td input[type="button"] {
+  border-radius: 45px;
+  border: none;
+  font-weight: 500;
+  background-color: rgb(160, 216, 241);
 }
 .retail-data > div:nth-child(n + 3) {
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.5rem;
 }
 /* .retail-data > div[class="headers"] {
   margin-bottom: 1.5rem;
@@ -86,9 +55,15 @@ th {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   text-align: center;
+  margin-bottom: 0.5rem;
 }
 .retail-summary p {
   margin: 0.25rem;
+}
+.retail-summary input[type="button"] {
+  border-radius: 45px;
+  border: none;
+  background-color: cornflowerblue;
 }
 .hidden {
   display: none;
@@ -99,4 +74,7 @@ th {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   text-align: center;
+}
+.headers p {
+  margin: 0.125rem;
 }

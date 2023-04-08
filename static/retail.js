@@ -275,6 +275,8 @@ const form_verify = (element) => {
 //
 Submit_sales.addEventListener("click", function (e) {
   e.preventDefault();
+  Submit_sales.setAttribute("disabled", "True");
+  Submit_sales.value = "Loading...";
 
   // TODO ensure field are not empty
 
@@ -396,6 +398,8 @@ Submit_sales.addEventListener("click", function (e) {
           error.classList.add("hide");
         }, 5000);
       }
+      Submit_sales.value = "Submit";
+      Submit_sales.removeAttribute("disabled");
     });
   });
 });

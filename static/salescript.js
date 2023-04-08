@@ -274,7 +274,8 @@ pay_status.forEach((element) => {
 
 Submit_sales.addEventListener("click", function (e) {
   e.preventDefault();
-
+  Submit_sales.value = "Loading...";
+  Submit_sales.setAttribute("disabled", "True");
   // TODO ensure field are not empty
 
   // initialize sales record object
@@ -368,6 +369,8 @@ Submit_sales.addEventListener("click", function (e) {
           error.classList.add("hide");
         }, 5000);
       }
+      Submit_sales.removeAttribute("disabled");
+      Submit_sales.value = "Submit";
     });
   });
 });

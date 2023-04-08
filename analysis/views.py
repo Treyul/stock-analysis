@@ -4,7 +4,9 @@ from django.http import JsonResponse
 from django.db.models import Q
 from django.db.models import Count,Sum
 from django.contrib.auth.decorators import login_required
+from operator import itemgetter
 import json
+from utils.models import LocalSales,RetailSales
 
 # define functions to be used oin the analysis
 def get_debts_and_credits_summation(request):
@@ -64,6 +66,35 @@ def balancing_out(request):
 
         # get data
         data = json.loads(request)
+        product,colour,size,date = itemgetter("product","colour","size","date")(data)
 
         return JsonResponse()
 
+@login_required
+def shop_sort(request):
+    if request.method == "POST":
+        # get object data
+        object_data = json.load(request)
+        product,colour,size,date,shop = itemgetter("product","colour","size","date","shop")(object_data)
+        sale_object = LocalSales.objects.filter(product=product,size=size,colour=colour,shop_no=shop,status=False,paid=False,date=date).first()
+
+        sale_object.paid = True
+        sale_object.save()
+        # print(object_data)
+
+    return JsonResponse({"message":"success"})
+
+
+@login_required
+def retail_sort(request):
+    if request.method == "POST":
+        # get object data
+        object_data = json.load(request)
+        product,colour,size,date,shop = itemgetter("product","colour","size","date","shop")(object_data)
+
+        sale_object = RetailSales.object.filter(product=product,size=size,colour=colour,date=date,shop_no=shop,status=False,paid=False).first()
+
+        sale_object.paid= True
+        sale_object.save()
+
+    return JsonResponse({"message":"success"})

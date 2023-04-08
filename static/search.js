@@ -156,7 +156,8 @@ submit.addEventListener("click", function (e) {
   }
   if (start_date.value != "") filters["start_date"] = start_date.value;
   if (end_date.value != "") filters["end_date"] = end_date.value;
-  console.log(filters);
+  filters["returned"] = document.getElementById("id_returned").checked;
+  filters["paid"] = document.getElementById("id_paid").checked;
 
   //get tables displayed in the page
   const tables = document.querySelectorAll("table");

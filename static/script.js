@@ -78,7 +78,7 @@ stock_type.addEventListener("input", function () {
 /****************** COLOUR LIST *********************/
 // Add colours
 // get the number of colours
-var items = 1;
+var items = 2;
 
 // add eventlister to add colour button
 addButton.addEventListener("click", () => {
@@ -91,8 +91,8 @@ addButton.addEventListener("click", () => {
 
   // create the inputs lable and set its attributes
   const label = document.createElement("label");
-  label.innerHTML = `Colour ${items + 1}: `;
-  label.for = `id_Colour ${items}`;
+  label.innerHTML = `Colour ${items}: `;
+  label.setAttribute("for", `id_Colour ${items}`);
 
   //select container to add the label and input field
   const container = document.querySelector("form");
@@ -108,9 +108,10 @@ removeButton.addEventListener("click", () => {
   // get the array of colours inputs and labels
   const colours = document.querySelectorAll("input[id^='id_Colour']");
   const colour_labels = document.querySelectorAll("label[for^='id_Colour']");
+  console.log(colour_labels, colours);
 
-  // show error message if length is less than 2
-  if (colours.length <= 2) {
+  // show error message if length is less than 1
+  if (colours.length <= 1) {
     alert_msg.innerHTML = "Colours cannot be less than 1";
     alert_msg.classList.add("error");
     show(alert_msg);
@@ -121,8 +122,10 @@ removeButton.addEventListener("click", () => {
     }, 5000);
   } else {
     // delete the elements from the array
+    // console.log(colour_labels);
     colours[colours.length - 1].remove();
-    colour_labels[colour_labels - 1].remove();
+    colour_labels[colour_labels.length - 1].remove();
+    // console.log(colour_labels);
     items--;
     document.querySelector("#id_num_items").value = items;
   }
@@ -264,6 +267,8 @@ next_stock_details.addEventListener("click", function (e) {
   // colours.classList.add("hidden");
   // colour.classList.remove("add_sale");
   submit_stock_details.classList.remove("hidden");
+  hide(addButton);
+  hide(removeButton);
   // get no of sizes available for the product
   next_stock_details.classList.add("hidden");
   // get all totalling button s and add functionality

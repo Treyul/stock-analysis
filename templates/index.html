@@ -3,7 +3,13 @@
 <script defer src="/static/script.js"></script>
 <link rel="stylesheet" href="/static/update.css" />
 <title>Document</title>
-{% endblock %} {% block body%}
+{% endblock %} {% block body%} {% if messages %}
+<ul class="messages">
+  {% for message in messages %}
+  <li>{{ message }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
 <p id="message" class="message hidden"></p>
 <form method="post" id="form_add_stock">
   {% csrf_token %} {{form}} {{form.colours}}

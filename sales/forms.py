@@ -41,6 +41,10 @@ class Search_sales(forms.Form):
     size = forms.CharField(label = "", required=False,widget = forms.TextInput(attrs={"placeholder":"size"}))
 
     colour = forms.CharField(label="" ,required=False, widget = forms.TextInput(attrs = {"placeholder":"colour"}))
+
+    paid = forms.CharField(label="paid", widget=forms.CheckboxInput())
+    
+    returned = forms.CharField(label="returned", widget=forms.CheckboxInput())
     
     start_date = forms.DateTimeField(required=False, widget = forms.DateInput(
         format=('%Y-%m-%d'),

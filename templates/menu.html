@@ -7,6 +7,11 @@
     <title>Document</title>
     <link rel="stylesheet" href="/static/menu.css" />
     <script defer src="/static/menu.js"></script>
+    <script defer src="/static/functions.js"></script>
+    <script
+      src="https://kit.fontawesome.com/04885ca4bc.js"
+      crossorigin="anonymous"
+    ></script>
     {% block script %} {% endblock %}
   </head>
   <body>
@@ -47,6 +52,9 @@
           <li>
             <a href="/settings">Settings</a>
           </li>
+          {% if request.user.rights == True %}
+          <li><a href="/dashboard">Dashboard</a></li>
+          {% endif %}
         </ul>
       </div>
     </div>

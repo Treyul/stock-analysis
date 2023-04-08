@@ -74,3 +74,7 @@ td {
 td p {
   margin: 0px;
 }
+
+form div:nth-last-of-type(1) {
+  grid-column: 3/3;
+}

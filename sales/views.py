@@ -418,7 +418,10 @@ def search(request):
             # pass
         if search_filters.get("start_date"):
             query &= Q(date__range = [search_filters["start_date"],search_filters["end_date"]])
-            # pass
+        
+        # filter the paid and returned booleans 
+        query &= Q(paid = search_filters["paid"])
+        query &= Q(status = search_filters["returned"])
 
         retail_results = RetailSales.objects.filter(query).all().values().order_by("-date")
 

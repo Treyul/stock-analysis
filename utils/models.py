@@ -121,23 +121,82 @@ class Ordered(models.Model):
 
     arrived = models.BooleanField(default=False,null=False)
 
-class users(models.Model):
+class Products_Order_Logs(models.Model):
 
-    username = models.CharField(max_length =255, primary_key=True,unique=True, null=False)
+    name = models.CharField(max_length =50, unique=False, null=False)
 
-    Fullname = models.CharField(max_length =255,null=False)
+    size_range = models.JSONField(null=False)
 
-    password = models.TextField( null=False)
+    colours = models.JSONField(null=False)
 
-    rights = models.CharField(max_length =15, null=False,default="attendant")
+    amount = models.IntegerField(null=False)
 
-    shop = models.CharField(max_length =20, null= False)
+    variation = models.JSONField( null=False)
 
-class Shop(models.Model):
-    name = models.CharField(max_length=100)
-    location = models.CharField(max_length=100)
+    order_price = models.IntegerField(null=True)
 
-class User(models.Model):
-    name = models.CharField(max_length=100)
-    email = models.EmailField()
-    shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
+    shipping_co = models.CharField(max_length =100,null=True)
+
+    comments = models.TextField(null=True)
+
+    order_date = models.DateField( default=date.today)
+
+    proposed_arrival = models.DateField( null = True)
+
+    arrival_date = models.DateField( null = True)
+
+    arrived = models.BooleanField(default=False,null=False)
+
+class Products_Logs(models.Model):
+
+    product_name = models.CharField(unique=False,max_length=50,null=False)
+
+    order_id = models.ForeignKey(Products_Order_Logs,on_delete=models.CASCADE,null=True)
+
+    sizes = models.JSONField(null=False)
+
+    colours = models.JSONField(null= False)
+
+    product_variation = models.JSONField(null=False)
+
+    amount = models.IntegerField(null=False)
+
+    Arrival_date = models.DateField(default=date.today)
+
+    depletion_date = models.DateField(null=True,default=None)
+
+
+class Products_Available(models.Model):
+
+    name = models.CharField(max_length=50, null=False)
+
+    Batch_no = models.ForeignKey(Products_Logs, on_delete=models.CASCADE, null=False)
+
+    Colour = models.CharField(max_length=20, null=False)
+
+    Size = models.CharField(max_length=7, null=False)
+
+    Price = models.IntegerField(null=True)
+
+    Amount = models.IntegerField(null=False)
+
+class Wholesale_Sales_Logs(models.Model):
+
+    product = models.CharField(max_length =50, null = False )
+
+    Batch = models.ForeignKey(Products_Logs,on_delete=models.CASCADE, default=None) 
+
+    size = models.CharField (max_length=50,null = False)
+
+    colour = models.CharField(max_length =50, null = False)
+
+    shop_no = models.CharField(max_length =10,null = False)
+
+    status = models.BooleanField( null = False )
+
+    paid = models.BooleanField(null = False)
+
+    date = models.DateField( default= date.today, null=False)
+
+    price = models.IntegerField(null=False)
+

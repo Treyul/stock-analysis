@@ -270,23 +270,19 @@ Submit_sales.addEventListener("click", function (e) {
 
   // initialize sales record object
   form.checkValidity();
-  let saledata = {};
   const product = document.getElementById("id_product");
   const name = document.getElementById("id_name");
   const size = document.getElementById("id_size");
   const colour = document.getElementById("id_colour");
-  // const status = document.getElementById("id_status");
   const paid = document.getElementById("id_paid");
 
   const product_data = {
-    color: `${colour.value}`,
-    // status: `${status.checked}`,
-    paid: `${paid.checked}`,
-    name: `${name.value}`,
+    product: product.value,
+    color: colour.value,
+    paid: paid.checked,
+    name: name.value,
+    sizes: size.value,
   };
-
-  saledata[product.value] = {};
-  saledata[product.value][size.value] = product_data;
 
   let response = fetch("/sales/", {
     method: "POST",
@@ -294,7 +290,7 @@ Submit_sales.addEventListener("click", function (e) {
       "content-type": "application/json",
       "X-CSRFToken": `${crsf_token}`,
     },
-    body: JSON.stringify(saledata),
+    body: JSON.stringify(product_data),
   }).then(function (response) {
     if (response.status !== 200) {
       console.log("ERROR");

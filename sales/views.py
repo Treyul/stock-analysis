@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from .forms import Wholesale,Retail_sales,Search_sales
-from utils.models import AvailableStock,RetailSales,LocalSales
+from utils.models import *
 from datetime import date
 import json
 from django.contrib.auth.decorators import login_required
@@ -26,150 +26,24 @@ def baseSales(request):
         # get JSON data sent through fetch
         sales_data = json.load(request)
 
-        colour_in_question = ""
-        
-        # Iterate through the sales Objects
-        for key in sales_data:
+        # get the data from the JSON object
+        product,colour,size,shop,paid = itemgetter("product","color","sizes","name","paid")(sales_data)
+ 
+        Available_Product = Products_Available.objects.filter(name=product,Colour=colour,Size=size).first()
 
-            # check product exists
-            stock = AvailableStock.objects.filter(name=key).first()
+        if not Available_Product:
+            response_message = {"message": "error","error": f"The product is not available"}
+        elif Available_Product:
+            # update the product
+            Parent_Product_log = Available_Product.Batch_no
+            Parent_Product_log.amount = Parent_Product_log.amount - 1
 
-            # if the stock does not exist
-            if not stock:
-                response_message = {"message": "error","error": f"The product {key} does not exist"}
-                return JsonResponse(response_message)
-            
-            # Change JSON strings to JSON obj
-            available_stock = json.loads(stock.variation)
-            available_sizes = json.loads(stock.size_range)
-            sold_stock = sales_data[key]
-            amount_sold = 0 
+            # TODO delete if the amount is 0
 
-            # check if size exists
-            for size in sold_stock:
+            Wholesale_sale = Wholesale_Sales_Logs(product=product, Batch_no=Parent_Product_log, size=size, colour=colour, shop_no=shop, status=False, paid=paid,price=Available_Product.price )
 
-                # return error if size is not available in database
-                if size not in available_stock:
-                    response_message = {"message":"error","error":f"size {size} not found"}
-                    return JsonResponse(response_message)
-
-                elif size in available_stock:
-
-                    # Return error if the stock in question has not been priced
-                    if not stock.price:
-                        response_message = {"message":"error","error":"Stock is yet to be priced Cannot make sale"}
-                        return JsonResponse(response_message)
-                    
-                    # get size objects
-                    old_color = available_stock[size]
-                    sold_color = sold_stock[size]
-
-                    color = sold_color["color"]
-                    shop = sold_color["name"]
-                    colour_in_question =sold_color["color"]
-                    # covert paid string to boolean value
-                    status = False
-                    paid = sold_color["paid"]
-                    if paid == "false":
-                        paid = False
-                    elif paid == "true":
-                        paid = True
-
-                    # Check if the color is available
-                    if color not in old_color:
-                        response_message = {"message":"error","error":f"The colour {color} in size {size} not found"}
-                        return JsonResponse(response_message)
-
-                    elif color in old_color:
-
-                        old_color[color] = old_color[color] - 1
-
-                        response_message = {"message":"success","success":f"sale added successfully"}
-                        
-                        #Incase of incorrect data in db catch error of zero stock
-                        if old_color[color] < 0:
-                            response_message = {"message":"error","error":f"Cannot have negative stock amount"}
-                            return JsonResponse(response_message)
-                        
-                        # delete color if it is depeleted
-                        elif old_color[color] == 0:
-                            del old_color[color]
-                            response_message = {"message":"success","success":f"{color} in {size} is now depleted"}
-
-                            # TODO check if the colour still exists in the stock
-
-                            # test also if stock size is depleted
-                            if len(old_color) == 0:
-                                del available_stock[size]
-                                response_message = {"message":"success","success":f"{size} is now depleted"}
-
-
-                                # Update size lists
-                                available_sizes.remove(size)
-
-                                # update db object
-                                stock.size_range = json.dumps(available_sizes)
-
-
-                            # test if the stock id depleted altogether
-                            if len(available_stock) == 0:
-                                stock.delete()
-                                sale = LocalSales(product=key,size=size,colour=color,shop_no=shop,paid=paid,status=status,date=date.today(),price=stock.price)
-
-                                sale.save()
-                                
-                                # Stock_log.depletion_date = date.today()
-                                response_message = {"message":"success","success":f"{key} is now depleted"}
-
-                                return JsonResponse(response_message)
-
-                        # TODO delete object from variation
-                        # elif old_color[color]  == 0
-                        #     return
-
-                        # upload sale to database
-                        sale = LocalSales(product=key,size=size,colour=color,shop_no=shop,paid=paid,status=status,date=date.today(),price=stock.price)
-
-                        sale.save()
-                            # TODO remove stock color and sizes and product altogether if depleted
-
-                        
-            # update stock amount remaining, variation, date
-            stock.amount = stock.amount - 1
-
-            # if stock.amount
-            # iterate thought the variation available
-            color_present = False
-            for size in available_stock:
-                for color in available_stock[size].keys():
-                    if color_present:
-                        continue
-                    else:
-                        color_present = color == colour_in_question
-            
-            # check the color bool value
-            if not color_present:
-                print("pass")
-                available_colours = json.loads(stock.colours)
-
-                if colour_in_question in available_colours:
-                    response_message = {"message":"success","success":f"{color} in {key} is now depleted"}
-                    available_colours.remove(colour_in_question)
-                stock.colours=json.dumps(available_colours)
-                    
-
-            stock.variation = json.dumps(available_stock)
-
-            stock.date = date.today()
-
-            stock.sizes = json.dumps(available_sizes)
-
-            stock.save()
-            
-            # sales_data =  json.dumps(sales_data)
-
-
-            return JsonResponse(response_message)
+            Available_Product.save()
+            Wholesale_sale.save()
 
     # fetch  the sales for the day
     sales = LocalSales.objects.filter(date=date.today())

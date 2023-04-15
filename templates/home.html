@@ -122,8 +122,7 @@
           <div class="availdata">
             <p>{{size}}</p>
             <div class="coldata">
-              {# with colours = order.variation[size] #} {% for color,amount in
-              colours.items %}
+              {% for color,amount in colours.items %}
               <div>
                 <p>{{color}}</p>
                 <p>{{amount}}</p>
@@ -134,6 +133,7 @@
           {%endfor%}
         </div>
       </div>
+      {%endfor%}
     </div>
     {%else%}
     <div id="notify">No orders pending arrival</div>

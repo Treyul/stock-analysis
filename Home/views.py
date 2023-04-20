@@ -5,31 +5,74 @@ from utils.models import *
 from datetime import date
 import json
 
+class ProductsJson():
+
+    name = ""
+    sizes = []
+    colours = []
+    variation = {}
+    Total = 0
+
+    def __init__(self,name):
+        self.name = name
+        self.sizes = set([])
+        self.colours = set([])
+        self.variation = {}
+        self.Total = 0
+
+
+
 
 # Home page view
 @login_required(login_url="/login")
 def Home(request):
 
-    # get products available
-    products = AvailableStock.objects.all()
-    # Products_Available_Objects = Products_Available.objects.filter()
-
     # get stock ordered pending arrival
     order_list = Products_Order_Logs.objects.filter(arrived = False).all()
 
-    # print(Products_Available.objects.all())
-    # print(Products_Available.objects.values("name","Colour","Size").annotate(total_amount=Sum('Amount')))
-    print(Products_Available.objects.values("name","Colour").distinct())
-    print(Products_Available.objects.values("name","Colour"))
+    # get product in stock
+    Products_in_stock = Products_Available.objects.values("name","Colour","Size").annotate(total=Sum('Amount'))
 
-    # change JSON string into OBJECT
-            # Convert Available stock json literal strings into JSON objects
-    for product in products:
-        product.size_range = json.loads(product.size_range)
-        
-        product.colours = json.loads(product.colours)
-        product.variation = json.loads(product.variation)
+    # initilize the array to held the product which are in stock
+    Products_in_stock_json=[]
 
-            # Convert Ordered stock json literal strings into JSON objects
+    # iterate the db objects
+    for product in Products_in_stock:
 
-    return render(request,"home.html",{"products" : products, "pending_order" : order_list})
+        # Set the boolean value that the product is not present in the array
+        present = False
+
+        # iterate through the array to check existence of the object
+        for present_product in Products_in_stock_json:
+            if present_product.name == product.get("name"):
+
+                # break from the loop if the condition is met
+                present = True
+                break
+
+        if present:
+            product_colour = product.get("Colour")
+            product_size = product.get("Size")
+            product_amount = product.get("total")
+
+            present_product.Total = present_product.Total + product_amount
+            present_product.variation[product_size] = {product_colour:product_amount}
+            present_product.colours.add(product_colour)
+            present_product.sizes.add(product_size)
+
+        elif not present:
+            product_json = ProductsJson(name=product.get("name"))
+
+            product_colour = product.get("Colour")
+            product_size = product.get("Size")
+            product_amount = product.get("total")
+
+            product_json.Total = product_json.Total + product_amount
+            product_json.variation[product_size] = {product_colour:product_amount}
+            product_json.colours.add(product_colour)
+            product_json.sizes.add(product_size)
+
+            # add the obj to the array
+            Products_in_stock_json.append(product_json)
+
+    return render(request,"home.html",{"products" : Products_in_stock_json, "pending_order" : order_list})

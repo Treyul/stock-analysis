@@ -9,7 +9,7 @@ class Retail_sales(forms.Form):
     
     colour = forms.CharField(label="",widget=forms.TextInput(attrs={"placeholder":"colour"}))
     
-    name = forms.CharField(required=False,label="",widget=forms.TextInput(attrs={"placeholder":"shop"}))
+    shop = forms.CharField(required=False,label="",widget=forms.TextInput(attrs={"placeholder":"shop"}))
     
     paid = forms.BooleanField(label="")
     

@@ -40,15 +40,18 @@ def baseSales(request):
 
             # TODO delete if the amount is 0
 
-            Wholesale_sale = Wholesale_Sales_Logs(product=product, Batch_no=Parent_Product_log, size=size, colour=colour, shop_no=shop, status=False, paid=paid,price=Available_Product.price )
+            Wholesale_sale = Wholesale_Sales_Logs(product=product, Batch=Parent_Product_log, size=size, colour=colour, shop_no=shop, status=False, paid=paid,price=Available_Product.Price )
 
             Available_Product.save()
             Wholesale_sale.save()
+            Parent_Product_log.save()
+            response_message = {"message": "success","success": "Sale successfully added"}
 
+        return JsonResponse(response_message)
+    
     # fetch  the sales for the day
-    sales = LocalSales.objects.filter(date=date.today())
+    sales = Wholesale_Sales_Logs.objects.filter(date=date.today())
     return render(request,"record.html",{"form": form,"sales":sales})
-
 
 # view for retail sales
 @login_required
@@ -56,214 +59,90 @@ def Retailsales(request):
 
     form = Retail_sales()
 
-    # get data if 
     if request.method == "POST":
 
         sales_data = json.load(request)
 
         # check if it is a retail sale or a brokering sale
-        for key in sales_data:
-            for size in sales_data[key]:
-                sale_size = sales_data[key][size]
-                shop_number = sale_size.get("name")
-                print(shop_number)
+        product,colour,size,shop,paid,price = itemgetter("product","color","sizes","name","paid","amount")(sales_data)
+        buyer = sales_data.get("buyer")
 
-                if shop_number != request.user.shop_number:
-                    response = brokering(request,sales_data)
-                    return JsonResponse(response)
+        if shop != request.user.shop_number:
+            response = brokering(request,sales_data)
+            return JsonResponse(response)
 
         # Iterate through the sales Objects
-        for key in sales_data:
+        Available_Product = Products_Available.objects.filter(name=product,Colour=colour,Size=size).first()
 
-            # check product exists
-            stock = AvailableStock.objects.filter(name=key).first()
+        if not Available_Product:
+            response_message = {"message": "error","error": f"The product is not available"}
+        elif Available_Product:
 
-            # if the stock does not exist
-            if not stock:
-                response_message = {"message": "error","error": f"The product {key} does not exist"}
-                return JsonResponse(response_message)
+            # update the product
+            Parent_Product_log = Available_Product.Batch_no
+            Parent_Product_log.amount = Parent_Product_log.amount - 1
+            Available_Product.Amount = Available_Product.Amount -1
+
+            if buyer:
+                sale = Retail_Sales_Log(product=product,size=size,colour=colour,shop_no=shop,buyer_name=buyer,paid=paid,status=False,date=date.today(),price=price)
+                sale.save()
+                response_message = {"message":"success"}
+                return response_message
+            elif not buyer:
+                sale = Retail_Sales_Log(product=product,size=size,colour=colour,shop_no=shop,paid=paid,status=False,date=date.today(),price=price)
+                sale.save()
+                response_message = {"message":"success"}
+                return response_message
             
-            # Change JSON strings to JSON obj
-            available_stock = json.loads(stock.variation)
-            available_sizes = json.loads(stock.size_range)
-            sold_stock = sales_data[key]
+            Parent_Product_log.save()
+            Available_Product.save()
+            response_message = {"message": "success","success": "Sale successfully added"}
 
-            # check if size exists
-            for size in sold_stock:
-
-                # return error if size is not available in database
-                if size not in available_stock:
-                    response_message = {"message":"error","error":f"size {size} not found"}
-                    return JsonResponse(response_message)
-
-                elif size in available_stock:
-
-                    # Return error if the stock in question has not been priced
-                    if not stock.price:
-                        response_message = {"message":"error","error":"Stock is yet to be priced Cannot make sale"}
-                        return JsonResponse(response_message)
-                    
-                    # get size objects
-                    old_color = available_stock[size]
-                    sold_color = sold_stock[size]
-
-                    color = sold_color["color"]
-                    shop = sold_color.get("name")
-                    buyer = sold_color.get("buyer")
-                    price = sold_color["amount"]
-                    paid = sold_color["paid"]
-                    # covert paid string to boolean value
-                    status = False
-                    if paid == "false":
-                        paid = False
-                    elif paid == "true":
-                        paid = True
-
-                    # Check if the color is available
-                    if color not in old_color:
-                        response_message = {"message":"error","error":f"The colour {color} in size {size} not found"}
-                        return JsonResponse(response_message)
-
-                    elif color in old_color:
-
-                        old_color[color] = old_color[color] - 1
-                        
-                        #Incase of incorrect data in db catch error of zero stock
-                        if old_color[color] < 0:
-                            response_message = {"message":"error","error":f"Cannot have negative stock amount"}
-                            return JsonResponse(response_message)
-                        
-                        # delete color if it is depeleted
-                        elif old_color[color] == 0:
-                            del old_color[color]
-
-                            # test also if stock size is depleted
-                            if len(old_color) == 0:
-                                del available_stock[size]
-
-
-                                # Update size lists
-                                available_sizes.remove(size)
-
-                                # update db object
-                                stock.size_range = json.dumps(available_sizes)
-
-
-                            # test if the stock id depleted altogether
-                            if len(available_stock) == 0:
-                                stock.delete()
-                                
-                                # Stock_log.depletion_date = date.today()
-                                response_message = {"message":"success","success":f"The ${key} is now depleted"}
-
-                                return JsonResponse(response_message)
-
-                        # TODO delete object from variation
-                        # elif old_color[color]  == 0
-                        #     return
-
-                        # upload sale to database
-                        print(shop,buyer)
-                        if shop and not buyer:
-                            print("1")
-                            sale = RetailSales(product=key,size=size,colour=color,shop_no=shop,paid=paid,status=status,date=date.today(),amount=price)
-                            sale.save() 
-                        elif buyer and not shop:
-                            print("2")
-                            sale = RetailSales(product=key,size=size,colour=color,buyer=buyer,paid=paid,status=status,date=date.today(),amount=price)
-                            sale.save() 
-                        elif buyer and shop:
-                            print("3")
-                            sale = RetailSales(product=key,size=size,colour=color,shop_no=shop,buyer=buyer,paid=paid,status=status,date=date.today(),amount=price)
-                            sale.save()
-                        elif not buyer and not shop:
-                            print("4")
-                            sale = RetailSales(product=key,size=size,colour=color,paid=paid,status=status,date=date.today(),amount=price)
-                            sale.save()
-
-            
-                            # TODO remove stock color and sizes and product altogether if depleted
-
-                        
-            # update stock amount remaining, variation, date
-            stock.amount = stock.amount - 1
-
-            # if stock.amount
-
-            stock.variation = json.dumps(available_stock)
-
-            stock.date = date.today()
-
-            stock.sizes = json.dumps(available_sizes)
-
-            stock.save()
-
-            
-            response_message = {"message":"success"}
-            # for key in sales_data:
-            sales_data =  json.dumps(sales_data)
-
-
-            return JsonResponse(response_message)
-
-        pass
-
-        # form = Retail_sales(request.post)
-
-        # if form.is_valid():
-
-        #     # get data submitted
-        #     product_name = form.cleaned_data["product"]
-        #     size = form.cleaned_data["size"]
-        #     colour = form.cleaned_data["colour"]
-        #     name = form.cleaned_data["name"] 
-        #     paid = form.cleaned_data["paid"] 
-        #     buyer = form.cleaned_data["buyer"]
-        #     amount = form.cleaned_data["amount"]
-        #     pass
 
     return render(request,"retailrecords.html",{"form":form})
 
 @login_required
 def brokering(request,sales_object):
 
-    for key in sales_object:
 
-        product = key
-
-        sale_data = sales_object[product]
-
-        for size in sale_data:
-
-            sale_size = size
-
-            sale_details = sale_data[size]
-
-            color = sale_details["color"]
-            shop = sale_details.get("name")
-            buyer = sale_details.get("buyer")
-            price = sale_details["amount"]
-            paid = sale_details["paid"]
-
-        # if not 
-            if paid == "false":
-                paid = False
-            elif paid == "true":
-                paid = True
-
-            # save the object
-            if buyer:
-                sale = RetailSales(product=product,size=sale_size,colour=color,shop_no=shop,buyer=buyer,paid=paid,status=False,date=date.today(),amount=price)
-                sale.save()
-                response_message = {"message":"success"}
-                return response_message
-            elif not buyer:
-                sale = RetailSales(product=product,size=sale_size,colour=color,shop_no=shop,paid=paid,status=False,date=date.today(),amount=price)
-                sale.save()
-                response_message = {"message":"success"}
-                return response_message
+    product,colour,size,shop,paid,price = itemgetter("product","color","sizes","name","paid","amount")(sales_object)
+    buyer = sales_object.get("buyer")
 
 
+    # save the object
+    if buyer:
+        sale = Retail_Sales_Log(product=product,size=size,colour=colour,shop_no=shop,buyer_name=buyer,paid=paid,status=False,date=date.today(),price=price)
+        sale.save()
+        response_message = {"message":"success"}
+        return response_message
+    elif not buyer:
+        sale = Retail_Sales_Log(product=product,size=size,colour=colour,shop_no=shop,paid=paid,status=False,date=date.today(),price=price)
+        sale.save()
+        response_message = {"message":"success"}
+        return response_message
+
+
+@login_required
+def shop_sales(request,sales_object):
+        product,colour,size,shop,paid = itemgetter("product","color","sizes","name","paid")(sales_data)
+ 
+        Available_Product = Products_Available.objects.filter(name=product,Colour=colour,Size=size).first()
+
+        if not Available_Product:
+            response_message = {"message": "error","error": f"The product is not available"}
+        elif Available_Product:
+            # update the product
+            Parent_Product_log = Available_Product.Batch_no
+            Parent_Product_log.amount = Parent_Product_log.amount - 1
+
+            # TODO delete if the amount is 0
+
+            Wholesale_sale = Wholesale_Sales_Logs(product=product, Batch_no=Parent_Product_log, size=size, colour=colour, shop_no=shop, status=False, paid=paid,price=Available_Product.price )
+
+            Available_Product.save()
+            Wholesale_sale.save()
+
+            return response_message
 
 @login_required
 def search(request):

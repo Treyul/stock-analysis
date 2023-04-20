@@ -9,27 +9,9 @@ const search = document.querySelector(".search");
 const table = document.querySelector("table");
 const form = document.querySelector("form");
 const error = document.getElementById("error");
-// const search_div = document.getElementById("search_div");
-
-// get the cookie in the website
-const cookies = document.cookie;
-
-// create a cookie array
-const cookie_array = cookies.split("=");
-
-// get index of the crsf key word
-const crsf_key = cookie_array.indexOf("csrftoken");
-const crsf_token = cookie_array[crsf_key + 1];
 
 /*************************************/
 // function to blur element
-const blur_element = (element) => {
-  element.classList.add("blur");
-};
-
-const unblur_element = (element) => {
-  element.classList.remove("blur");
-};
 
 // functions to hide elements
 const hide = (element) => {
@@ -60,7 +42,7 @@ const change_pay = (element) => {
         `<i class="fa-solid fa-spinner fa-spin-pulse"></i>`
       );
       element.classList.add("hidden");
-      // element.setAttribute("d")
+
       let sale_data = {};
       // const sales_data{"name","data"} = "yes",
       sale_data["name"] = parent[0].innerHTML;
@@ -72,7 +54,10 @@ const change_pay = (element) => {
 
       let reponse = fetch("/changepay", {
         method: "POST",
-        headers: { "content-type": "application/json" },
+        headers: {
+          "content-type": "application/json",
+          "X-CSRFToken": `${crsf_token}`,
+        },
         body: JSON.stringify(sale_data),
       }).then(function (response) {
         if (response.status !== 200) {
@@ -219,14 +204,13 @@ pay_status.forEach((element) => {
     }
     if (bool == true) {
       // Fetch endpoint from server
-      console.log("print stat ");
       const parent = element.closest("tr").cells;
       element.insertAdjacentHTML(
         "afterend",
         `<i class="fa-solid fa-spinner fa-spin-pulse"></i>`
       );
       element.classList.add("hidden");
-      console.log(parent);
+      // console.log(parent);
       let sale_data = {};
       // set properties of the sale to be changed status
       sale_data["name"] = parent[0].innerHTML;
@@ -235,6 +219,7 @@ pay_status.forEach((element) => {
       sale_data["shop"] = parent[3].innerHTML;
       sale_data["return"] = parent[4].firstElementChild.innerHTML;
       sale_data["pay"] = value;
+
       let response = fetch("/changepay", {
         method: "POST",
         headers: { "content-type": "application/json" },
@@ -269,6 +254,8 @@ const form_verify = (element) => {
       error.classList.add("hide");
       error.classList.remove("error");
     }, 5000);
+    Submit_sales.value = "Submit";
+    Submit_sales.removeAttribute("disabled");
     return false;
   } else return true;
 };
@@ -281,14 +268,12 @@ Submit_sales.addEventListener("click", function (e) {
   // TODO ensure field are not empty
 
   // initialize sales record object
-  let saledata = {};
   const product = document.getElementById("id_product");
-  const name = document.getElementById("id_name");
+  const name = document.getElementById("id_shop");
   const amount = document.getElementById("id_amount");
   const size = document.getElementById("id_size");
   const colour = document.getElementById("id_colour");
   const buyer = document.getElementById("id_buyer");
-  // const status = document.getElementById("id_status");
   const paid = document.getElementById("id_paid");
 
   // catch error in data to be submitted
@@ -301,6 +286,8 @@ Submit_sales.addEventListener("click", function (e) {
     error.innerHTML = "Price should be included";
     error.classList.add("error");
     error.classList.remove("hide");
+    Submit_sales.value = "Submit";
+    Submit_sales.removeAttribute("disabled");
     setTimeout(() => {
       error.classList.add("hide");
       error.classList.remove("error");
@@ -309,17 +296,17 @@ Submit_sales.addEventListener("click", function (e) {
   }
 
   const product_data = {
-    color: `${colour.value}`,
+    product: product.value,
+    color: colour.value,
     amount: +amount.value,
-    paid: `${paid.checked}`,
+    paid: paid.checked,
+    sizes: size.value,
+    name: name.value,
     // name: `${name.value}`,
     // buyer: buyer.value,
   };
   if (buyer.value.trim() != "") product_data["buyer"] = buyer.value.trim();
-  if (name.value.trim() != "") product_data["name"] = name.value.trim();
-
-  saledata[product.value] = {};
-  saledata[product.value][size.value] = product_data;
+  // if (name.value.trim() != "") product_data["name"] = name.value.trim();
 
   let response = fetch("/sales/retail", {
     method: "POST",
@@ -327,7 +314,7 @@ Submit_sales.addEventListener("click", function (e) {
       "content-type": "application/json",
       "X-CSRFToken": `${crsf_token}`,
     },
-    body: JSON.stringify(saledata),
+    body: JSON.stringify(product_data),
   }).then(function (response) {
     if (response.status !== 200) {
       console.log("ERROR");

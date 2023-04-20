@@ -76,9 +76,9 @@
       {% for product in products %}
       <div class="homedata">
         <p class="start">{{product.name}}</p>
-        <p>{% for size in product.size_range %} {{size}}, {% endfor %}</p>
+        <p>{% for size in product.sizes %} {{size}}, {% endfor %}</p>
         <p>{% for colour in product.colours %} {{colour}}, {% endfor %}</p>
-        <p>{{product.amount}}</p>
+        <p>{{product.Total}}</p>
         <button>Show</button>
         <div class="hidden">
           {% for size,colours in product.variation.items %}

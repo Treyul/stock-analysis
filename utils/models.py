@@ -4,7 +4,6 @@ from django.db import models
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
 from django.urls import reverse
-from utils.oldmodels import *
 # from django.utils import timezone
 
 
@@ -52,12 +51,11 @@ class Products_Logs(models.Model):
 
     depletion_date = models.DateField(null=True,default=None)
 
-
 class Products_Available(models.Model):
 
     name = models.CharField(max_length=50, null=False)
 
-    Batch_no = models.ForeignKey(Products_Logs, on_delete=models.CASCADE, null=False)
+    Batch_no = models.ForeignKey(Products_Logs, on_delete=models.CASCADE, null=False, related_name="availability")
 
     Colour = models.CharField(max_length=20, null=False)
 
@@ -71,7 +69,7 @@ class Wholesale_Sales_Logs(models.Model):
 
     product = models.CharField(max_length =50, null = False )
 
-    Batch = models.ForeignKey(Products_Logs,on_delete=models.CASCADE, default=None) 
+    Batch = models.ForeignKey(Products_Logs,on_delete=models.CASCADE, default=None, related_name="sales") 
 
     size = models.CharField (max_length=50,null = False)
 
@@ -108,3 +106,11 @@ class Retail_Sales_Log(models.Model):
     balanced_out = models.BooleanField(default=False)
 
     date = models.DateField( default= date.today, null=False)
+
+class Credit_and_Debit_Management(models.Model):
+
+    Shop_name = models.CharField(max_length=50 ,null=False)
+
+    debt = models.IntegerField(null=False)
+
+    Amount_paid = models.IntegerField(null=False)

@@ -1,10 +1,10 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import RetailSales,Stock,AvailableStock,LocalSales,Ordered
+from .models import *
 
-admin.site.register(RetailSales)
-admin.site.register(Stock)
-admin.site.register(AvailableStock)
-admin.site.register(LocalSales)
-admin.site.register(Ordered)
+admin.site.register(Retail_Sales_Log)
+admin.site.register(Products_Available)
+admin.site.register(Products_Logs)
+admin.site.register(Wholesale_Sales_Logs)
+admin.site.register(Products_Order_Logs)

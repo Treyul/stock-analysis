@@ -37,7 +37,6 @@
               <td><p>{{obj.price}}</p></td>
               <td><p>{{obj.colour}}</p></td>
               <td><p>{{obj.size}}</p></td>
-              <!-- <td><p>{{obj.paid}}</p></td> -->
               <td><p>{{obj.date |date:"Y-m-d" }}</p></td>
               <td><input type="button" value="Sorted" class="shop" /></td>
             </tr>
@@ -79,11 +78,9 @@
               {% for obj in sum.data %}
               <tr>
                 <td><p>{{obj.product}}</p></td>
-                <td><p>{{obj.amount}}</p></td>
+                <td><p>{{obj.price}}</p></td>
                 <td><p>{{obj.colour}}</p></td>
-                <!-- <td><p>{{obj.amount}}</p></td> -->
                 <td><p>{{obj.size}}</p></td>
-                
                 <td><p>{{obj.date|date:"Y-m-d"}}</p></td>
                 <td><input type="button" value="Sorted" class="brokered"/></td>
               </tr>

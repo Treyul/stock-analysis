@@ -4,23 +4,6 @@ const current_year_volume = document.getElementById("current_year_volume");
 const show_sale_details = document.querySelectorAll(".retail-show-btn");
 const retail_data = document.querySelector(".retail-data");
 const retail_table = retail_data.querySelector("table");
-const MONTHS = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "June",
-  "Jul",
-  "Aug",
-  "Sept",
-  "Oct",
-  "Nov",
-  "Dec",
-];
-
-const QUARTERS = ["Fisrt", "Second", "Third", "Fourth"];
-const date = new Date();
 
 // fiunctions
 // get data from table cells

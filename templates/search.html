@@ -1,19 +1,11 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <script defer src="{%static 'search.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'search.css' %}" />
-  </head>
-  <body>
-    <div id="error" class="error hidden">this is an error</div>
-    <form method="post">
-      {%csrf_token %} {{form.as_div }}
-      <input type="submit" id="submit" value="search" />
-    </form>
-  </body>
-</html>
+{% extends "menu.html"%} {% block script %} {% load static %}
+<script defer src="{% static 'search.js' %}"></script>
+<link rel="stylesheet" href="{% static 'search.css' %}" />
+{%endblock%} {% block body %}
+<div id="error" class="error hide">this is an error</div>
+
+<form method="post">
+  {%csrf_token %} {{form.as_div }}
+  <input type="submit" id="submit" value="search" />
+</form>
+{% endblock %}

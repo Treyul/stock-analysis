@@ -2,26 +2,9 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Count,Sum
 from django.shortcuts import render
 from utils.models import *
+from utils.classes import *
 from datetime import date
 import json
-
-class ProductsJson():
-
-    name = ""
-    sizes = []
-    colours = []
-    variation = {}
-    Total = 0
-
-    def __init__(self,name):
-        self.name = name
-        self.sizes = set([])
-        self.colours = set([])
-        self.variation = {}
-        self.Total = 0
-
-
-
 
 # Home page view
 @login_required(login_url="/login")

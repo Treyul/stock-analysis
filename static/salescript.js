@@ -5,6 +5,7 @@ const Submit_sales = document.getElementById("submit_sales");
 const return_status = document.querySelectorAll(".return");
 const pay_status = document.querySelectorAll(".paid");
 const search = document.querySelector(".search");
+const error = document.getElementById("error");
 const table = document.querySelector("table");
 const form = document.querySelector("form");
 
@@ -39,16 +40,15 @@ Submit_sales.addEventListener("click", function (e) {
   e.preventDefault();
   Submit_sales.value = "Loading...";
   Submit_sales.setAttribute("disabled", "True");
-  // TODO ensure field are not empty
 
   // initialize sales record object
-  form.checkValidity();
   const product = document.getElementById("id_product");
   const name = document.getElementById("id_name");
   const size = document.getElementById("id_size");
   const colour = document.getElementById("id_colour");
   const paid = document.getElementById("id_paid");
 
+  // create object that will be sent to server
   const product_data = {
     product: product.value,
     color: colour.value,
@@ -65,15 +65,17 @@ Submit_sales.addEventListener("click", function (e) {
     },
     body: JSON.stringify(product_data),
   }).then(function (response) {
+    // if there is an error in the server rendering
     if (response.status !== 200) {
-      console.log("ERROR");
+      Show_error_messages(
+        error,
+        "Server error. \nPlease refresh page and try again.",
+        "error"
+      );
     }
-    // console.log(response.json());
+
     response.json().then(function (data) {
-      // console.log(data);
-      // console.log("here");
       if (data["message"] == "error") {
-        const error = document.getElementById("error");
         product.innerHTML = "";
         name.innerHTML = "";
         size.innerHTML = 0;
@@ -102,17 +104,13 @@ Submit_sales.addEventListener("click", function (e) {
         const pay = row.querySelector(".paid");
         const ret = row.querySelector(".return");
 
-        // console.log(pay);
-
         change_pay(pay);
         change_return(ret);
-        // console.log(template.getElementsByTagName("td"));
-        // set input value to initial
+
         product.value = "";
         name.value = "";
         size.value = 0;
         colour.value = "";
-        // console.log("passed");
       }
       Submit_sales.removeAttribute("disabled");
       Submit_sales.value = "Submit";

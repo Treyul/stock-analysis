@@ -1,135 +1,10 @@
-/*************    Defination of functions  **************/
-const change_pay = (element) => {
-  element.addEventListener("click", function () {
-    let value = element.previousElementSibling.innerHTML;
-    let bool = false;
-
-    // if status is false
-    if (value == "False") {
-      bool = confirm("Do you want to change status to paid");
-    } else {
-      bool = confirm("Do you want to change status to not paid");
-    }
-
-    if (bool == true) {
-      // declare object to be sent to servers and set its properties
-      const parent = element.closest("tr").cells;
-      element.insertAdjacentHTML(
-        "afterend",
-        `<i class="fa-solid fa-spinner fa-spin-pulse"></i>`
-      );
-      element.classList.add("hidden");
-      // element.setAttribute("d")
-      let sale_data = {};
-      // const sales_data{"name","data"} = "yes",
-      sale_data["name"] = parent[0].innerHTML;
-      sale_data["size"] = parent[1].innerHTML;
-      sale_data["colour"] = parent[2].innerHTML;
-      sale_data["shop"] = parent[3].innerHTML;
-      sale_data["return"] = parent[4].firstElementChild.innerHTML;
-      sale_data["pay"] = value;
-
-      let reponse = fetch("/sales/changepay", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          "X-CSRFToken": `${crsf_token}`,
-        },
-        body: JSON.stringify(sale_data),
-      }).then(function (response) {
-        if (response.status !== 200) {
-          console.log("ERROR");
-        }
-        response.json().then(function (data) {
-          console.log(data);
-          if ((data["message"] = "success")) {
-            element.previousElementSibling.innerHTML =
-              "paid" == value ? "False" : "paid";
-            element.nextElementSibling.remove();
-            element.classList.remove("hidden");
-            alert("successfully changed status");
-          }
-        });
-      });
-    }
-  });
-};
-
-const change_return = (element) => {
-  element.addEventListener("click", function () {
-    let value = element.previousElementSibling.innerHTML;
-    let bool = false;
-
-    // if status is false
-    if (value == "False") {
-      bool = confirm("Do you want to change status to returned");
-    } else {
-      bool = confirm("Do you want to change status to not returned");
-    }
-
-    if (bool == true) {
-      // declare object to be sent to servers and set its properties
-      const parent = element.closest("tr").cells;
-      element.insertAdjacentHTML(
-        "afterend",
-        `<i class="fa-solid fa-spinner fa-spin-pulse"></i>`
-      );
-      element.classList.add("hidden");
-      // element.setAttribute("d")
-      let sale_data = {};
-      // const sales_data{"name","data"} = "yes",
-      sale_data["name"] = parent[0].innerHTML;
-      sale_data["size"] = parent[1].innerHTML;
-      sale_data["colour"] = parent[2].innerHTML;
-      sale_data["shop"] = parent[3].innerHTML;
-      sale_data["return"] = value;
-      sale_data["pay"] = parent[5].firstElementChild.innerHTML;
-
-      let reponse = fetch("/changereturn", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          "X-CSRFToken": `${crsf_token}`,
-        },
-        body: JSON.stringify(sale_data),
-      }).then(function (response) {
-        if (response.status !== 200) {
-          console.log("ERROR");
-        }
-        response.json().then(function (data) {
-          console.log(data);
-          if ((data["message"] = "success")) {
-            element.previousElementSibling.innerHTML =
-              "returned" == value ? "False" : "returned";
-            element.nextElementSibling.remove();
-            element.classList.remove("hidden");
-            alert("successfully changed status");
-          }
-        });
-      });
-    }
-  });
-};
-
-/************   select elements  ******************/
 const submit = document.getElementById("submit");
 const form = document.querySelector("form");
-
-// get the cookies in the website
-const cookies = document.cookie;
-
-// create a cookie array
-const cookie_array = cookies.split("=");
-
-// get index of the crsf key word
-const crsf_key = cookie_array.indexOf("csrftoken");
-const crsf_token = cookie_array[crsf_key + 1];
-
+const error = document.getElementById("error");
 submit.addEventListener("click", function (e) {
   e.preventDefault();
-  console.log("print");
 
-  //   get value of the input fields
+  //   getinput fields
   const product = document.getElementById("id_product");
   const shop = document.getElementById("id_shop_number");
   const size = document.getElementById("id_size");
@@ -223,6 +98,7 @@ submit.addEventListener("click", function (e) {
                 ? `False <input type="button" value="Change" class="status paid" />`
                 : "returned"
             }</td>
+            <td class="hide">${results[id]}</td>
               </tr>`;
             }
 
@@ -286,6 +162,7 @@ submit.addEventListener("click", function (e) {
                   ? `<p>False</p> <input type="button" value="Change" class="status paid" />`
                   : '<p>paid </p> <input type="button" value="Change" class="status paid" />'
               }</td>
+              <td class="hide">${result["id"]}</td>
               </tr>`;
             }
             form.insertAdjacentHTML("afterend", wholesale_template);
@@ -299,9 +176,6 @@ submit.addEventListener("click", function (e) {
             wholesale_pay_btns.forEach((button) => change_pay(button));
             wholesale_return_btns.forEach((button) => change_return(button));
           }
-
-          // console.log(retail_pay_btns, retail_return_btns);
-
           //
         } else {
         }

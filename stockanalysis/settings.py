@@ -107,7 +107,6 @@ WSGI_APPLICATION = 'stockanalysis.wsgi.application'
 #     }
 # }
 
-# mysql+pymysql://b4efcd84e73da2:2d8fc5cf@us-cdbr-east-06.cleardb.net/heroku_4b7312ec17a7f3c
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',

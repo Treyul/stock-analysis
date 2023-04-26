@@ -1,3 +1,20 @@
+const MONTHS = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "June",
+  "Jul",
+  "Aug",
+  "Sept",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
+const QUARTERS = ["Fisrt", "Second", "Third", "Fourth"];
+
 // get the cookie in the website
 const cookies = document.cookie;
 

@@ -44,9 +44,9 @@
           <!-- <p class="start">{{stock.name}}</p> -->
         <td class="start">{{stock.name}}</td>
 
-          <td>{% for size in stock.size_range %} {{size}}, {% endfor %}</td>
+          <td>{% for size in stock.sizes %} {{size}}, {% endfor %}</td>
           <td>{% for colour in stock.colours %} {{colour}}, {% endfor %}</td>
-          <td>{{stock.amount}}</td>
+          <td>{{stock.Total}}</td>
          <td><input type="button" value="Set prices" class="prices" /></td>
         <!-- </div> --></tr>
       

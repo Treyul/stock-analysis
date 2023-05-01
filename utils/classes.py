@@ -5,6 +5,7 @@ class ProductsJson():
     colours = []
     variation = {}
     Total = 0
+    price = 0
 
     def __init__(self,name):
         self.name = name

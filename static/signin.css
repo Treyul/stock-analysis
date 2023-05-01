@@ -31,7 +31,7 @@ form > input[type="submit"] {
   background-color: orange;
 }
 
-form > button {
+#login_btn {
   /* display: flex; */
   border-radius: 45px;
   border: none;
@@ -40,5 +40,20 @@ form > button {
   font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
   font-weight: bold;
   letter-spacing: 1.5px;
-  margin-top: 2rem;
+  margin-top: 4rem;
+}
+#login_btn button {
+  /* display: flex; */
+  border-radius: 45px;
+  border: none;
+  background-color: orange;
+  /* padding: 0.25rem 2em; */
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  font-weight: bold;
+  letter-spacing: 1.5px;
+  margin-top: 0rem;
+}
+
+.hide {
+  display: none;
 }

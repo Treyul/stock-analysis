@@ -1,0 +1,33 @@
+#pending_orders {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  text-align: center;
+}
+#pending_orders p,
+div p {
+  margin-block-end: 0px;
+  margin-block-start: 0px;
+  margin-inline-end: 0px;
+  margin-inline-start: 0px;
+}
+
+#pending_orders_summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  text-align: center;
+  column-gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+#pending_orders_summary button {
+  border-radius: 30px;
+  border: none;
+}
+
+#priced_products,
+#priced_products_summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 2fr;
+  column-gap: 0.5rem;
+  text-align: center;
+}

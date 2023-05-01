@@ -28,6 +28,7 @@ urlpatterns = [
     path("stock/",include("stock.urls")),
     path("login/",include("login.urls")),
     path("Home/",include("Home.urls")),
+    path("dashboard/", include("dashboard.urls")),
     path("settings/", include("settings.urls"))
 ]
 

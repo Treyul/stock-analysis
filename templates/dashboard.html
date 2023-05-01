@@ -1,0 +1,66 @@
+{% extends "menu.html" %}
+
+<!-- block to hold css and js links -->
+{% block script %}
+<link rel="stylesheet" href="/static/dashboard.css" />
+<script defer src="/static/dashboard.js"></script>
+{%endblock%}
+
+<!-- beginning of body block -->
+{% block body %}
+
+<!-- block to hold pending orders -->
+{% if pending_orders %}
+<div>
+  <div id="pending_orders">
+    <p>Product</p>
+    <p>Price</p>
+    <p>Total</p>
+  </div>
+
+  <!-- iterate between the pending order list -->
+  {% for order in pending_orders %}
+  <div id="pending_orders_summary">
+    <p>{{order.name}}</p>
+    <p>{{order.order_price}}</p>
+    <p>{{order.amount}}</p>
+    <button>Show</button>
+    <button>Arrived</button>
+  </div>
+  <!-- <p>{{order.order_date |date:"Y-m-d" }}</p> -->
+  {%endfor%}
+</div>
+{%endif%}
+
+<!-- block for setting prices for products -->
+{% if priced_products %}
+<div>
+  <div id="priced_products">
+    <p>Product</p>
+    <p>Amount</p>
+  </div>
+  {% for product in priced_products%}
+  <div id="priced_products_summary">
+    <p>{{product.name}}</p>
+    <p>{{product.Total}}</p>
+    <button>Show</button>
+    <button>change price</button>
+  </div>
+  {%endfor%}
+</div>
+{% endif %}
+
+<!-- block for changing prices -->
+{% if unpriced_products %}
+<div>
+  <div id="unpriced_products"></div>
+  {% for product in unpriced_products%}
+  <div></div>
+  {%endfor%}
+</div>
+{% endif%}
+<table id="change_price"></table>
+<table id="set_prices"></table>
+
+<!-- close the body block -->
+{% endblock %}

@@ -6,6 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     {% load static %}
     <link rel="stylesheet" href="{% static 'signin.css' %}" />
+    <script
+      src="https://kit.fontawesome.com/04885ca4bc.js"
+      crossorigin="anonymous"
+    ></script>
     <title>Document</title>
   </head>
   <body>
@@ -20,7 +24,27 @@
         <a href="createaccount">click here to create</a>
       </p>
       {%else%} {{field}} {%endif%}{%endfor%}
-      <button type="submit">Log In</button>
+      <div id="login_btn">
+        <button type="submit">Log In</button>
+        <div id="login_loading" class="hide">
+          <i class="fa-solid fa-spinner fa-spin"></i>
+        </div>
+      </div>
     </form>
+    <script defer>
+      const password = document.getElementById("id_passwordLg");
+      const username = document.getElementById("id_username");
+      const login_btn = document.querySelector("#login_btn button");
+      const login_icon = document.getElementById("login_loading");
+      console.log(login_btn);
+      console.log(login_icon);
+      login_btn.addEventListener("click", function () {
+        if (password.value == "" || username.value == "") {
+          return;
+        }
+        login_btn.classList.add("hide");
+        login_icon.classList.remove("hide");
+      });
+    </script>
   </body>
 </html>

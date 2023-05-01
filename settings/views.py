@@ -52,6 +52,8 @@ def settings(request):
 
             # add the obj to the array
             priced_stock.append(product_json)
+    
+    
     for product in unpriced_stock_objects:
 
         # Set the boolean value that the product is not present in the array

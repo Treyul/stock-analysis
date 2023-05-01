@@ -26,7 +26,13 @@
   />
   <input type="button" id="add-item" class="add-sale" value="Add sale" />
   <!-- <i class="fa-solid fa-spinner fa-spin"></i> -->
-  <input type="submit" id="submit_sales" value="Submit Sale" />
+
+  <div id="submit_sales_div">
+    <input type="submit" id="submit_sales" value="Submit" />
+    <div id="sale_submit_loading" class="hidden">
+      <i class="fa-solid fa-spinner fa-spin"></i>
+    </div>
+  </div>
 </form>
 {% if sales %}
 <table id="sales">

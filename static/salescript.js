@@ -8,17 +8,9 @@ const search = document.querySelector(".search");
 const error = document.getElementById("error");
 const table = document.querySelector("table");
 const form = document.querySelector("form");
+const sale_submit_icon = document.getElementById("sale_submit_loading");
 
 /*************************************/
-// function to blur element
-const blur_element = (element) => {
-  element.classList.add("blur");
-};
-
-const unblur_element = (element) => {
-  element.classList.remove("blur");
-};
-
 // functions to hide elements
 const hide = (element) => {
   element.classList.add("hidden");
@@ -38,8 +30,8 @@ pay_status.forEach((element) => {
 
 Submit_sales.addEventListener("click", function (e) {
   e.preventDefault();
-  Submit_sales.value = "Loading...";
-  Submit_sales.setAttribute("disabled", "True");
+  Submit_sales.classList.add("hidden");
+  sale_submit_icon.classList.remove("hidden");
 
   // initialize sales record object
   const product = document.getElementById("id_product");
@@ -72,6 +64,8 @@ Submit_sales.addEventListener("click", function (e) {
         "Server error. \nPlease refresh page and try again.",
         "error"
       );
+      Submit_sales.classList.remove("hidden");
+      sale_submit_icon.classList.add("hidden");
     }
 
     response.json().then(function (data) {
@@ -81,8 +75,12 @@ Submit_sales.addEventListener("click", function (e) {
         size.innerHTML = 0;
         colour.innerHTML = "";
         Show_error_messages(error, data["error"], "error");
+        Submit_sales.classList.remove("hidden");
+        sale_submit_icon.classList.add("hidden");
       } else if (data["message"] != "error") {
         Show_error_messages(error, data["success"], "success");
+        Submit_sales.classList.remove("hidden");
+        sale_submit_icon.classList.add("hidden");
 
         // append data to sales table
         // initialize template
@@ -112,8 +110,6 @@ Submit_sales.addEventListener("click", function (e) {
         size.value = 0;
         colour.value = "";
       }
-      Submit_sales.removeAttribute("disabled");
-      Submit_sales.value = "Submit";
     });
   });
 });

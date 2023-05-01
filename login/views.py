@@ -21,14 +21,11 @@ def Signin(request):
 
             user = Users.objects.filter(username = username, password = sha512(password.encode()).hexdigest()).first()
             
+            # if details provided are correct redirect user to hoe page
             if user:
-                print("yeah")
                 login(request, user)
                 return redirect("/")
-            else:
-                print("umm..")
-                print(sha512(password.encode()).hexdigest())
-
+            
     return render(request,"login.html",{"form":form})
 
 # view for creating users

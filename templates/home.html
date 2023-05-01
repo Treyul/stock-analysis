@@ -59,6 +59,9 @@
           <li>
             <a href="/settings">Settings</a>
           </li>
+          {% if request.user.rights == True %}
+          <li><a href="/dashboard">Dashboard</a></li>
+          {%endif%}
         </ul>
       </div>
     </div>

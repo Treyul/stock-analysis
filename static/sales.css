@@ -94,10 +94,21 @@ form > input[type="submit"] {
   border: none;
   border-radius: 45px;
 }
+#submit_sales_div {
+  background-color: #84f584;
+  grid-column: 4/4;
+  border: none;
+  border-radius: 45px;
+  /* color: white; */
+  text-align: center;
+}
 #submit_sales {
   background-color: #84f584;
   grid-column: 4/4;
+  border: none;
+  border-radius: 45px;
   /* color: white; */
+  text-align: center;
 }
 #remove-item {
   background-color: rgb(241 56 56 / 88%);

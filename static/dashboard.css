@@ -18,16 +18,22 @@ div p {
   column-gap: 0.5rem;
   margin-top: 0.5rem;
 }
-
-#pending_orders_summary button {
+div[id*="summary"] + div {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  text-align: center;
+}
+div button {
   border-radius: 30px;
   border: none;
 }
 
 #priced_products,
-#priced_products_summary {
+#unpriced_products,
+div[id*="summary"] {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 2fr;
   column-gap: 0.5rem;
   text-align: center;
+  margin-top: 0.5rem;
 }

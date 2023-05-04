@@ -35,7 +35,10 @@ def get_unpriced_products(request):
                 product_amount = product.get("total")
 
                 present_product.Total = present_product.Total + product_amount
-                present_product.variation[product_size] = {product_colour:product_amount}
+                if present_product.variation.get(product_size):
+                     present_product.variation[product_size][product_colour] = product_amount
+                else:
+                    present_product.variation[product_size] = {product_colour:product_amount}
                 present_product.colours.add(product_colour)
                 present_product.sizes.add(product_size)
 
@@ -64,7 +67,7 @@ def get_priced_products(request):
     # if request.method =="POST":
 
         # get the priced product that have arrived
-        priced_stock_objects = Products_Available.objects.filter(~Q(Price = None)).values("name","Colour","Size").annotate(total=Sum('Amount'))
+        priced_stock_objects = Products_Available.objects.filter(~Q(Price = None)).values("name","Colour","Size","Price").annotate(total=Sum('Amount'))
 
         # initialize array to hold the db objects
         priced_stock = []
@@ -99,7 +102,9 @@ def get_priced_products(request):
                 product_colour = product.get("Colour")
                 product_size = product.get("Size")
                 product_amount = product.get("total")
+                product_json.price = product.get("Price")
 
+                
                 product_json.Total = product_json.Total + product_amount
                 product_json.variation[product_size] = {product_colour:product_amount}
                 product_json.colours.add(product_colour)
@@ -108,6 +113,6 @@ def get_priced_products(request):
                 # add the obj to the array
                 priced_stock.append(product_json)
     
-        print(priced_stock)
+        # print(priced_stock)
         return priced_stock
     

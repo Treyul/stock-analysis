@@ -1,13 +1,68 @@
-{% extends "menu.html" %}
-
+{% extends "menu.html" %} {%load static %}
 <!-- block to hold css and js links -->
 {% block script %}
-<link rel="stylesheet" href="/static/dashboard.css" />
-<script defer src="/static/dashboard.js"></script>
+<link rel="stylesheet" href="{% static 'dashboard.css' %}" />
+<script defer src="{% static 'dashboard.js' %}"></script>
 {%endblock%}
 
 <!-- beginning of body block -->
 {% block body %}
+
+<!-- Blck holding the worth of the shop -->
+<div
+  style="
+    display: grid;
+    text-align: center;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    row-gap: 0.5rem;
+  "
+>
+  <p><strong>Type</strong></p>
+  <p><strong>Worth</strong></p>
+  <p><strong>Quantity</strong></p>
+  <p></p>
+  {% if priced_products %}
+  <p style="margin: auto">Priced</p>
+  <div
+    style="grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr"
+  >
+    {% with amount=0 %} {% for product in priced_products %}
+    <p>{{priced_worth|add:product.worth}}</p>
+    <p>{{amount|add:product.Total}}</p>
+    {%endfor%} {%endwith%}
+  </div>
+  <button>Show details</button>
+  <div
+    style="
+      grid-column: span 4;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+      text-align: center;
+    "
+  >
+    <p><strong>Product</strong></p>
+    <p><strong>Quantity</strong></p>
+    <p><strong>Price</strong></p>
+    <p><strong>Worth</strong></p>
+    <!-- <button>Show</button> -->
+  </div>
+  {% for product in priced_products %}
+  <div
+    style="
+      grid-column: span 4;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+      text-align: center;
+    "
+  >
+    <p>{{product.name}}</p>
+    <p>{{product.Total}}</p>
+    <p>{{product.price}}</p>
+    <p>{{product.worth}}</p>
+    <button>Show</button>
+  </div>
+  {%endfor%} {%endif%}
+</div>
 
 <!-- block to hold pending orders -->
 {% if pending_orders %}
@@ -27,7 +82,51 @@
     <button>Show</button>
     <button>Arrived</button>
   </div>
-  <!-- <p>{{order.order_date |date:"Y-m-d" }}</p> -->
+  <div>
+    <!-- |date:"Y-m-d" ; -->
+    <p><strong>Sizes</strong></p>
+    <p><strong>Colours</strong></p>
+    <p><strong>Order date</strong></p>
+    <p>{% for size in order.size_range %}{{size}},{% endfor %}</p>
+    <p>{% for color in order.colours %} {{color}}, {% endfor %}</p>
+    <p>{{order.order_date }}</p>
+    {% if order.shipping_co or order.proposed_arrival %}
+    <p><strong>shipping Co</strong></p>
+    <p><strong>Arrival date</strong></p>
+    <p style="grid-column: 3 / span 1"></p>
+    <p>{{ order.shipping_co }}</p>
+    <p>{{ order.proposed_arrival }}</p>
+    {% endif %}
+    <button style="grid-column: 3 / span 1">Show variation</button>
+  </div>
+  <div
+    style="
+      text-align: center;
+      display: grid;
+      grid-template-columns: 0.75fr 1fr 1fr 0.75fr 1fr 1fr;
+      row-gap: 0.5rem;
+    "
+  >
+    <p><strong>Size</strong></p>
+    <p><strong>Colour</strong></p>
+    <p><strong>Amount</strong></p>
+    <p><strong>Size</strong></p>
+    <p><strong>Colour</strong></p>
+    <p><strong>Amount</strong></p>
+    {% for size,colours in order.variation.items %}
+    <p style="margin: auto">{{size}}</p>
+    <div
+      style="grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr"
+    >
+      {% for color,amount in colours.items %}
+      <!-- <div> -->
+      <p>{{color}}</p>
+      <p>{{amount}}</p>
+      <!-- </div> -->
+      {% endfor %}
+    </div>
+    {%endfor%}
+  </div>
   {%endfor%}
 </div>
 {%endif%}
@@ -46,6 +145,42 @@
     <button>Show</button>
     <button>change price</button>
   </div>
+  <div>
+    <p><strong>Sizes</strong></p>
+    <p><strong>Colours</strong></p>
+    <p></p>
+    <p>{% for size in product.sizes %}{{size}},{% endfor %}</p>
+    <p>{% for color in product.colours %} {{color}}, {% endfor %}</p>
+    <button>Show variation</button>
+  </div>
+  <div
+    style="
+      text-align: center;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    "
+  >
+    <p><strong>Size</strong></p>
+    <p><strong>Colour</strong></p>
+    <p><strong>Amount</strong></p>
+    <p><strong>Size</strong></p>
+    <p><strong>Colour</strong></p>
+    <p><strong>Amount</strong></p>
+    {% for size,colours in product.variation.items %}
+    <p style="margin: auto">{{size}}</p>
+    <div
+      style="grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr"
+    >
+      {% for color,amount in colours.items %}
+      <!-- <div> -->
+      <p>{{color}}</p>
+      <p>{{amount}}</p>
+      <!-- </div> -->
+      {% endfor %}
+    </div>
+    {%endfor%}
+  </div>
+
   {%endfor%}
 </div>
 {% endif %}
@@ -53,9 +188,54 @@
 <!-- block for changing prices -->
 {% if unpriced_products %}
 <div>
-  <div id="unpriced_products"></div>
+  <div id="unpriced_products">
+    <p>Product</p>
+    <p>Amount</p>
+  </div>
   {% for product in unpriced_products%}
-  <div></div>
+  <div id="unpriced_products_summary">
+    <p>{{product.name}}</p>
+    <p>{{product.Total}}</p>
+    <button>Show</button>
+    <button>change price</button>
+  </div>
+  <div>
+    <p><strong>Sizes</strong></p>
+    <p><strong>Colours</strong></p>
+    <p></p>
+    <p>{% for size in product.sizes %}{{size}},{% endfor %}</p>
+    <p>{% for color in product.colours %} {{color}}, {% endfor %}</p>
+    <button>Show variation</button>
+  </div>
+  <div
+    style="
+      text-align: center;
+      display: grid;
+      grid-template-columns: 0.75fr 1fr 1fr 0.75fr 1fr 1fr;
+      row-gap: 0.5rem;
+    "
+  >
+    <p><strong>Size</strong></p>
+    <p><strong>Colour</strong></p>
+    <p><strong>Amount</strong></p>
+    <p><strong>Size</strong></p>
+    <p><strong>Colour</strong></p>
+    <p><strong>Amount</strong></p>
+    {% for size,colours in product.variation.items %}
+    <p style="margin: auto">{{size}}</p>
+    <div
+      style="grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr"
+    >
+      {% for color,amount in colours.items %}
+      <!-- <div> -->
+      <p>{{color}}</p>
+      <p>{{amount}}</p>
+      <!-- </div> -->
+      {% endfor %}
+    </div>
+    {%endfor%}
+  </div>
+
   {%endfor%}
 </div>
 {% endif%}

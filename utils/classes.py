@@ -13,3 +13,7 @@ class ProductsJson():
         self.colours = set([])
         self.variation = {}
         self.Total = 0
+        self.price = 0
+
+    def worth(self):
+        return self.price * self.Total

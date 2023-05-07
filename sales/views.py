@@ -42,7 +42,6 @@ def baseSales(request):
         elif Available_Product:
             # update the product
             Parent_Product_log = Available_Product.Batch_no
-            Parent_Product_log.amount = Parent_Product_log.amount - 1
             Available_Product.Amount = Available_Product.Amount - 1
             
             # create the db object
@@ -50,10 +49,16 @@ def baseSales(request):
             
             # save the object and the changes in existing models
             Wholesale_sale.save()
-            Parent_Product_log.save()
             if Available_Product.Amount == 0:
                 Available_Product.delete()
-                response_message = {"message": "success","success": "Product is now depleted"}
+
+                # test if the product exists in different variations
+                Still_Available = Products_Available.objects.filter(name=product).first()
+
+                if not Still_Available:
+                    Parent_Product_log.depletion_date = date.today()
+                    Parent_Product_log.save()
+                response_message = {"message": "success","success": f"{colour} in {product} is now depleted"}
             else:
                 Available_Product.save()
                 response_message = {"message": "success","success": "Sale successfully added"}
@@ -92,7 +97,6 @@ def Retailsales(request):
 
             # update the product
             Parent_Product_log = Available_Product.Batch_no
-            Parent_Product_log.amount = Parent_Product_log.amount - 1
             Available_Product.Amount = Available_Product.Amount -1
 
             if buyer:
@@ -106,7 +110,6 @@ def Retailsales(request):
                 response_message = {"message":"success"}
                 return response_message
             
-            Parent_Product_log.save()
             Available_Product.save()
             response_message = {"message": "success","success": "Sale successfully added"}
 
@@ -145,7 +148,6 @@ def shop_sales(request,sales_object):
         elif Available_Product:
             # update the product
             Parent_Product_log = Available_Product.Batch_no
-            Parent_Product_log.amount = Parent_Product_log.amount - 1
 
             # TODO delete if the amount is 0
 

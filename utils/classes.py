@@ -17,3 +17,17 @@ class ProductsJson():
 
     def worth(self):
         return self.price * self.Total
+    
+
+class Product_Log_History():
+
+    name = ""
+    no_of_restocks = 0
+    product_logs = []
+
+    def __init__(self,name):
+
+        self.name = name
+        self.no_of_restocks = 0
+        self.product_logs = []
+        

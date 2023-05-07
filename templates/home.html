@@ -15,12 +15,7 @@
     ></script>
     <title>Document</title>
   </head>
-  <body
-    style="
-      margin: 0em;
-      font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-    "
-  >
+  <body>
     <h2>Welcome {{request.user.first_name}}</h2>
 
     <div id="menu">
@@ -67,7 +62,7 @@
     </div>
 
     {% if products %}
-    <div class="contain" id="available">
+    <div class="contain">
       <h3 style="grid-column: span 5">Available stock</h3>
       <div class="hometitle">
         <h5 style="grid-column: 1">Name</h5>

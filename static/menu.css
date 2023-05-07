@@ -1,10 +1,11 @@
 /**********  STYLES FOR THE HAMBURGER  ********/
 div[id="hamburger"] {
-  width: 2rem;
+  width: 2.5rem;
+  /* height: 2.5rem; */
 }
 
 div[id="hamburger"] div {
-  margin: 0.3rem;
+  margin: 0.4rem;
   background-color: black;
   height: 0.15rem;
 }
@@ -48,8 +49,9 @@ div[id="main-menu"] ul li {
 div[id="main-menu"] ul li a {
   text-decoration: none;
   color: black;
-  padding: 0.5rem 4rem;
+  padding: 0.5rem 2rem;
   /* margin: 0.25rem; */
+  padding-right: 1rem;
   cursor: pointer;
 }
 .show {
@@ -62,6 +64,6 @@ div[id="main-menu"] ul li a {
   opacity: 0;
 }
 
-.dropdown-items {
-  /* display: none; */
+#menu {
+  margin-bottom: 1rem;
 }

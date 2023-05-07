@@ -18,6 +18,12 @@ menu_hamburger.addEventListener("click", function () {
   item_two.classList.toggle("item-two");
   item_three.classList.toggle("item-three");
   menu.classList.toggle("menuhidden");
+
+  drop_down_submenus.forEach((Element) => {
+    const submenus = Element.nextElementSibling;
+
+    submenus.className = "hidden";
+  });
 });
 menu.addEventListener("mouseout", function () {
   console.log("out");
@@ -34,6 +40,11 @@ menu.addEventListener("mouseout", function () {
   item_two.classList.toggle("item-two");
   item_three.classList.toggle("item-three");
   menu.classList.toggle("menuhidden");
+
+  // drop_down_submenus.forEach((Element) => {
+  //   const submenus = Element.nextElementSibling;
+  //   submenus.classList.toggle("hidden");
+  // });
 });
 
 // add toggling of submenus

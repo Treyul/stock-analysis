@@ -3,19 +3,34 @@ from utils.models import *
 from utils.classes import *
 from utils.views import *
 from django.db import transaction
-from django.db.models import Q,Sum,Count
+from django.db.models import Q,Sum,Count,F
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 import json
 
+"""
+For stock analysis
+No of restock = group product logs by product name count columns
 
-# def update_variable(value):
-#     data = value
-#     return data
+1. [DONE] Count the number of appearances of a product in product logs and order label
+2. Sum the amount ordered in product logs SP1
+3. Order by batches
+4. get depletion date and arrival date
+5. difference in no.5 as Time for depletion
 
-# register.filter('update_variable', update_variable)
+1. [DONE]group by batches 
+2. [DONE] Sum the amount of product in each batch  SA1
 
-# Create your views here.
+1. product sold in each batch = SP1-SA1 if not depleted
+
+"""
+
+@login_required
+def stock_analyis(request):
+    
+    pass
+
+
 @login_required
 @transaction.atomic
 def Change_order_status_Arrived(request):
@@ -34,6 +49,14 @@ def home(request):
 
     pending_orders = Products_Order_Logs.objects.filter(arrived = False).all()
 
+    # get number of restocks and variation in each restock
+    Number_of_restocks = Products_Logs.objects.values("product_name").annotate(number = Count("product_name"))
+    product_logs = Products_Logs.objects.all()
+
+    Depleted_Products = Products_Logs.objects.filter(~Q(depletion_date = None))
+    
+    Amounts_Available = Products_Available.objects.values("name").annotate(amount = Sum("Amount"))
+    print(Depleted_Products)
     return render(request ,"dashboard.html",{"priced_products":priced_arrived_products,"unpriced_products":unpriced_arrived_products, "pending_orders":pending_orders,"priced_worth":0,"order_worth":0})
 
 

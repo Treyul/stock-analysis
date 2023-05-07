@@ -99,13 +99,15 @@ def setprice(request):
     if request.method == "POST":
 
         data =  json.load(request)
+        print(data)
         
-        available = Products_Available.objects.filter(name = data["product"]).first()
+        available = Products_Available.objects.filter(name = data["product"]).all()
 
         #set the price
-        available.price = data["price"]
+        for db_obj in available:
+            db_obj.Price = data["price"]
+            db_obj.save()
 
-        available.save()
 
         response_message = {"message":"success"}
 

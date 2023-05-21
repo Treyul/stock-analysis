@@ -28,7 +28,7 @@ def update_available_stock(request):
                     Total_amount = Total_amount + amount
 
             # add product to Logs
-            stock = Products_Logs(product_name=product_name, sizes = product_sizes_json, colours=product_colours_json,amount = Total_amount, product_variation = product_data_json )
+            stock = Products_Logs(product_name=product_name, sizes = product_sizes_json, colours=product_colours_json,amount = Total_amount,order_amount=Total_amount, product_variation = product_data_json )
             
             # iterate through the variation to create the products availabe objects
             stock.save()

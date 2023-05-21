@@ -27,8 +27,50 @@ No of restock = group product logs by product name count columns
 
 @login_required
 def stock_analyis(request):
+
+    # query product logs for all products and get the no of restocks
+    Number_of_restocks = Products_Logs.objects.values("product_name").annotate(number = Count("product_name"))
+    # Amounts_Available = Products_Available.objects.values("name").annotate(amount = Sum("Amount"))
+
+    product_analysis = []
+
+    # populate the array
+    for product in Number_of_restocks:
+        product_log = Product_Log_History(product["product_name"].lower(),product["number"])
+        product_analysis.append(product_log)
+
+    product_logs = Products_Logs.objects.order_by("-Arrival_date").values()
+    for product in product_logs:
+        for product_log in product_analysis:
+            if product["product_name"].lower() == product_log.name:
+                product_log.product_logs.append(product)
+                product_log.ordered = product_log.ordered + product["order_amount"]
+                product_log.available = product_log.available + product["amount"]
+                break   
+
+    Wholesale_sales_data =Wholesale_Sales_Logs.objects.values("product","date").annotate(sales=Count("date")).order_by("date")
+    # {'product': 'test76', 'date': datetime.date(2023, 4, 20), 'sales': 1}
+    for sale in Wholesale_sales_data:
+        for product in product_analysis:
+            if product.name == sale.get("product").lower():
+                product.sales_history[0].append(sale.get("date"))
+                product.sales_history[1].append(sale.get("sales"))
+                break
+
+    Retail_sales_data =Retail_Sales_Log.objects.values("product","date").annotate(sales=Count("date")).order_by("date")
+    for sale in Retail_sales_data:
+        for product in product_analysis:
+            if product.name == sale.get("product").lower():
+                product.retail_sales_history[0].append(sale.get("date"))
+                product.retail_sales_history[1].append(sale.get("sales"))
+                break
+
+
+    analysis_json = []
+    for product in product_analysis:
+        analysis_json.append(product.__dict__)
     
-    pass
+    return analysis_json
 
 
 @login_required
@@ -49,15 +91,12 @@ def home(request):
 
     pending_orders = Products_Order_Logs.objects.filter(arrived = False).all()
 
-    # get number of restocks and variation in each restock
-    Number_of_restocks = Products_Logs.objects.values("product_name").annotate(number = Count("product_name"))
-    product_logs = Products_Logs.objects.all()
-
     Depleted_Products = Products_Logs.objects.filter(~Q(depletion_date = None))
     
     Amounts_Available = Products_Available.objects.values("name").annotate(amount = Sum("Amount"))
-    print(Depleted_Products)
-    return render(request ,"dashboard.html",{"priced_products":priced_arrived_products,"unpriced_products":unpriced_arrived_products, "pending_orders":pending_orders,"priced_worth":0,"order_worth":0})
+    # print(Depleted_Products)
+    analysis_json = stock_analyis(request)
+    return render(request ,"dashboard.html",{"priced_products":priced_arrived_products,"unpriced_products":unpriced_arrived_products, "pending_orders":pending_orders,"priced_worth":0,"order_worth":0,"analysis":analysis_json})
 
 
 @login_required
@@ -87,8 +126,10 @@ def sale_dataset(request):
     for array in retail_dataset:
         array.reverse()
 
+    # analysis = stock_analyis(request)
+    analysis_json = stock_analyis(request)
     
-    return JsonResponse({"wholesale":wholesale_dataset,"retail":retail_dataset})
+    return JsonResponse({"wholesale":wholesale_dataset,"retail":retail_dataset,"analysis":analysis_json})
 
 @login_required
 @transaction.atomic

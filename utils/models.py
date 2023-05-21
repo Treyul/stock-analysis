@@ -45,6 +45,8 @@ class Products_Logs(models.Model):
 
     amount = models.IntegerField(null=False)
 
+    order_amount = models.IntegerField(null=True)
+
     Arrival_date = models.DateField(default=date.today)
 
     depletion_date = models.DateField(null=True,default=None)

@@ -1,13 +1,13 @@
-from django.shortcuts import render
-from django.http import JsonResponse
-from .forms import *
-from utils.models import *
-from datetime import date
-import json
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
+from django.http import JsonResponse
+from django.shortcuts import render
 from django.db import transaction
 from operator import itemgetter
+from django.db.models import Q
+from utils.models import *
+from datetime import date
+from .forms import *
+import json
 
 """
 TODO show client when colour or size is depleted
@@ -43,6 +43,7 @@ def baseSales(request):
             # update the product
             Parent_Product_log = Available_Product.Batch_no
             Available_Product.Amount = Available_Product.Amount - 1
+            Parent_Product_log.amount = Parent_Product_log.amount - 1
             
             # create the db object
             Wholesale_sale = Wholesale_Sales_Logs(product=product, Batch=Parent_Product_log, size=size, colour=colour, shop_no=shop, status=False, paid=paid,price=Available_Product.Price )
@@ -54,6 +55,7 @@ def baseSales(request):
 
                 # test if the product exists in different variations
                 Still_Available = Products_Available.objects.filter(name=product).first()
+                Parent_Product_log.save()
 
                 if not Still_Available:
                     Parent_Product_log.depletion_date = date.today()
@@ -61,6 +63,7 @@ def baseSales(request):
                 response_message = {"message": "success","success": f"{colour} in {product} is now depleted"}
             else:
                 Available_Product.save()
+                Parent_Product_log.save()
                 response_message = {"message": "success","success": "Sale successfully added"}
 
         return JsonResponse(response_message)
@@ -98,6 +101,7 @@ def Retailsales(request):
             # update the product
             Parent_Product_log = Available_Product.Batch_no
             Available_Product.Amount = Available_Product.Amount -1
+            Parent_Product_log.amount = Parent_Product_log.amount - 1
 
             if buyer:
                 sale = Retail_Sales_Log(product=product,size=size,colour=colour,shop_no=shop,buyer_name=buyer,paid=paid,status=False,date=date.today(),price=price)
@@ -111,6 +115,7 @@ def Retailsales(request):
                 return response_message
             
             Available_Product.save()
+            Parent_Product_log.save()
             response_message = {"message": "success","success": "Sale successfully added"}
 
 

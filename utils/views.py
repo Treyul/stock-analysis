@@ -43,7 +43,7 @@ def get_unpriced_products(request):
                 present_product.sizes.add(product_size)
 
             elif not present:
-                product_json = ProductsJson(name=product.get("name"))
+                product_json = ProductsJson(name=product.get("name"),paid=False)
 
                 product_colour = product.get("Colour")
                 product_size = product.get("Size")
@@ -97,7 +97,7 @@ def get_priced_products(request):
                 present_product.sizes.add(product_size)
 
             elif not present:
-                product_json = ProductsJson(name=product.get("name"))
+                product_json = ProductsJson(name=product.get("name"),paid=True)
 
                 product_colour = product.get("Colour")
                 product_size = product.get("Size")

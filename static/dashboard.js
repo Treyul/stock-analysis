@@ -67,6 +67,14 @@ const Show_Order_abtr = document.querySelectorAll(".show-order-abtr");
 const Show_Order_deets = document.querySelectorAll(".show-order-var");
 const Show_Worth_deets = document.querySelectorAll(".show-worth-deets");
 const Sales_analysis_chart = document.getElementById("sales_analysis");
+const Product_selection = document.getElementById("products")
+// const default_product =  document.querySelector("#products option:checked").innerHTML
+// const default_product_div = document.querySelector(`#analysis > div.${default_product}`)
+const products_divs = document.querySelectorAll(`#analysis > div`)
+
+// default_product_div.classList.toggle("hidden")
+// default_product_div.classList.toggle("analysis--div")
+
 
 // event listener to show more details in the sections
 Show_Abstract.forEach((button) => {
@@ -222,12 +230,17 @@ fetch("sale-analysis", {
         }
       })
     }
+
+    // draw a line graph for the products
     const Product_line_graphs = document.querySelectorAll("#analysis div > div#sale-line-graph canvas")
     for (var i = 0; i < Product_line_graphs.length; i++)
     {
       const obj_desc = data["analysis"][i].sales_history
-      // console.log(obj_desc);
-      new Chart(Product_line_graphs[i],{
+      // console.log(obj_desc[0].length == 0);
+      if(obj_desc[0].length > 2)
+{ 
+  console.log("2");     
+  new Chart(Product_line_graphs[i],{
         type:"line",
         data:{
           labels:obj_desc[0],
@@ -260,8 +273,104 @@ fetch("sale-analysis", {
           ],
         },
       },
-      })
+      })}
+      else if (obj_desc[0].length > 0 && obj_desc[0].length <= 2)
+      {
+        new Chart(Product_line_graphs[i],{
+          type:"bar",
+          data:{
+            labels:obj_desc[0],
+            datasets:[
+              {
+data:obj_desc[1],
+backgroundColor:"rgb(100, 149, 237)",
+borderColor: 'white'
+              }]
+          },
+          options:{
+            legend: { display: false },
+            scales: {
+              yAxes: [
+                {gridLines:{display:false},
+                  ticks: {
+                    max:Math.max(...obj_desc[1])+2,
+                    beginAtZero: true,
+                    stepSize:Math.ceil(Math.max(...obj_desc[1])/5)
+                  },
+                },
+              ],
+              xAxes:[{gridLines:{display:false}}]
+            }
+          }
+        })
+      }
+      else if(obj_desc[0].length == 0){
+        Product_line_graphs[i].remove()
+        // console.log(3);
+      }
     }
+
+    // donought pie to show sales sharing
+    const Product_pie_graphs = document.querySelectorAll("#analysis div > div#sale-pie-graph canvas")
+    for (var i = 0; i < Product_pie_graphs.length; i++)
+    {
+      const obj_desc = data["analysis"][i] 
+      const available = obj_desc.available
+      const ordered_amount = obj_desc.ordered
+      var wholesale_sales = obj_desc.sales_history[1].reduce((a,b)=>a+b,0)
+      console.log(obj_desc);
+
+      if(ordered_amount-available  <= 0 )
+      {
+        Product_pie_graphs[i].remove()
+      }
+      else
+      {
+        new Chart(Product_pie_graphs[i],{
+          type:"doughnut",
+          data:{
+            labels:["Wholesale","retail"],
+            datasets:[{
+              data:[wholesale_sales,(ordered_amount-available-wholesale_sales)],
+              backgroundColor:["lightblue","grey"]
+            }]
+          },
+          options:{
+            centerArea: {
+              text: 'Title',
+              subText: 'Subtitle',
+            },
+            // title:{
+            //   position:"bottom",
+            //   display:true,
+            //   text:
+            //   ,padding:0
+            // },
+            // centertext: `${(obj_desc.ordered-obj_desc.available)/obj_desc.ordered*100}% sold`,
+            legend: {
+              // display:false ,
+              fullWidth:false,
+              position:'bottom',
+              labels: {
+                boxWidth:10,
+                  // This more specific font property overrides the global property
+                  fontSize: 10
+                           }
+          },
+            // responsive: true,
+            maintainAspectRatio: false,
+            cutoutPercentage:"60",
+            rotation:Math.PI,
+            circumference:2 * Math.PI
+          }
+        })
+      }
+    }
+
+    products_divs.forEach(container=>{
+  container.classList.add("hidden")
+  container.classList.remove("analysis--div")
+})
   });
 });
 
@@ -304,3 +413,19 @@ var ctx = document.getElementById('chartJSContainer').getContext('2d');
 new Chart(ctx, options);
 // });
 */
+
+Product_selection.addEventListener("change",function()
+{
+ const product =  document.querySelector("#products option:checked").innerHTML
+ const product_div = document.querySelector(`#analysis > div.${product}`)
+ const product_containers = document.querySelectorAll(`#analysis > div`)
+
+product_containers.forEach(container=>{
+  container.classList.add("hidden")
+  container.classList.remove("analysis--div")
+})
+ product_div.classList.toggle("hidden")
+ product_div.classList.toggle("analysis--div")
+
+ console.log(product_div);
+})

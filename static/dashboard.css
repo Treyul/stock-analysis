@@ -121,3 +121,10 @@ body {
 #worthsum p {
   margin: auto;
 }
+
+.analysis--div
+{
+  display: grid;
+  grid-template-columns:2fr 2fr;
+  align-items: center;
+}

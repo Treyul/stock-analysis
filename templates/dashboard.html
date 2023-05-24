@@ -268,14 +268,18 @@
 
 {% if analysis%}
 <div id="analysis" class="section-container">
-  <select>
+  <select id="products" style="
+      width: -webkit-fill-available;
+      text-align: center;
+      margin: 1rem;">
+      <option >Choose product</option>
     {%for product in analysis %}
     <option>{{product.name}}</option>
 {%endfor%}
   </select>
 
   {%for product in analysis%}
-  <div style="display: grid;grid-template-columns:2fr 2fr;align-items: center;">
+  <div   class="{{product.name}}">
   <div style="display:grid;grid-template-columns:1fr 1fr;grid-column:1/span 1;height:fit-content;justify-items: center;">
     <p><strong>Product</strong></p>
     <p><strong>Restocks</strong></p>
@@ -316,6 +320,8 @@
 
   <!-- graphical analysis for the line graph sales data -->
   <div id="sale-line-graph" style="grid-column:1/span 2;"><canvas></canvas></div>
+  <div id="sale-pie-graph" style="grid-column:1/span 2;"><canvas></canvas></div>
+
 </div>
   {%endfor%}
 

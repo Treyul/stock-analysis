@@ -41,5 +41,6 @@ class Product_Log_History():
         self.price = 0
         self.sales_history = [[],[]]
         self.retail_sales_history =[[],[]]
+        self.performance = [[],[]]
         
 

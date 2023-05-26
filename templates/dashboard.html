@@ -10,7 +10,7 @@
 <!-- beginning of body block -->
 {% block body %}
 
-<!-- Blck holding the worth of the shop -->
+<!-- Block holding the worth of the shop -->
 <div class="section-container">
   <div
     style="
@@ -265,7 +265,7 @@
 </div>
 
 <!-- <canvas id="chartJSContainer" width="600" height="400"></canvas> -->
-
+<!-- container containe=ing each products analysis -->
 {% if analysis%}
 <div id="analysis" class="section-container">
   <select id="products" style="
@@ -321,6 +321,8 @@
   <!-- graphical analysis for the line graph sales data -->
   <div id="sale-line-graph" style="grid-column:1/span 2;"><canvas></canvas></div>
   <div id="sale-pie-graph" style="grid-column:1/span 2;"><canvas></canvas></div>
+  <div id="sale-size-performance" style="grid-column:1/span 2;"><canvas></canvas></div>
+  <div id="sale-colour-performance" style="grid-column:1/span 2;"><canvas></canvas></div>
 
 </div>
   {%endfor%}

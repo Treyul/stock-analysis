@@ -1,65 +1,3 @@
-const toggle_abstract_class = (button, className) => {
-  const parent = button.closest("div");
-
-  const sibling = parent.nextElementSibling;
-
-  const child = sibling.nextElementSibling;
-
-  const variation_btn = sibling.querySelector("button");
-
-  variation_btn.innerHTML = "Show variation";
-
-  sibling.classList.toggle("hidden");
-  child.className = "hidden";
-  sibling.classList.toggle(className);
-
-  const btn_html = button.innerHTML;
-
-  btn_html == "Show"
-    ? (button.innerHTML = "Hide")
-    : (button.innerHTML = "Show");
-};
-
-const toggle_detail_class = (button, className) => {
-  const parent = button.closest("div");
-
-  const sibling = parent.nextElementSibling;
-
-  btn_html = button.innerHTML;
-
-  btn_html == "Show variation"
-    ? (button.innerHTML = "Hide variation")
-    : (button.innerHTML = "Show variation");
-
-  sibling.classList.toggle("hidden");
-  sibling.classList.toggle(className);
-};
-
-const worth_summation = (container) => {
-  const worth_container = container.querySelectorAll(".worth");
-  const quantity_container = container.querySelectorAll(".quantity");
-
-  let worth_sum = 0;
-  let quantity_sum = 0;
-
-  for (i = 0; i < worth_container.length; i++) {
-    if (worth_container[i] != "") {
-      worth_sum += Number(worth_container[i].innerHTML);
-    }
-    quantity_sum += Number(quantity_container[i].innerHTML);
-  }
-
-  worth_container[0].innerHTML = worth_sum;
-  quantity_container[0].innerHTML = quantity_sum;
-
-  if (worth_container.length > 1) {
-    for (i = 1; i < worth_container.length; i++) {
-      worth_container[i].remove();
-      quantity_container[i].remove();
-    }
-  }
-};
-
 const Show_Abstract = document.querySelectorAll(".showabstract");
 const Show_Detailed = document.querySelectorAll(".showdetailed");
 const worth_Containers = document.querySelectorAll("#worthsum");
@@ -261,8 +199,9 @@ fetch("sale-analysis", {
         legend: { display: false },
         scales: {
           yAxes: [
-            {gridLines:{
-            display:false,
+            {
+              gridLines:{
+                     display:false,
           },
               ticks: {
                 max:Math.max(...obj_desc[1])+1,
@@ -371,6 +310,84 @@ borderColor: 'white'
   container.classList.add("hidden")
   container.classList.remove("analysis--div")
 })
+    const Product_size_performance = document.querySelectorAll("#analysis div > div#sale-size-performance canvas")
+    for (var i = 0; i < Product_size_performance.length; i++){
+      const Product_Object_Analysis = data["analysis"][i].performance
+      console.log(Product_Object_Analysis);
+      new Chart(Product_size_performance[i],{
+        type:"bar",
+        data:{
+          labels:Product_Object_Analysis.wholesale_sizes.sizes,
+          datasets:[
+            {
+            backgroundColor:"rgba(255, 165, 0,1.0)",
+            data:Product_Object_Analysis.wholesale_sizes.data
+          },
+        ]
+        },
+        options: {
+          title: {
+            display: true,
+            text: "Size sale performance",
+            // position:"left"
+          },
+          legend: { display: false },
+          scales: {
+            yAxes: [
+              {
+                gridLines:{
+                  display:false,
+                },
+                ticks: {
+                  beginAtZero: true,
+                },
+              },
+            ],
+          },
+        },
+      })
+
+
+    }
+    const Product_colour_performance = document.querySelectorAll("#analysis div > div#sale-colour-performance canvas")
+    for (var i = 0; i < Product_colour_performance.length; i++){
+      const Product_Object_Analysis = data["analysis"][i].performance
+      console.log(Product_Object_Analysis);
+      new Chart(Product_colour_performance[i],{
+        type:"bar",
+        data:{
+          labels:Product_Object_Analysis.wholesale_colours.colours,
+          datasets:[
+            {
+            backgroundColor:"rgba(255, 165, 0,1.0)",
+            data:Product_Object_Analysis.wholesale_colours.data
+          },
+        ]
+        },
+        options: {
+          title: {
+            display: true,
+            text: "Colour sale performance",
+            // position:"left"
+          },
+          legend: { display: false },
+          scales: {
+            yAxes: [
+              {
+                gridLines:{
+                  display:false,
+                },
+                ticks: {
+                  beginAtZero: true,
+                },
+              },
+            ],
+          },
+        },
+      })
+
+
+    }
   });
 });
 

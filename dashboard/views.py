@@ -65,6 +65,24 @@ def stock_analyis(request):
                 product.retail_sales_history[1].append(sale.get("sales"))
                 break
 
+    wholesales_size_analysis = Wholesale_Sales_Logs.objects.filter(paid=True).values("product","size").annotate(sum =Count("size"))
+    wholesale_colour_analysis = Wholesale_Sales_Logs.objects.filter(paid=True).values("product","colour").annotate(sum = Count("colour"))
+    retail_size_analysis = Wholesale_Sales_Logs.objects.filter(paid=True).values("product","size").annotate(sum =Count("size"))
+    retail_colour_analysis = Wholesale_Sales_Logs.objects.filter(paid=True).values("product","colour").annotate(sum = Count("colour"))
+    print(wholesales_size_analysis,wholesale_colour_analysis)
+    for data in wholesales_size_analysis:
+        for product in product_analysis:
+            if product.name == data.get("product").lower():
+                product.performance["wholesale_sizes"]["sizes"].append( data.get("size"))
+                product.performance["wholesale_sizes"]["data"].append(data.get("sum"))
+                
+    for data in wholesale_colour_analysis:
+        for product in product_analysis:
+            if product.name == data.get("product").lower():
+                product.performance["wholesale_colours"]["colours"].append( data.get("colour"))
+                product.performance["wholesale_colours"]["data"].append(data.get("sum"))
+                
+
 
     analysis_json = []
     for product in product_analysis:

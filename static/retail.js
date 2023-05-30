@@ -101,8 +101,8 @@ Submit_sales.addEventListener("click", function (e) {
     }
     // console.log(response.json());
     response.json().then(function (data) {
-      console.log(data);
-      console.log("here");
+      // console.log(data);
+      // console.log("here");
       if (data["message"] == "error") {
         const error = document.getElementById("error");
 

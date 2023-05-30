@@ -86,6 +86,8 @@ def Retailsales(request):
         # check if it is a retail sale or a brokering sale
         product,colour,size,shop,paid,price = itemgetter("product","color","sizes","name","paid","amount")(sales_data)
         buyer = sales_data.get("buyer")
+        # print(shop)
+        # print("test" ,request.user.shop_number)
 
         if shop != request.user.shop_number:
             response = brokering(request,sales_data)
@@ -106,17 +108,14 @@ def Retailsales(request):
             if buyer:
                 sale = Retail_Sales_Log(product=product,size=size,colour=colour,shop_no=shop,buyer_name=buyer,paid=paid,status=False,date=date.today(),price=price)
                 sale.save()
-                response_message = {"message":"success"}
-                return response_message
             elif not buyer:
                 sale = Retail_Sales_Log(product=product,size=size,colour=colour,shop_no=shop,paid=paid,status=False,date=date.today(),price=price)
                 sale.save()
-                response_message = {"message":"success"}
-                return response_message
             
             Available_Product.save()
             Parent_Product_log.save()
             response_message = {"message": "success","success": "Sale successfully added"}
+            return JsonResponse(response_message)
 
 
     return render(request,"retailrecords.html",{"form":form})

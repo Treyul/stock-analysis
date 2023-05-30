@@ -122,9 +122,13 @@ body {
   margin: auto;
 }
 
-.analysis--div
-{
+.analysis--div {
   display: grid;
-  grid-template-columns:2fr 2fr;
+  grid-template-columns: 2fr 2fr;
   align-items: center;
+}
+div[id$="-graph"] {
+  box-shadow: 0rem 0rem 1rem 0.25rem rgb(0 0 0 / 20%);
+  margin: 1rem 0rem;
+  padding: 1rem 0rem;
 }

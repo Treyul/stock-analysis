@@ -47,13 +47,6 @@ def analysis(request):
 
             summation_obj["data"] = sale_data
     
-    print(list(owes[1]))
-    # for i,k in enumerate(owes):
-    #     print(i,k)
-    # for i in owe_data[0]:
-    #     print(i.shop_no)
-    # for summation_obj in owes[0]:
-    #     print(k.get("shop_no")
 
 
     return render(request,"analysis.html",{"localsum":list(owes[0]),"retailsum":list(owes[1]),})
@@ -90,11 +83,12 @@ def retail_sort(request):
         # get object data
         object_data = json.load(request)
         product,colour,size,date,shop = itemgetter("product","colour","size","date","shop")(object_data)
+        sale_object = Retail_Sales_Log.objects.filter(product=product,size=size,colour=colour,date=date,shop_no=shop,status=False,balanced_out=False).first()
+        if sale_object:
+            sale_object.paid= True
+            sale_object.balanced_out = True
+            sale_object.save()
+            return JsonResponse({"message":"success"})
+        else:
 
-        sale_object = Retail_Sales_Log.object.filter(product=product,size=size,colour=colour,date=date,shop_no=shop,status=False,paid=False).first()
-
-        sale_object.paid= True
-        sale_object.balanced_out = True
-        sale_object.save()
-
-    return JsonResponse({"message":"success"})
+            return JsonResponse({"message":"failure","failure":"Please refresh and try again"})

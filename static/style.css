@@ -344,7 +344,8 @@ button {
   text-align: center;
 }
 .coldata > div > p {
-  margin: 0.5rem;
+  margin: 0.5rem 0.1rem;
+  /* margin-right: 0.25rem; */
 }
 .par-availdata {
   border-top: 1px darkorange solid;

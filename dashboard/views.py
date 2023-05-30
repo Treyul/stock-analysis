@@ -48,7 +48,7 @@ def stock_analyis(request):
                 product_log.available = product_log.available + product["amount"]
                 break   
 
-    Wholesale_sales_data =Wholesale_Sales_Logs.objects.values("product","date").annotate(sales=Count("date")).order_by("date")
+    Wholesale_sales_data =Wholesale_Sales_Logs.objects.filter(status=False).values("product","date").annotate(sales=Count("date")).order_by("date")
     # {'product': 'test76', 'date': datetime.date(2023, 4, 20), 'sales': 1}
     for sale in Wholesale_sales_data:
         for product in product_analysis:
@@ -57,7 +57,7 @@ def stock_analyis(request):
                 product.sales_history[1].append(sale.get("sales"))
                 break
 
-    Retail_sales_data =Retail_Sales_Log.objects.values("product","date").annotate(sales=Count("date")).order_by("date")
+    Retail_sales_data =Retail_Sales_Log.objects.filter(status=False).values("product","date").annotate(sales=Count("date")).order_by("date")
     for sale in Retail_sales_data:
         for product in product_analysis:
             if product.name == sale.get("product").lower():
@@ -65,11 +65,11 @@ def stock_analyis(request):
                 product.retail_sales_history[1].append(sale.get("sales"))
                 break
 
-    wholesales_size_analysis = Wholesale_Sales_Logs.objects.filter(paid=True).values("product","size").annotate(sum =Count("size"))
-    wholesale_colour_analysis = Wholesale_Sales_Logs.objects.filter(paid=True).values("product","colour").annotate(sum = Count("colour"))
+    wholesales_size_analysis = Wholesale_Sales_Logs.objects.filter(status=False).values("product","size").annotate(sum =Count("size"))
+    wholesale_colour_analysis = Wholesale_Sales_Logs.objects.filter(status=False).values("product","colour").annotate(sum = Count("colour"))
     retail_size_analysis = Wholesale_Sales_Logs.objects.filter(paid=True).values("product","size").annotate(sum =Count("size"))
     retail_colour_analysis = Wholesale_Sales_Logs.objects.filter(paid=True).values("product","colour").annotate(sum = Count("colour"))
-    print(wholesales_size_analysis,wholesale_colour_analysis)
+    # print(wholesales_size_analysis,wholesale_colour_analysis)
     for data in wholesales_size_analysis:
         for product in product_analysis:
             if product.name == data.get("product").lower():

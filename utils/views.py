@@ -50,7 +50,11 @@ def get_unpriced_products(request):
                 product_amount = product.get("total")
 
                 product_json.Total = product_json.Total + product_amount
-                product_json.variation[product_size] = {product_colour:product_amount}
+                if product_json.variation.get(product_size):
+                    product_json.variation[product_size][product_colour]=product_amount
+                else:
+                    product_json.variation[product_size] = {}
+                    product_json.variation[product_size][product_colour]=product_amount
                 product_json.colours.add(product_colour)
                 product_json.sizes.add(product_size)
 
@@ -68,7 +72,7 @@ def get_priced_products(request):
 
         # get the priced product that have arrived
         priced_stock_objects = Products_Available.objects.filter(~Q(Price = None)).values("name","Colour","Size","Price").annotate(total=Sum('Amount'))
-
+        # print(priced_stock_objects)
         # initialize array to hold the db objects
         priced_stock = []
 
@@ -80,7 +84,7 @@ def get_priced_products(request):
 
             # iterate through the array to check existence of the object
             for present_product in priced_stock:
-                if present_product.name == product.get("name"):
+                if present_product.name == product.get("name").lower():
 
                     # break from the loop if the condition is met
                     present = True
@@ -92,12 +96,16 @@ def get_priced_products(request):
                 product_amount = product.get("total")
 
                 present_product.Total = present_product.Total + product_amount
-                present_product.variation[product_size] = {product_colour:product_amount}
+                if product_json.variation.get(product_size):
+                    product_json.variation[product_size][product_colour]=product_amount
+                else:
+                    product_json.variation[product_size] = {}
+                    product_json.variation[product_size][product_colour]=product_amount
                 present_product.colours.add(product_colour)
                 present_product.sizes.add(product_size)
 
             elif not present:
-                product_json = ProductsJson(name=product.get("name"),paid=True)
+                product_json = ProductsJson(name=product.get("name").lower(),paid=True)
 
                 product_colour = product.get("Colour")
                 product_size = product.get("Size")
@@ -106,13 +114,15 @@ def get_priced_products(request):
 
                 
                 product_json.Total = product_json.Total + product_amount
-                product_json.variation[product_size] = {product_colour:product_amount}
+                if product_json.variation.get(product_size):
+                    product_json.variation[product_size][product_colour]=product_amount
+                else:
+                    product_json.variation[product_size] = {}
+                    product_json.variation[product_size][product_colour]=product_amount
                 product_json.colours.add(product_colour)
                 product_json.sizes.add(product_size)
 
                 # add the obj to the array
                 priced_stock.append(product_json)
-    
-        # print(priced_stock)
         return priced_stock
     

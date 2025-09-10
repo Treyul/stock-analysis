@@ -4,3 +4,4 @@ python-dateutil
 mysqlclient
 django-on-heroku 
 python-dotenv
+uvicorn

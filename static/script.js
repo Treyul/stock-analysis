@@ -256,8 +256,46 @@ next_stock_details.addEventListener("click", function (e) {
       <input type="button" class="summation" value="Done"></td></tr>`;
     }
   } else if (stock_type.value == "intervaled") {
-    if (min_size > max_size) {
-      // pass error to user TODO
+    const max_size_value = +max_size.value;
+    let min_size_value = +min_size.value;
+    const interval_value = +interval.value;
+
+    // Throw error when ma size is less than min size
+    if (min_size_value > max_size_value) {
+      alert_msg.innerHTML = "mimimum size cannot be greater than maximum size";
+      alert_msg.classList.add("error");
+      show(alert_msg);
+      setTimeout(function () {
+        alert_msg.classList.remove("error");
+        hide(alert_msg);
+      }, 6000);
+      return;
+    }
+
+    // create table rows to input data
+    for (
+      min_size_value;
+      min_size_value <= max_size_value + interval_value;
+      min_size_value = min_size_value + interval_value
+    ) {
+      // create the table row for each size
+      if (min_size_value == max_size_value + interval_value) {
+        variation_template += `<tr><td>Total</td>`;
+      } else {
+        variation_template += `<tr><td>${min_size_value}</td>`;
+      }
+
+      console.log(min_size_value);
+      console.log(interval_value);
+      // create a table cell for each color
+      for (let k = 0; k < len; k++) {
+        console.log(k);
+        variation_template += `<td><input type="number" value="0"></td>`;
+      }
+
+      // create the summation button in each row
+      variation_template += `<td><input type="number" disabled value="0"></td><td>
+      <input type="button" class="summation" value="Done"></td></tr>`;
     }
   } else if (stock_type.value == "Random") {
   }
@@ -338,16 +376,3 @@ next_stock_details.addEventListener("click", function (e) {
 });
 
 let count = 1;
-// colour.addEventListener("click", function (e) {
-//   e.preventDefault();
-//   let label = `colours-${count}`;
-
-//   Colour_list.insertAdjacentHTML(
-//     "beforeend",
-//     `<li>
-//   <label for="${label}">Colour</label>
-//   <input id="${label}" name="${label}" type="text" placeholder="Colour">
-//   </li>`
-//   );
-//   count++;
-// });

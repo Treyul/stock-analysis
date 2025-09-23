@@ -51,6 +51,7 @@ def update_stock_ordered(request):
     # get form data if post request is made
     if request.method == "POST":
         form = Order_Form(request.POST)
+        # print(form.errors)
         if form.is_valid():
             print(form.cleaned_data)
             product_name = form.cleaned_data["name"]
@@ -73,7 +74,8 @@ def update_stock_ordered(request):
             # add order
             # comments,shipping co, arrival date
             # Fill the columns that can be null in db if they are pro
-            new_order = Products_Order_Logs(name=product_name,size_range=product_sizes_json,colours=product_colours_json,variation=product_data_json,amount=Total_amount,arrived=False)
+            print(product_data_json)
+            new_order = Products_Order_Logs(name=product_name,shop=request.user,size_range=product_sizes_json,colours=product_colours_json,variation=product_data_json,amount=Total_amount,arrived=False)
             if form.cleaned_data.get("Shipper"):
                 new_order.shipping_co = form.cleaned_data.get("Shipper")
             if form.cleaned_data.get("arrival"):

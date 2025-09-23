@@ -19,18 +19,21 @@
         <div id="two" class="ham-item"></div>
         <div id="three" class="ham-item"></div>
       </div>
+
       <div id="main-menu" class="menuhidden">
+      <div class="links" ><a href="/Home">Home</a></div>
       <div class="links" data-tab="1">Account details</div>
       {%if unpriced_stock %}
       <div class="links" data-tab="2">Set prices</div>
-      {%endif%} {%if priced_stock%}
+      {%endif%} 
+      {%if priced_stock%}
       <div class="links" data-tab="3">Change prices</div>
       {%endif%}
       <div class="links" data-tab="4">Reset password</div>
-      <a></a>
    </div>
+
     <div class="content">
-      <h2>{{request.user.first_name}}</h2>
+      <h2>{{request.user.Username}}</h2>
       <div class="contents content-01 contents--active">
         <p>{{request.user.shop_number}}</p>
       </div>
@@ -54,8 +57,11 @@
         <div>All stock as been priced</div>
         {%endif%}
       </div>
+
       <div class="contents content-03">
         {% if priced_stock %} 
+        <table>
+          <tr><th>Product</th><th>sizes</th><th>Colour</th><th>Amount</th></tr>
         {%for stock in priced_stock%}
         <tr>
           <!-- <div class="stock-data"> -->

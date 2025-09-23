@@ -67,7 +67,7 @@ class Order_Form(forms.Form):
     
     price = forms.IntegerField(required=False,label="" ,widget=forms.NumberInput(attrs={"placeholder":"Order price"}))
     
-    arrival = forms.DateTimeField(required=False, widget = forms.DateInput(
+    arrival = forms.DateTimeField(required=False,label="Est arrival date", widget = forms.DateInput(
         format=('%Y-%m-%d'),
         attrs={'class': 'form-control', 'placeholder': 'Select a date','type': 'date', "value":date.today()})
         )

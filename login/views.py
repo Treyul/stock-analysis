@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from .forms import Login,CreateAccount
-from .models import Users
+from utils.models import Users
 from hashlib import sha512
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
@@ -19,7 +19,7 @@ def Signin(request):
 
             password = form.cleaned_data["passwordLg"]
 
-            user = Users.objects.filter(username = username, password = sha512(password.encode()).hexdigest()).first()
+            user = Users.objects.filter(Username = username, password = sha512(password.encode()).hexdigest()).first()
             
             # if details provided are correct redirect user to hoe page
             if user:
@@ -48,7 +48,7 @@ def Signup(request):
             shop = form.cleaned_data["shop"]
             
             # initialize user instance
-            user = Users(username = username, first_name = name, shop_number = shop, rights = owner)
+            user = Users(Username = username, shop_number = shop, is_admin = owner)
             
             # confirm passwords provided are correct
             confirm_password = form.cleaned_data["confirm_password"]

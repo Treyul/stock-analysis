@@ -1,14 +1,82 @@
-from datetime import date
+from datetime import date, datetime
 from django.db import models
-# from django.template.defaultfilters import slugify
-# from django.contrib.auth.models import User
-# from django.urls import reverse
+from django.contrib.auth.models import AbstractBaseUser,UserManager,PermissionsMixin
+from hashlib import sha512
+
+# create model for user management
+class Users(AbstractBaseUser,PermissionsMixin):
+    Username = models.CharField(max_length=50,unique=True)
+    
+    password = models.CharField(max_length=512)
+    
+    email = models.EmailField(max_length=100, null=True,unique=True)
+    
+    is_admin = models.BooleanField(null=False, default=False)
+    
+    Date_created = models.DateTimeField(default= datetime.today)
+    
+    Last_visit = models.DateTimeField(default= datetime.today)
+    
+    migrated = models.BooleanField(null=False, default=False)
+    
+    shop_number = models.CharField(max_length= 20, null= False)    
+    
+    @property
+    def rights(self):
+        "Is the user a member of staff?"
+        # Simplest possible answer: All admins are staff
+        return self.is_admin
+    
+    @property
+    def is_active(self):
+        return True
+    
+    @property
+    def is_superuser(self):
+        return self.is_admin
+        
+    USERNAME_FIELD = "Username"
+    objects = UserManager()
+    
+    def check_Password(self,password):
+        
+        print("********checking password********")        
+        
+        hashed_pass = sha512(password.encode()).hexdigest()
+
+        if hashed_pass == self.password:
+            return True
+        else:
+            return False
+        
+    def create_password(self,password):
+                
+        self.password = sha512(password.encode()).hexdigest()
+        
+    def rights(self):
+        
+        return False
+    
+    def get_scopes_for_user(self):
+        
+        if self.is_superuser:
+            return ["read", "write", "order", "cart", "payment", "wishlist", "review", "admin_read", "admin_write", "admin_manage"]
+        
+        elif self.is_staff:
+            return ["admin_read", "admin_write"]
+        
+        elif self.is_authenticated:
+            return ["read", "write", "order", "cart", "payment", "wishlist", "review"]
+        else:
+            return ["read"]
 
 
 class Products_Order_Logs(models.Model):
 
     name = models.CharField(max_length =50, unique=False, null=False)
 
+    shop = models.ForeignKey(Users,on_delete=models.CASCADE,null=False, default=None)
+    
     size_range = models.JSONField(null=False)
 
     colours = models.JSONField(null=False)
@@ -34,6 +102,8 @@ class Products_Order_Logs(models.Model):
 class Products_Logs(models.Model):
 
     product_name = models.CharField(unique=False,max_length=50,null=False)
+    
+    shop = models.ForeignKey(Users,null=False,on_delete=models.CASCADE,default=None)
 
     order_id = models.ForeignKey(Products_Order_Logs,on_delete=models.CASCADE,null=True)
 
@@ -54,6 +124,8 @@ class Products_Logs(models.Model):
 class Products_Available(models.Model):
 
     name = models.CharField(max_length=50, null=False)
+    
+    # shop = models.ForeignKey(Users,null=False,on_delete=models.CASCADE,default=None)
 
     Batch_no = models.ForeignKey(Products_Logs, on_delete=models.CASCADE, null=False, related_name="availability")
 

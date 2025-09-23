@@ -53,8 +53,6 @@
 }
 body {
   margin: 0px;
-  /* backdrop-filter: blur(136px); */
-  /* filter: blur(1px); */
 }
 th {
   border: 1px solid black;
@@ -64,18 +62,11 @@ td {
   border-bottom: 1px solid black;
 }
 form {
-  /* display: flex; 
-    width: 100%;
-    /* flex: auto 1 1; */
   margin-bottom: 0.5rem;
   display: grid;
-  /* display: flex; */
-  /* width: 393px; */
-  grid-template-columns: 6em 5em 3em 5em;
-  row-gap: 1em;
-  /* grid-template-columns: 1fr 1fr 1fr 1fr; */
-  flex-wrap: wrap;
-  /* filter: blur(1px); */
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1em;
+  width: 95%;
   justify-content: space-between;
 }
 form > input[type="text"],
@@ -87,16 +78,21 @@ form > input[type="number"] {
   margin-left: 0.5rem;
   resize: both;
   flex-basis: 3rem;
-  /* width: 5rem; */
+  width: 100%;
 }
 form > input[type="button"],
 form > input[type="submit"] {
   border: none;
   border-radius: 45px;
 }
+form > div {
+  margin-left: 0.5em;
+}
 #submit_sales {
   background-color: #84f584;
-  grid-column: 4/4;
+  grid-column: 2 / span 2;
+  width: 50%;
+  margin-left: 25%;
   /* color: white; */
 }
 #remove-item {
@@ -106,7 +102,9 @@ form > input[type="submit"] {
 }
 #add-item {
   background-color: #78cde9;
-  grid-column: 4/4;
+  grid-column: 2 / span 2;
+  width: 50%;
+  margin-left: 25%;
 }
 table {
   border-collapse: collapse;

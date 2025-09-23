@@ -39,7 +39,7 @@ def settings(request):
             present_product.sizes.add(product_size)
 
         elif not present:
-            product_json = ProductsJson(name=product.get("name"))
+            product_json = ProductsJson(name=product.get("name"),paid=False)
 
             product_colour = product.get("Colour")
             product_size = product.get("Size")
@@ -78,7 +78,7 @@ def settings(request):
             present_product.sizes.add(product_size)
 
         elif not present:
-            product_json = ProductsJson(name=product.get("name"))
+            product_json = ProductsJson(name=product.get("name"),paid=False)
 
             product_colour = product.get("Colour")
             product_size = product.get("Size")

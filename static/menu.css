@@ -40,7 +40,7 @@ div[id="main-menu"] ul {
   padding-inline-start: 0px;
 }
 div[id="main-menu"] ul li {
-  margin: 0.75rem;
+  margin: 0.75rem 0.5rem;
   padding: 0.25rem 0rem;
   color: black;
   letter-spacing: 1.5px;
@@ -66,4 +66,6 @@ div[id="main-menu"] ul li a {
 
 #menu {
   margin-bottom: 1rem;
+  position: sticky;
+  top: 2.5%;
 }

@@ -101,6 +101,8 @@ WSGI_APPLICATION = 'stockanalysis.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+AUTH_USER_MODEL = 'utils.Users'
+
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
@@ -175,13 +177,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # APPEND_SLASH=False
 ALLOWED_HOSTS = [
-    'http://mk-dubai.herokuapp.com/',
-'https://mk-dubai.herokuapp.com/',
+    'mk-dubai.herokuapp.com/',
+'mk-dubai.herokuapp.com/',
 'mk-dubai.herokuapp.com',
 'mk-dubai.herokuapp.com/',
 "127.0.0.1",
 "stock-analysis-zy5o.onrender.com"
 ]
-
-# import django_on_heroku 
-# django_on_heroku.settings(locals())

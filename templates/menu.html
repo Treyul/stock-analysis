@@ -52,7 +52,7 @@
           <li>
             <a href="/settings">Settings</a>
           </li>
-          {% if request.user.rights == True %}
+          {% if request.user.is_admin == True %}
           <li><a href="/dashboard">Dashboard</a></li>
           {% endif %}
         </ul>

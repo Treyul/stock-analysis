@@ -64,30 +64,19 @@ td {
   border-bottom: 1px solid black;
 }
 form {
-  /* display: flex; 
-  width: 100%;
-  /* flex: auto 1 1; */
-  margin-bottom: 0.5rem;
+  margin: 0.5rem;
   display: grid;
-  /* display: flex; */
-  /* width: 393px; */
-  grid-template-columns: 6em 5em 3em 5em;
-  row-gap: 1em;
-  /* grid-template-columns: 1fr 1fr 1fr 1fr; */
-  flex-wrap: wrap;
-  /* filter: blur(1px); */
-  justify-content: space-between;
+  grid-template-columns: 6em 7em 5em;
+  gap: 1em;
+  justify-items: center;
+  justify-content: space-evenly;
 }
 form > input[type="text"],
 form > input[type="number"] {
   border: none;
-  size: auto;
   border-bottom: 1px solid gray;
   text-align: center;
-  margin-left: 0.5rem;
-  resize: both;
-  flex-basis: 3rem;
-  /* width: 5rem; */
+  width: 100%;
 }
 form > input[type="button"],
 form > input[type="submit"] {
@@ -96,18 +85,18 @@ form > input[type="submit"] {
 }
 #submit_sales_div {
   background-color: #84f584;
-  grid-column: 4/4;
+  grid-column: 2 / span 2;
   border: none;
   border-radius: 45px;
-  /* color: white; */
+  margin-left: 25%;
+  width: 50%;
   text-align: center;
 }
 #submit_sales {
   background-color: #84f584;
-  grid-column: 4/4;
+  grid-column: 2 / span 2;
   border: none;
   border-radius: 45px;
-  /* color: white; */
   text-align: center;
 }
 #remove-item {
@@ -117,7 +106,9 @@ form > input[type="submit"] {
 }
 #add-item {
   background-color: #78cde9;
-  grid-column: 4/4;
+  width: 50%;
+  grid-column: 2 / span 2;
+  margin-left: 25%;
 }
 table {
   border-collapse: collapse;

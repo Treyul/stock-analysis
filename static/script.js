@@ -83,6 +83,8 @@ var items = 2;
 // add eventlister to add colour button
 addButton.addEventListener("click", () => {
   // create colour input element and set its attributes
+  const parent_div = addButton.closest("div");
+  const div_container = document.createElement("div");
   const item = document.createElement("input");
   item.type = "text";
   item.name = `Colour ${items}`;
@@ -96,8 +98,9 @@ addButton.addEventListener("click", () => {
 
   //select container to add the label and input field
   const container = document.querySelector("form");
-  container.insertBefore(label, removeButton);
-  container.insertBefore(item, removeButton);
+  div_container.insertAdjacentElement("beforeend", label);
+  div_container.insertAdjacentElement("beforeend", item);
+  container.insertBefore(div_container, parent_div);
   items++;
   document.querySelector("#id_num_items").value = items;
 });
@@ -106,6 +109,7 @@ addButton.addEventListener("click", () => {
 // Add event listener to rthe remove colour button
 removeButton.addEventListener("click", () => {
   // get the array of colours inputs and labels
+
   const colours = document.querySelectorAll("input[id^='id_Colour']");
   const colour_labels = document.querySelectorAll("label[for^='id_Colour']");
   console.log(colour_labels, colours);
@@ -122,9 +126,10 @@ removeButton.addEventListener("click", () => {
     }, 5000);
   } else {
     // delete the elements from the array
-    // console.log(colour_labels);
-    colours[colours.length - 1].remove();
-    colour_labels[colour_labels.length - 1].remove();
+    const color = colours[colours.length - 1];
+    const parent_container = color.closest("div");
+    parent_container.remove();
+    // colour_labels[colour_labels.length - 1].remove();
     // console.log(colour_labels);
     items--;
     document.querySelector("#id_num_items").value = items;
@@ -259,10 +264,8 @@ next_stock_details.addEventListener("click", function (e) {
 
   // close the table and append it to the page
   variation_template += `</table>`;
-  colours[colours.length - 1].insertAdjacentHTML(
-    "afterend",
-    variation_template
-  );
+  const lastcolor_container = colours[colours.length - 1].closest("div");
+  lastcolor_container.insertAdjacentHTML("afterend", variation_template);
   // hide colour and submit stock
   // colours.classList.add("hidden");
   // colour.classList.remove("add_sale");
@@ -315,7 +318,8 @@ next_stock_details.addEventListener("click", function (e) {
         // iterate between color columns
         for (let i = 1; i < siblings.length - 2; i++) {
           // get size number and update summation
-          size[`${colours[i - 1].value}`] =
+
+          size[`${colours[i - 1].value.toLowerCase()}`] =
             +siblings[i].getElementsByTagName("input")[0].value;
           sum += +siblings[i].getElementsByTagName("input")[0].value;
         }

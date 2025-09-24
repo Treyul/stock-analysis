@@ -6,6 +6,7 @@ const Show_Order_deets = document.querySelectorAll(".show-order-var");
 const Show_Worth_deets = document.querySelectorAll(".show-worth-deets");
 const Sales_analysis_chart = document.getElementById("sales_analysis");
 const Product_selection = document.getElementById("products");
+const Arrival_buttons = document.querySelectorAll(".arrival");
 // const default_product =  document.querySelector("#products option:checked").innerHTML
 // const default_product_div = document.querySelector(`#analysis > div.${default_product}`)
 const products_divs = document.querySelectorAll(`#analysis > div`);
@@ -45,6 +46,38 @@ Show_Order_deets.forEach((button) => {
 Show_Worth_deets.forEach((button) => {
   button.addEventListener("click", function () {
     toggle_detail_class(button, "worth-deets");
+  });
+});
+
+Arrival_buttons.forEach((button) => {
+  button.addEventListener("click", function () {
+    // send product details which has arrived
+    const Div_Container = button.closest("div");
+    const Button_Siblings = Div_Container.children;
+    const Order_Amount = Button_Siblings[2].innerHTML;
+    const Product_Name = Button_Siblings[0].innerHTML;
+
+    const Order_Date = Div_Container.nextElementSibling.children[5].innerHTML;
+
+    const Product_Json = {
+      product: Product_Name,
+      amount: Order_Amount,
+      order_date: Order_Date,
+    };
+    console.log(Product_Json);
+    fetch("product-arrival", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "X-CSRFToken": `${crsf_token}`,
+      },
+      body: JSON.stringify(Product_Json),
+    }).then(function (response) {
+      response,
+        json().then(function (data) {
+          console.log(data);
+        });
+    });
   });
 });
 

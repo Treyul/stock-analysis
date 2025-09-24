@@ -285,8 +285,8 @@ next_stock_details.addEventListener("click", function (e) {
         variation_template += `<tr><td>${min_size_value}</td>`;
       }
 
-      console.log(min_size_value);
-      console.log(interval_value);
+      // console.log(min_size_value);
+      // console.log(interval_value);
       // create a table cell for each color
       for (let k = 0; k < len; k++) {
         console.log(k);
@@ -332,7 +332,7 @@ next_stock_details.addEventListener("click", function (e) {
           if (r == colours.length) {
             for (let rs = 0; rs < colours.length; rs++) {
               sum += +siblings[rs + 1].getElementsByTagName("input")[0].value;
-              console.log(sum);
+              // console.log(sum);
             }
             siblings[r + 1].getElementsByTagName("input")[0].value = sum;
             stock_data.value = JSON.stringify(stock_json);
@@ -340,14 +340,16 @@ next_stock_details.addEventListener("click", function (e) {
             // iterate between variation object colors
             for (const [key, val] of Object.entries(stock_json)) {
               // get summation of the color in each size
-              sum += +val[`${colours[r].value}`];
+              sum += +val[`${colours[r].value.toLowerCase()}`];
+              // console.log(colours[r].value);
+              // console.log(val[`${colours[r].value}`]);
             }
 
             // make summation of color visible
             siblings[r + 1].getElementsByTagName("input")[0].value = sum;
           }
         }
-        console.log("done");
+        // console.log("done");
       } else {
         // initailze sum and size object to store the color variation
         let sum = 0;

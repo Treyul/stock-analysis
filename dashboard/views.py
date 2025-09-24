@@ -6,6 +6,7 @@ from django.db import transaction
 from django.db.models import Q,Sum,Count,F
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
+from datetime import datetime
 import json
 
 """
@@ -96,7 +97,13 @@ def stock_analyis(request):
 def Change_order_status_Arrived(request):
 
     if request.method == "POST":
-        pass
+        
+        data = json.load(request)
+        product = Products_Order_Logs.objects.filter(name=data["product"],amount=data["amount"]).first()
+        print(product.variation)
+        product.arrived = True
+        
+        return JsonResponse({"message":"Status changed successfully"})
     pass
 
 
